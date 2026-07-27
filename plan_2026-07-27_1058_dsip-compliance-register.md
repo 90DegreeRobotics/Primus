@@ -1,7 +1,7 @@
 # Plan: DSIP compliance register - 2026-07-27 10:58
 
 ## Status
-IN-PROGRESS
+COMPLETE
 
 ## Goal
 Attempt to locate the official/public DSIP 26.BZ BAA/CSO and MDA
@@ -41,8 +41,8 @@ is available.
 - [x] Write root handoff for this compliance-register unit.
 - [x] Stage explicit docs-only paths.
 - [x] Run `git diff --check --cached`.
-- [ ] Commit and push to `origin main`.
-- [ ] Verify `HEAD == origin/main`.
+- [x] Commit and push to `origin main`.
+- [x] Verify `HEAD == origin/main`.
 
 ## Test Gate
 
