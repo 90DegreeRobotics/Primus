@@ -25,6 +25,18 @@ for the MDA26BZ04-NV006 neuromorphic hardware SBIR pursuit.
 | `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` | Updated 2026-07-27 | Proposal claim classification, missing evidence, no-go claims, and acceptance gates |
 | `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` | Checked 2026-07-27 | DSIP package fingerprints, confirmed submission facts, operator-blocked gates, and no-go rules |
 | `docs/sbir/TECHNICAL_VOLUME_OUTLINE_2026-07-27.md` | Created 2026-07-27 | 15-page Volume 2 outline in the official section order with claim tags and no-go boundaries |
+| `docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md` | Created 2026-07-27 | Source-audited pivot from August 19 proposal race to defense evidence package while company/admin readiness is blocked |
+| `https://www.mda.mil/business/SBIR/SBIR_STTR_programs.html` | Checked 2026-07-27 | MDA SBIR/STTR program focus, technology transition framing, Phase I/II/III overview |
+| `https://www.mda.mil/business/SBIR/resources.html` | Checked 2026-07-27 | MDA SBIR/STTR contacts and capability-briefing email |
+| `https://www.mda.mil/business/smallbus_programs.html` | Checked 2026-07-27 | MDA OSBP mission, SAM opportunity guidance, outreach email |
+| `https://www.mda.mil/business/bus_areasopp.html` | Checked 2026-07-27 | MDA prime/subcontracting path and SBIR/STTR contact guidance |
+| `https://www.mda.mil/business/bus_mdasbac.html` | Checked 2026-07-27 | MDA Small Business Advocacy Council and prime liaison contacts |
+| `https://www.acquisition.gov/far/15.603` | Checked 2026-07-27 | Unsolicited-proposal no-go for previously published agency requirements |
+| `https://www.diu.mil/work-with-us` | Checked 2026-07-27 | DIU solicitation, prototype, and adoption path |
+| `https://www.diu.mil/solution-brief-guidance` | Checked 2026-07-27 | DIU solution brief guidance |
+| `https://www.darpa.mil/about/offices/mxo` | Checked 2026-07-27 | DARPA MXO scope and current office-wide BAA deadline |
+| `https://smdsymposium.org/` | Checked 2026-07-27 | 2026 Space & Missile Defense Symposium date/location |
+| `https://smdsymposium.org/technology-track/` | Checked 2026-07-27 | SMD technology-track relevance to AI/ML validation and space/missile defense |
 
 ## Blocking Gates
 
@@ -37,12 +49,19 @@ for the MDA26BZ04-NV006 neuromorphic hardware SBIR pursuit.
 - [x] Confirm cybersecurity/CMMC language.
 - [x] Confirm ITAR/EAR and foreign-national disclosure language.
 - [ ] Confirm UEI, SAM, SBIR.gov Company Registry, SBC Control ID, and DSIP access.
+- [x] Record strategic pivot: August 19 is a conditional/admin-gated track, not
+  the expiration date for the technology program.
 
 ## Truth Rule
 
 No proposal text may claim that Primus, CCF, or Chronos already demonstrates
 neuromorphic hardware. Current software may be used as evidence for an auditable
 continual-learning lifecycle and as a Phase I requirements/emulator path.
+
+While company readiness is blocked, the default SBIR-adjacent deliverable is the
+defense evidence package in
+`docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md`, not a cosmetic late-stage
+proposal sprint.
 
 The current CCF evidence boundary is prototype-level: source compiles, component
 smoke tests run, and a local ignored checkpoint can generate text. It does not

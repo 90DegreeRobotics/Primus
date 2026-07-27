@@ -64,6 +64,19 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
 - `docs/sbir/TECHNICAL_VOLUME_OUTLINE_2026-07-27.md` now provides a 15-page
   MDA Technical Volume outline in the official BAA section order, with claim
   tags, no-go boundaries, page budget, and blocked business/team placeholders.
+- `docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md` now source-audits the
+  post-deadline strategy and records the strategic pivot: the August 19, 2026
+  MDA submission remains a conditional/admin-gated track, while the default path
+  is to build a defense evidence package around measured shadow-learning runs,
+  raw benchmarks, failure records, and a non-confidential capability statement.
+- The pivot source audit verified MDA OSBP/SBIR outreach surfaces, MDA
+  prime/subcontracting and Small Business Advocacy Council paths, SBIR Phase III
+  follow-on treatment for derived awardee technology, FAR 15.603 limits on
+  unsolicited proposals for previously published requirements, DIU
+  solution-brief/prototype paths, DARPA MXO BAA timing/scope, and the 2026 Space
+  & Missile Defense Symposium date/location. It did not verify the pasted claim
+  that the MDA SBIR/STTR Program Office will participate at the 2026 SMD
+  Symposium.
 - `CCF_Sovereign` source import audit completed on July 27, 2026. The Python
   source/tests/training scripts compiled with exit code 0.
 - `python test_mvp.py` ran from `C:\Primus\CCF_Sovereign` and exited 0 in 43.2
@@ -98,6 +111,13 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   2345 status, CMMC/SPRS completion, Volume 7 foreign-affiliation disclosures,
   TABA decision, letters of support, and actual DSIP submission are not yet
   confirmed in this repo.
+- The August 19 prime-submission track should not be treated as active unless
+  the reopened gate in `SBIR_plan.md` Section 0A clears with operator/company
+  evidence.
+- The defense evidence package is not built yet. The repo still needs measured
+  shadow cycles, benchmark manifests, raw results, failure reports, latency and
+  retention/forgetting measurements, resource/cost measurements, and a
+  non-confidential capability statement before outreach can lead with data.
 - Public Topic Q&A should be rechecked before final submission. The public DSIP
   Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
   a nonzero topic question count.

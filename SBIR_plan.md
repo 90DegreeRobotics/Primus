@@ -32,6 +32,51 @@
 - [x] Reconciled `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` with the official package so stale DSIP blockers no longer survive.
 - [x] Created `docs/sbir/TECHNICAL_VOLUME_OUTLINE_2026-07-27.md` as a 15-page, claim-tagged Volume 2 outline in the official section order.
 - [ ] Confirm company administrative readiness: UEI, SAM, SBIR Company Registry, SBC Control ID, DSIP account, ownership/control, and employee count.
+- [x] Audited the post-deadline/pivot strategy against official sources in `docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md`.
+- [x] Recorded August 19 as a conditional/admin-gated proposal track, not the expiration date of the technology program.
+- [x] Established a defense evidence package backlog for future MDA, DIU, DARPA, prime-subcontract, and later SBIR/STTR paths.
+- [ ] Complete the operator/company administrative gate if the August 19 prime-submission track is reopened.
+
+---
+
+## 0A. Strategic Pivot As Of 2026-07-27
+
+The August 19, 2026 deadline remains the cutoff for this specific
+`MDA26BZ04-NV006` submission. It is not the end of the underlying technical
+path.
+
+Because NeuroCognica administrative readiness is not confirmed, the default
+strategy is now:
+
+1. Keep the MDA proposal package as a compliance and market-signal record.
+2. Do not burn the remaining time on proposal theater unless the administrative
+   gate clears.
+3. Build a defense evidence package around real shadow-learning runs,
+   benchmark manifests, failures, raw measurements, and reproducibility.
+4. Use that evidence for future MDA outreach, prime-subcontracting, DIU,
+   DARPA, or later SBIR/STTR opportunities.
+
+See `docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md` for the source audit,
+no-go rules, operator checklist, outreach rules, and evidence backlog.
+
+### Reopened August 19 Gate
+
+Only reopen a full prime-submission sprint if these become true fast enough to
+leave real proposal time:
+
+- [ ] confirmed U.S. for-profit applicant identity;
+- [ ] ownership/control and employee-count eligibility can be certified;
+- [ ] Login.gov access;
+- [ ] SAM.gov registration/UEI path submitted and moving;
+- [ ] SBIR.gov Company Registry and SBC Control ID;
+- [ ] DSIP account access;
+- [ ] DD Form 2345 certification or application evidence;
+- [ ] CMMC Level 1 / SPRS path;
+- [ ] credible Cost Volume assumptions;
+- [ ] partner/advisor gap either closed or explicitly carried as proposal risk.
+
+If those do not clear, the next real work is technical evidence, not a prettier
+PDF.
 
 ---
 
@@ -583,6 +628,10 @@ The official DSIP/MDA package confirms this topic is subject to ITAR/EAR restric
 - [x] Review MDA-specific cybersecurity/CMMC language.
 - [x] Review ITAR/EAR/foreign-national language.
 - [x] Establish compliance folder in repo.
+- [x] Establish pivot/evidence-package plan because administrative readiness is
+  currently blocked.
+- [ ] If pursuing August 19 as prime, clear every reopened August 19 gate in
+  Section 0A before final proposal sprint.
 
 ## Technical
 
@@ -596,6 +645,9 @@ The official DSIP/MDA package confirms this topic is subject to ITAR/EAR restric
 - [x] Draft TRL-6 roadmap.
 - [x] Draft Phase II hardware/software/material list.
 - [x] Draft DTE plan.
+- [ ] Create non-confidential defense evidence package structure.
+- [ ] Define first shadow-cycle manifest and parent/candidate benchmark schema.
+- [ ] Preserve raw failure reports instead of polishing them away.
 
 ## Proposal
 
@@ -679,6 +731,10 @@ This topic is unusually aligned with a NeuroCognica research path because MDA is
 
 The proposal should not sell wetware mysticism or claim a finished hardware system.
 
-It should sell a disciplined engineering progression:
+While company readiness remains blocked, it should guide a disciplined
+engineering progression and evidence package:
 
 **auditable continual learning → falsifiable software proof → neuromorphic translation → quantitative emulator → TRL-6 hardware roadmap → adaptive RF neuromorphic prototype.**
+
+The next concrete work is measured shadow integration and a non-confidential
+capability/evidence package, not submission theater.

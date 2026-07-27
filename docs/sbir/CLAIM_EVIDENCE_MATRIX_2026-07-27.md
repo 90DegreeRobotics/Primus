@@ -102,12 +102,16 @@ claim. When in doubt, downgrade the language.
 
 ## Immediate Next Work
 
-1. Produce a Technical Volume outline constrained to the 15-page MDA limit and
-   the claim/evidence matrix.
-2. Complete operator/company readiness: UEI, SAM, SBIR.gov Company Registry,
-   SBC Control ID, Login.gov/DSIP access, DD Form 2345, CMMC/SPRS, ownership,
-   employee count, TABA decision, and corporate official certification.
-3. Recheck public Topic Q&A before final submission.
-4. Harden `CCF_Sovereign/test_mvp.py` into a real failing test suite.
-5. Define the first Primus shadow-cycle manifest and benchmark skeleton.
-6. Identify RF/waveform and neuromorphic hardware partner candidates.
+1. Use `docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md` as the active strategy
+   gate while company readiness remains blocked.
+2. If the August 19 prime-submission track is reopened, complete
+   operator/company readiness: UEI, SAM, SBIR.gov Company Registry, SBC Control
+   ID, Login.gov/DSIP access, DD Form 2345, CMMC/SPRS, ownership, employee
+   count, TABA decision, and corporate official certification.
+3. Create the non-confidential defense evidence package structure named in the
+   pivot document.
+4. Define the first Primus shadow-cycle manifest and parent/candidate benchmark
+   skeleton.
+5. Harden `CCF_Sovereign/test_mvp.py` into a real failing test suite.
+6. Recheck public Topic Q&A before any final MDA submission.
+7. Identify RF/waveform and neuromorphic hardware partner candidates.
