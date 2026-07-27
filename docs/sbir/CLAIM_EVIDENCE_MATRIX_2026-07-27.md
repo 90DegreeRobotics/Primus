@@ -72,6 +72,7 @@ claim. When in doubt, downgrade the language.
 | Candidate promotion can be cryptographically bound to evidence. | `FUTURE WORK` | Charter/Annex and SBIR plan define provenance/Forever Law need. | No Forever Law event-chain integration verified in Primus path. | Implement and verify event-chain sealing for training/evaluation/promotion. |
 | The software lifecycle can be translated into neuromorphic hardware requirements. | `HYPOTHESIS` | `SBIR_plan.md` defines translation study and hardware requirement categories. | No measured lifecycle data, no hardware partner input, no physical substrate decision. | Phase I translation study from measured software runs to substrate requirements. |
 | Shadow-cycle manifest primitives exist. | `VERIFIED` | `CCF_Sovereign/src/evaluation/shadow_manifest.py` defines file evidence, benchmark cases, canonical manifest JSON, manifest SHA-256, and train/eval source-overlap warnings. `python test_shadow_manifest.py` exited 0. | No real shadow-cycle manifest from live artifacts; no parent/candidate runner; no benchmark scoring. | Generate first real manifest and build parent/candidate benchmark runner. |
+| No-training parent baseline result writer exists. | `VERIFIED` | `CCF_Sovereign/src/evaluation/shadow_baseline.py` consumes a validated manifest and responder callable, records raw responses, response hashes, pass/fail expected-string checks, responder errors, aggregate counts, latency, manifest hash, and explicit no-mutation/no-promotion flags. `python test_shadow_baseline.py` exited 0. | No live run against the ignored local checkpoint or other real parent artifact; no candidate comparison; expected-string checks are a first scoring primitive, not a complete benchmark suite. | Run the first live parent baseline from a real manifest, then add parent/candidate comparison and richer metrics. |
 | A substrate-independent neuromorphic emulator can model intended hardware behavior. | `FUTURE WORK` | `SBIR_plan.md` defines emulator scope. | No emulator exists in repo. | Build emulator with explicit time constants, energy/latency assumptions, and plasticity model. |
 | The program can produce a TRL-6 roadmap. | `HYPOTHESIS` | `SBIR_plan.md` drafts roadmap structure and DTE package. | Official MDA instructions, partner/lab assumptions, measured Phase I data. | Produce MDA deliverable package after DSIP and technical evidence gates. |
 | Phase II should demonstrate adaptive RF waveform generation on or with neuromorphic processing. | `FUTURE WORK` | `SBIR_plan.md` maps this to topic direction. | RF partner, waveform workload, neuromorphic substrate, representative RF test environment. | Add RF/waveform advisor or partner and define hardware-in-loop test concept. |
@@ -109,9 +110,8 @@ claim. When in doubt, downgrade the language.
    operator/company readiness: UEI, SAM, SBIR.gov Company Registry, SBC Control
    ID, Login.gov/DSIP access, DD Form 2345, CMMC/SPRS, ownership, employee
    count, TABA decision, and corporate official certification.
-3. Create the non-confidential defense evidence package structure named in the
-   pivot document.
-4. Generate the first real Primus shadow-cycle manifest from live artifacts.
+3. Generate the first real Primus shadow-cycle manifest from live artifacts.
+4. Run the no-training parent baseline against that real manifest.
 5. Define the first parent/candidate benchmark runner and scoring schema.
 6. Recheck public Topic Q&A before any final MDA submission.
 7. Identify RF/waveform and neuromorphic hardware partner candidates.

@@ -98,6 +98,11 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   `python test_shadow_manifest.py` exited 0 after testing file hashing,
   manifest save/load hash stability, duplicate benchmark-case rejection, and
   train/eval source-overlap rejection.
+- `CCF_Sovereign\src\evaluation\shadow_baseline.py` now provides a
+  no-training parent baseline result writer bound to a validated shadow
+  manifest hash, and `python test_shadow_baseline.py` exited 0 after testing
+  pass/fail scoring, raw result artifact writing, responder-error capture,
+  non-string response rejection, and explicit no-mutation/no-promotion flags.
 - `docs/defense_evidence/README.md` now defines the non-confidential defense
   evidence package structure and exclusions for private, controlled, checkpoint,
   and raw-corpus material.
@@ -136,10 +141,12 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   results, failure reports, latency and retention/forgetting measurements,
   resource/cost measurements, and a non-confidential capability statement before
   outreach can lead with data.
-- `CCF_Sovereign\src\evaluation\shadow_manifest.py` is a manifest/evidence
-  skeleton, not a shadow-learning runner. No candidate generation, training
-  subprocess observation, benchmark scoring, or atomic promotion is implemented
-  yet.
+- `CCF_Sovereign\src\evaluation\shadow_manifest.py` and
+  `CCF_Sovereign\src\evaluation\shadow_baseline.py` are manifest and
+  parent-baseline evidence primitives, not a full shadow-learning runner. No
+  live parent baseline against the ignored checkpoint, candidate generation,
+  training subprocess observation, parent/candidate benchmark comparison, rich
+  benchmark scoring, or atomic promotion is implemented yet.
 - Public Topic Q&A should be rechecked before final submission. The public DSIP
   Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
   a nonzero topic question count.

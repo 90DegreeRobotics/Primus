@@ -14,7 +14,12 @@ checkpoints, model weights, or training corpora here.
 - [x] Manifest code scaffold exists at
   `CCF_Sovereign/src/evaluation/shadow_manifest.py`.
 - [x] Manifest tests exist at `CCF_Sovereign/test_shadow_manifest.py`.
+- [x] No-training parent baseline result writer exists at
+  `CCF_Sovereign/src/evaluation/shadow_baseline.py`.
+- [x] No-training parent baseline tests exist at
+  `CCF_Sovereign/test_shadow_baseline.py`.
 - [ ] First real shadow-cycle manifest generated from live artifacts.
+- [ ] First live parent baseline run against a real parent artifact.
 - [ ] First parent/candidate benchmark run.
 - [ ] First raw failure report.
 - [ ] First retention/forgetting measurement.
@@ -46,7 +51,9 @@ Create these only when there is real content to preserve:
 
 ## First Build Target
 
-The next technical target is a dry-run shadow manifest using a tiny local parent
-artifact and benchmark cases, followed by a no-training parent baseline. That
-still will not prove autonomous learning. It will prove that the evidence
-pipeline can start recording the right facts.
+The next technical target is a live shadow manifest using a real local parent
+artifact and outreach-safe benchmark cases, followed by a no-training parent
+baseline against that same parent artifact. That still will not prove
+autonomous learning. It will prove that the evidence pipeline can start
+recording the right facts against real artifacts instead of only unit-test
+fixtures.

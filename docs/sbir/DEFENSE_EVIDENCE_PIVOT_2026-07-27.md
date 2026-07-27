@@ -159,6 +159,7 @@ Create these alongside the code. Do not wait until the next solicitation appears
 - [ ] Candidate lineage record.
 - [ ] Failure report template.
 - [ ] Adversarial/regression test history.
+- [x] No-training parent baseline result writer.
 - [ ] Retention and forgetting measurements.
 - [ ] Latency measurements.
 - [ ] Resource/cost measurements.
@@ -177,6 +178,9 @@ This is the path from "interesting architecture" to "show me the results."
 - [x] Add deterministic shadow-manifest code primitives for file hashes,
   benchmark cases, canonical JSON, manifest hashes, and train/eval source
   overlap rejection.
+- [x] Add a no-training parent baseline result writer that consumes a validated
+  manifest, records raw responses, scores expected-string checks, captures
+  responder errors, and marks mutation/promotion as forbidden.
 - [ ] Build a benchmark skeleton that compares parent vs candidate on identical
   frozen cases.
 - [ ] Run a no-training parent baseline.

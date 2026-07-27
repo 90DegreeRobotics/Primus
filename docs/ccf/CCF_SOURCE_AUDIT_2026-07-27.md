@@ -99,6 +99,30 @@ Observed results:
   exposed bad expected hash in the new test.
 - `python -m compileall -q ...` exited 0.
 
+## Shadow Baseline Update - 2026-07-27
+
+Commands run from `C:\Primus` or `C:\Primus\CCF_Sovereign`:
+
+```pwsh
+python -m compileall -q CCF_Sovereign\src CCF_Sovereign\test_shadow_baseline.py
+python test_shadow_baseline.py
+```
+
+Observed results:
+
+- `CCF_Sovereign\src\evaluation\shadow_baseline.py` now consumes a validated
+  `ShadowCycleManifest` and a parent responder callable.
+- It writes a raw JSON result artifact containing the run ID, cycle ID,
+  manifest SHA-256, parent file evidence, raw responses, response hashes,
+  expected-string pass/fail checks, responder errors, latency, aggregate counts,
+  and explicit no-mutation/no-promotion flags.
+- `CCF_Sovereign\test_shadow_baseline.py` exited 0 with four tests covering
+  pass/fail scoring, artifact hash fields, responder-exception capture,
+  non-string responder rejection, and preservation of manifest hash/no-mutation
+  semantics.
+- This is still parent-only evidence plumbing. It has not run against the real
+  ignored checkpoint and does not compare a candidate.
+
 ## Evidence Boundary
 
 The original `test_mvp.py` was weak smoke evidence because it caught substrate
@@ -161,6 +185,8 @@ self-optimization in production, sentience, or a verified learned Council voice.
 ## Next Work
 
 - Generate the first real shadow-cycle manifest from live artifacts.
+- Run the no-training parent baseline against the live manifest and ignored
+  local checkpoint or another real parent artifact.
 - Add a parent/candidate benchmark runner that consumes the manifest.
 - Add real GPU/load telemetry or mark the circadian trigger as simulated.
 - Build a nonblocking runtime harness that can prove idle transition and sleep

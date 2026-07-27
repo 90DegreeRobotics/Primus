@@ -35,6 +35,8 @@
 - [x] Audited the post-deadline/pivot strategy against official sources in `docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md`.
 - [x] Recorded August 19 as a conditional/admin-gated proposal track, not the expiration date of the technology program.
 - [x] Established a defense evidence package backlog for future MDA, DIU, DARPA, prime-subcontract, and later SBIR/STTR paths.
+- [x] Added a no-training parent baseline result writer and fail-hard tests for
+  the first benchmark-result artifact shape.
 - [ ] Complete the operator/company administrative gate if the August 19 prime-submission track is reopened.
 
 ---
@@ -240,6 +242,7 @@ This keeps the proposal technically honest while making the software prototype v
 - [ ] Produce isolated candidate workspace.
 - [ ] Run training as an observed child process.
 - [ ] Hash real candidate output from disk.
+- [x] Add a no-training parent baseline result writer bound to manifest hash.
 - [ ] Run parent and candidate against the same frozen benchmark.
 - [ ] Compute per-case and aggregate metrics from raw results.
 - [ ] Detect protected-task regression.
@@ -249,6 +252,10 @@ This keeps the proposal technically honest while making the software prototype v
 - [ ] Prove canonical Primus hash is unchanged by shadow operation.
 - [ ] Execute at least three complete shadow cycles.
 - [ ] Record failures rather than repairing them before audit.
+
+**Current earned evidence:** The repo now has manifest primitives and a
+parent-only no-training result writer with tests. It has not yet run against the
+real local checkpoint and does not compare parent versus candidate.
 
 **Deliverable:** Repeatable, auditable candidate-generation pipeline.
 
