@@ -40,11 +40,24 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   SBIR.gov topic page and Defense SBIR/STTR opportunity guidance on July 27,
   2026. DSIP and the MDA component-specific instructions remain controlling for
   final submission requirements.
+- The public DSIP topic API and official solicitation-document endpoints were
+  checked on July 27, 2026 for `MDA26BZ04-NV006`. The official DoW SBIR 2026
+  BAA Release 4 preface and MDA Release 4 component instructions downloaded as
+  PDFs, opened as valid PDFs, and were fingerprinted in
+  `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md`.
+- The official DSIP/MDA package confirms the August 19, 2026 12:00 p.m. ET
+  proposal cutoff, August 12, 2026 12:00 p.m. ET Topic Q&A cutoff, 15-page MDA
+  Technical Volume limit, six-month Phase I period, `$307,500` base Phase I cap
+  or `$314,000` with TABA, no Phase I Option, CMMC Level 1, ITAR/EAR
+  restriction, and DD Form 2345/evidence requirement.
 - `docs/sbir/README.md` now exists as the SBIR source/compliance register for
   this pursuit.
 - `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` now classifies current SBIR
   proposal claims as verified, weak evidence, hypothesis, future work, blocked,
   or no-go.
+- `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` now records official package
+  sources, fingerprints, confirmed submission facts, operator/company blockers,
+  and proposal no-go rules.
 - `CCF_Sovereign` source import audit completed on July 27, 2026. The Python
   source/tests/training scripts compiled with exit code 0.
 - `python test_mvp.py` ran from `C:\Primus\CCF_Sovereign` and exited 0 in 43.2
@@ -73,7 +86,12 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
 - Large/private local artifacts remain intentionally ignored: virtual
   environments, raw conversation exports, training data, generated maps, caches,
   and the local checkpoint.
-- SBIR administrative readiness remains operator/DSIP-blocked: UEI, SAM,
-  SBIR.gov Company Registry, SBC Control ID, DSIP account, exact cutoff time,
-  page limits, funding ceiling, and component-specific cybersecurity/export
-  language are not yet confirmed in this repo.
+- SBIR administrative readiness remains operator/company-blocked: UEI, SAM,
+  SBIR.gov Company Registry, SBC Control ID, Login.gov, DSIP account access,
+  ownership/control, employee count, corporate-official certification, DD Form
+  2345 status, CMMC/SPRS completion, Volume 7 foreign-affiliation disclosures,
+  TABA decision, letters of support, and actual DSIP submission are not yet
+  confirmed in this repo.
+- Public Topic Q&A should be rechecked before final submission. The public DSIP
+  Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
+  a nonzero topic question count.

@@ -11,7 +11,7 @@
 **Open date:** July 22, 2026
 **Proposal due date:** August 19, 2026
 
-> **Important verification note:** The official SBIR.gov topic page confirms the topic, status, dates, and MDA technical need. SBIR.gov also warns that topic pages are copies and may not be the latest version, so the Defense SBIR/STTR Innovation Portal (DSIP), the active BAA/CSO document, and the MDA component-specific instructions control final forms, format, deadlines, cost limits, and compliance requirements. The **$314,000 Phase I amount** and detailed Phase I/II/III wording below are currently corroborated by a secondary funding-opportunity source reproducing the topic details; confirm them in DSIP before proposal submission.
+> **Important verification note:** The official SBIR.gov topic page confirms the topic, status, dates, and MDA technical need. SBIR.gov also warns that topic pages are copies and may not be the latest version, so the Defense SBIR/STTR Innovation Portal (DSIP), the active BAA document, and the MDA component-specific instructions control final forms, format, deadlines, cost limits, and compliance requirements. On July 27, 2026, the public DSIP topic API and official PDF package confirmed the Release 4 BAA preface, MDA instructions, 12:00 p.m. ET cutoff, 15-page Technical Volume limit, six-month Phase I period, CMMC Level 1, ITAR/EAR restriction, and MDA Phase I cap of **$307,500 base / $314,000 with TABA**. See `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md`.
 
 ---
 
@@ -26,8 +26,9 @@
 - [x] Added proposal assembly content: innovation sentence, mission problem, hypothesis, objectives, milestones, success criteria, risk table, Phase II/III path, team gaps, and budget framework.
 - [x] Established `docs/sbir/` as the proposal compliance/source register folder.
 - [x] Created `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` to classify proposal claims against current evidence.
-- [ ] Download and archive the official DSIP 26.BZ BAA/CSO and MDA component-specific instructions.
-- [ ] Confirm exact Phase I ceiling, period of performance, cutoff time, page limits, and required forms inside DSIP.
+- [x] Downloaded, inspected, and fingerprinted the official public DSIP 26.BZ BAA preface and MDA component-specific instructions.
+- [x] Confirmed exact Phase I ceiling, period of performance, cutoff time, page limits, and required DSIP volumes from the official package.
+- [x] Created `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` for package fingerprints, confirmed facts, operator gates, and no-go rules.
 - [ ] Confirm company administrative readiness: UEI, SAM, SBIR Company Registry, SBC Control ID, DSIP account, ownership/control, and employee count.
 
 ---
@@ -48,13 +49,13 @@ The topic explicitly connects neuromorphic processing to the Missile Defense Sys
 
 ### Phase I funding
 
-**Reported Phase I amount: up to $314,000.**
+**Confirmed MDA Phase I ceiling:** `$307,500` base, or `$314,000` if TABA is included. MDA does not use a Phase I Option.
 
 ### Phase I purpose
 
 Phase I is intended to **demonstrate a pathway to a product** that addresses neuromorphic-hardware challenges and is relevant to Missile Defense sensing and real-time learning.
 
-Reported Phase I deliverables include:
+Official Phase I deliverables include:
 
 - assessment of performance, packaging, and survivability challenges;
 - roadmap to a **Technology Readiness Level (TRL) 6** product;
@@ -90,7 +91,7 @@ The topic states that solutions using **neuromorphic semiconductor chips with bi
 
 ### Phase III / dual-use direction
 
-The reported Phase III direction is production, test, and evaluation in a realistic system-level environment, potentially including airborne or space **low size, weight, and power (SWaP)** platforms.
+The official Phase III direction is production, test, and evaluation in a realistic system-level environment, potentially including airborne or space **low size, weight, and power (SWaP)** platforms.
 
 ---
 
@@ -145,10 +146,10 @@ This keeps the proposal technically honest while making the software prototype v
 - [ ] Confirm SBIR.gov Company Registry registration and SBC Control ID.
 - [ ] Confirm SAM.gov entity registration/status as required for federal contracting/award.
 - [ ] Create/link Defense SBIR/STTR Innovation Portal (DSIP) account.
-- [ ] Download and archive the current official 26.BZ BAA and MDA component instructions from DSIP.
-- [ ] Confirm exact submission cutoff time, not just the August 19 date.
-- [ ] Review current ITAR/EAR language and foreign-national disclosure requirements.
-- [ ] Review current CMMC/cybersecurity requirements in the MDA component instructions.
+- [x] Download and fingerprint the current official 26.BZ BAA preface and MDA component instructions from DSIP.
+- [x] Confirm exact submission cutoff time, not just the August 19 date.
+- [x] Review current ITAR/EAR language and foreign-national disclosure requirements.
+- [x] Review current CMMC/cybersecurity requirements in the MDA component instructions.
 - [ ] Decide whether any subcontractor, university, materials lab, RF lab, or neuromorphic-hardware partner is required.
 - [ ] Confirm Phase I workshare remains SBIR-compliant if subcontractors are used.
 - [x] Establish proposal repository folder.
@@ -485,7 +486,7 @@ If an adaptive learning system separates wake-state acquisition from controlled 
 | RF waveform expertise gap | High | Add RF/waveform partner or advisor before final submission | Partner letter, SOW, or named subcontract plan |
 | Hardware substrate expertise gap | High | Identify neuromorphic semiconductor/memristive/spiking hardware partner | Partner capability matrix and Phase II resource list |
 | Export-control or foreign-national restrictions | High | DSIP/MDA instruction review before team finalization | Compliance checklist and disclosure decision |
-| Cybersecurity/CMMC obligations underestimated | Medium | Treat component instructions as controlling | DSIP-derived requirements register |
+| Cybersecurity/CMMC obligations underestimated | Medium | Treat component instructions as controlling | `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` |
 | Energy/power claims become speculative | Medium | Use measured power only where instrumented; otherwise label as estimates | Instrumentation notes and model assumptions |
 | Proposal overclaims current Primus maturity | High | Maintain claim/evidence matrix and proposal red-team pass | Final review rejects unsupported claims |
 
@@ -527,7 +528,7 @@ Commercial dual-use paths:
 
 ## Budget framework
 
-Do not finalize budget until DSIP confirms the ceiling, performance period, indirect rules, allowable costs, and whether TABA or other assistance lines are available. If the `$314,000` Phase I ceiling is confirmed, use this as a planning skeleton only:
+Do not finalize the budget until the actual DSIP Cost Volume, indirect rates, allowable costs, and TABA decision are complete. The official MDA package confirms a `$307,500` base Phase I cap, or `$314,000` if TABA is included, so use this as a planning skeleton only:
 
 | Category | Planning intent |
 | --- | --- |
@@ -561,7 +562,7 @@ All applicants must register in the SBIR/STTR Company Registry. The registry use
 
 Defense SBIR/STTR proposal submission is handled through the **Defense SBIR/STTR Innovation Portal (DSIP)**. Always use the current DSIP 26.BZ announcement and MDA component instructions as the controlling submission documents.
 
-The topic is reported by a secondary reproduction as subject to ITAR/EAR restrictions. Treat export-control and foreign-national language as **must verify in DSIP/MDA instructions** before team finalization.
+The official DSIP/MDA package confirms this topic is subject to ITAR/EAR restrictions and CMMC Level 1. Treat export-control, foreign-national, DD Form 2345, and cybersecurity readiness as active compliance work before team finalization.
 
 ---
 
@@ -569,16 +570,16 @@ The topic is reported by a secondary reproduction as subject to ITAR/EAR restric
 
 ## Administrative
 
-- [ ] Pull official DSIP topic package.
-- [ ] Confirm exact funding ceiling in official component instructions.
-- [ ] Confirm exact deadline time.
-- [ ] Confirm Phase I period of performance.
+- [x] Pull official DSIP topic package.
+- [x] Confirm exact funding ceiling in official component instructions.
+- [x] Confirm exact deadline time.
+- [x] Confirm Phase I period of performance.
 - [ ] Verify UEI.
 - [ ] Verify SAM registration.
 - [ ] Verify SBIR Company Registry / SBC Control ID.
 - [ ] Verify DSIP access.
-- [ ] Review MDA-specific cybersecurity/CMMC language.
-- [ ] Review ITAR/EAR/foreign-national language.
+- [x] Review MDA-specific cybersecurity/CMMC language.
+- [x] Review ITAR/EAR/foreign-national language.
 - [x] Establish compliance folder in repo.
 
 ## Technical
@@ -627,6 +628,15 @@ The topic is reported by a secondary reproduction as subject to ITAR/EAR restric
 - Defense SBIR/STTR Opportunities portal:
   <https://www.defensesbirsttr.mil/SBIR-STTR/Opportunities/>
 
+- DSIP public topic search endpoint:
+  <https://www.dodsbirsttr.mil/topics/api/public/topics/search>
+
+- DSIP Release 4 BAA preface download endpoint:
+  <https://www.dodsbirsttr.mil/submissions/api/public/download/solicitationDocuments?solicitation=DOD_SBIR_2026_P1_CBZ&release=4&documentType=RELEASE_PREFACE>
+
+- DSIP MDA Release 4 component instructions download endpoint:
+  <https://www.dodsbirsttr.mil/submissions/api/public/download/solicitationDocuments?solicitation=DOD_SBIR_2026_P1_CBZ&documentType=INSTRUCTIONS&component=MDA&release=4>
+
 - SBIR.gov Company Registration:
   <https://app.www.sbir.gov/company-registration/overview>
 
@@ -638,7 +648,7 @@ The topic is reported by a secondary reproduction as subject to ITAR/EAR restric
 - BW&CO — Neuromorphic Hardware, MDA26BZ04-NV006:
   <https://www.bwcoconsulting.com/fod/mda26bz04-nv006>
 
-This secondary source currently reproduces the Phase I/II/III technical detail and reports the Phase I funding amount as **$314,000**. Confirm the amount and all submission requirements in DSIP before proposal submission.
+This secondary source reproduced useful topic details during the first pass, but it is no longer controlling for proposal requirements. Use the official DSIP package and `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md`.
 
 ---
 
@@ -652,11 +662,11 @@ This secondary source currently reproduces the Phase I/II/III technical detail a
 | Open July 22, 2026 | High | Official SBIR.gov |
 | Due August 19, 2026 | High | Official SBIR.gov |
 | MDA need: distributed sensing / real-time learning / low latency / high throughput | High | Official SBIR.gov |
-| Phase I amount $314,000 | Medium pending DSIP confirmation | Current secondary topic reproduction |
-| Detailed Phase I/II/III deliverables | Medium-high pending DSIP confirmation | Current secondary reproduction of topic text |
+| Phase I amount `$307,500` base / `$314,000` with TABA | High | Official MDA Release 4 component instructions |
+| Detailed Phase I/II/III deliverables | High | Official DSIP topic detail and MDA Release 4 component instructions |
 | SBIR eligibility basics | High | SBIR.gov/SBA |
 | SBIR Phase I two-thirds workshare | High | SBIR.gov FAQ |
-| Exact MDA proposal format/page limits/cyber requirements | Must verify | Current DSIP 26.BZ component instructions control |
+| Exact MDA proposal format/page limits/cyber requirements | High for public-package facts; operator action still required | Official DoW BAA preface and MDA Release 4 component instructions |
 
 ---
 
