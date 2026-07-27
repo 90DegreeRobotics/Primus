@@ -36,11 +36,14 @@ claim. When in doubt, downgrade the language.
 | Claim | Status | Current Evidence | Missing Evidence | Proposed Phase I Proof / Next Gate |
 | --- | --- | --- | --- | --- |
 | MDA26BZ04-NV006 exists as a neuromorphic hardware topic. | `VERIFIED` | `SBIR_plan.md` records official SBIR.gov topic check on 2026-07-27; `docs/sbir/README.md` source register points to SBIR.gov topic page. | None for topic existence. | Preserve source link and date in proposal source register. |
-| Topic status, release date, open date, and due date are known from SBIR.gov. | `VERIFIED` | `SBIR_plan.md` lists status open, release 2026-07-01, open 2026-07-22, due 2026-08-19. | Exact cutoff time is not confirmed. | Confirm cutoff time in DSIP/MDA component instructions before submission. |
-| DSIP and MDA component instructions control final submission requirements. | `VERIFIED` | `SBIR_plan.md` and `docs/sbir/README.md` explicitly preserve this control hierarchy. | Actual DSIP package is not archived in repo. | Download official 26.BZ BAA/CSO and MDA component instructions. |
-| Phase I amount is up to $314,000. | `WEAK EVIDENCE` | `SBIR_plan.md` says this is from a secondary reproduction. | Official DSIP/MDA confirmation. | Confirm in DSIP before budget language is finalized. |
-| Company is administratively ready to submit. | `BLOCKED` | `STATUS.md` and `docs/sbir/README.md` list UEI, SAM, Company Registry, SBC Control ID, DSIP access, deadline, page limits, and cyber/export language as unconfirmed. | Operator/company records and DSIP access. | Complete administrative readiness checklist and archive non-sensitive proof. |
-| ITAR/EAR/CMMC language is known. | `BLOCKED` | `SBIR_plan.md` marks export-control and cybersecurity language as DSIP/MDA must-verify. | Official component instructions and team/foreign-national facts. | Create compliance memo after DSIP package review. |
+| Topic status, release date, open date, and proposal cutoff are known from official public sources. | `VERIFIED` | `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` records SBIR.gov and DSIP evidence: release 2026-07-01, open 2026-07-22, proposal cutoff 2026-08-19 at 12:00 p.m. ET. | None for public-package date/cutoff facts. | Recheck DSIP package on submission day before final certification. |
+| DSIP and MDA component instructions control final submission requirements. | `VERIFIED` | `SBIR_plan.md`, `docs/sbir/README.md`, and `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` preserve the control hierarchy and official PDF fingerprints. | None for public package access. | Use the compliance register as the proposal gate; recheck before submission. |
+| Official DSIP package is accessible and fingerprinted. | `VERIFIED` | `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` records the BAA preface and MDA instructions URLs, byte counts, page counts, and SHA-256 hashes. | Local PDFs are temp-only, not committed. | Redownload from official URLs if content must be inspected again. |
+| MDA Phase I amount is `$307,500` base or `$314,000` with TABA. | `VERIFIED` | `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` records the official MDA Release 4 component instruction language. | Actual DSIP Cost Volume and TABA decision. | Build budget only after company rates and TABA decision are known. |
+| MDA Technical Volume limit and format are known. | `VERIFIED` | Compliance register records 15-page limit, 10-point minimum font, 8.5 x 11 inch paper, one-inch margins, consecutive pages, header requirements, and no locked/encrypted/active-media uploads. | Actual final Volume 2 page count. | Check generated proposal PDF after DSIP upload/export and reject if over 15 pages. |
+| ITAR/EAR/CMMC language is known from the official package. | `VERIFIED` | Compliance register records DSIP `itar=true`, MDA export-control language, CMMC Level 1, DD Form 2345/evidence requirement, and foreign-national disclosure constraints. | Company/team-specific DD Form 2345 status, CMMC/SPRS completion, and foreign-national disclosures. | Complete operator/company readiness gates before submission. |
+| Public Topic Q&A is fully reconciled. | `WEAK EVIDENCE` | Public Q&A endpoint returned `[]`, but DSIP topic metadata showed a nonzero topic question count. | Resolve discrepancy by checking DSIP UI/API again before submission. | Recheck Topic Q&A and update compliance register if answers appear. |
+| Company is administratively ready to submit. | `BLOCKED` | `STATUS.md` and the compliance register list UEI, SAM, Company Registry, SBC Control ID, Login.gov, DSIP access, DD Form 2345, CMMC/SPRS, ownership/control, employee count, TABA, and corporate-official certification as unverified. | Operator/company records and DSIP access. | Complete administrative readiness checklist and archive non-sensitive proof. |
 
 ## Current Technical Evidence Claims
 
@@ -84,9 +87,9 @@ claim. When in doubt, downgrade the language.
 
 ## Minimum Proposal Acceptance Gates
 
-- [ ] DSIP 26.BZ BAA/CSO and MDA component instructions archived or summarized
-  in a non-sensitive compliance memo.
-- [ ] Exact deadline time, page limits, funding ceiling, period of performance,
+- [x] DSIP 26.BZ BAA and MDA component instructions summarized and
+  fingerprinted in a non-sensitive compliance register.
+- [x] Exact deadline time, page limits, funding ceiling, period of performance,
   required forms, cybersecurity, and export language confirmed.
 - [ ] Company readiness confirmed: UEI, SAM, SBIR.gov Company Registry, SBC
   Control ID, DSIP access, ownership/control, and employee count.
@@ -99,8 +102,12 @@ claim. When in doubt, downgrade the language.
 
 ## Immediate Next Work
 
-1. Pull official DSIP package and component instructions.
-2. Build a Phase I compliance register from the official package.
-3. Harden `CCF_Sovereign/test_mvp.py` into a real failing test suite.
-4. Define the first Primus shadow-cycle manifest and benchmark skeleton.
-5. Identify RF/waveform and neuromorphic hardware partner candidates.
+1. Produce a Technical Volume outline constrained to the 15-page MDA limit and
+   the claim/evidence matrix.
+2. Complete operator/company readiness: UEI, SAM, SBIR.gov Company Registry,
+   SBC Control ID, Login.gov/DSIP access, DD Form 2345, CMMC/SPRS, ownership,
+   employee count, TABA decision, and corporate official certification.
+3. Recheck public Topic Q&A before final submission.
+4. Harden `CCF_Sovereign/test_mvp.py` into a real failing test suite.
+5. Define the first Primus shadow-cycle manifest and benchmark skeleton.
+6. Identify RF/waveform and neuromorphic hardware partner candidates.

@@ -29,6 +29,8 @@
 - [x] Downloaded, inspected, and fingerprinted the official public DSIP 26.BZ BAA preface and MDA component-specific instructions.
 - [x] Confirmed exact Phase I ceiling, period of performance, cutoff time, page limits, and required DSIP volumes from the official package.
 - [x] Created `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` for package fingerprints, confirmed facts, operator gates, and no-go rules.
+- [x] Reconciled `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` with the official package so stale DSIP blockers no longer survive.
+- [x] Created `docs/sbir/TECHNICAL_VOLUME_OUTLINE_2026-07-27.md` as a 15-page, claim-tagged Volume 2 outline in the official section order.
 - [ ] Confirm company administrative readiness: UEI, SAM, SBIR Company Registry, SBC Control ID, DSIP account, ownership/control, and employee count.
 
 ---
@@ -597,6 +599,7 @@ The official DSIP/MDA package confirms this topic is subject to ITAR/EAR restric
 
 ## Proposal
 
+- [x] Technical Volume outline.
 - [x] One-sentence innovation.
 - [x] MDA mission problem.
 - [x] Technical hypothesis.

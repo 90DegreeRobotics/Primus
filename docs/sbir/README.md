@@ -22,8 +22,9 @@ for the MDA26BZ04-NV006 neuromorphic hardware SBIR pursuit.
 | `https://www.sbir.gov/faq/all` | Checked 2026-07-27 | SBIR eligibility, company registry, subcontract/workshare basics |
 | `https://www.bwcoconsulting.com/fod/mda26bz04-nv006` | Secondary, checked 2026-07-27 | Non-controlling mirror only; DSIP/MDA package now controls |
 | `docs/ccf/CCF_SOURCE_AUDIT_2026-07-27.md` | Checked 2026-07-27 | Current Primus/CCF technical source baseline and claim limits |
-| `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` | Checked 2026-07-27 | Proposal claim classification, missing evidence, no-go claims, and acceptance gates |
+| `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` | Updated 2026-07-27 | Proposal claim classification, missing evidence, no-go claims, and acceptance gates |
 | `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` | Checked 2026-07-27 | DSIP package fingerprints, confirmed submission facts, operator-blocked gates, and no-go rules |
+| `docs/sbir/TECHNICAL_VOLUME_OUTLINE_2026-07-27.md` | Created 2026-07-27 | 15-page Volume 2 outline in the official section order with claim tags and no-go boundaries |
 
 ## Blocking Gates
 
@@ -49,6 +50,7 @@ prove product readiness, RF waveform adaptation, neuromorphic hardware, or a
 verified learned Council persona.
 
 Before drafting proposal text, check
-`docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md`. Present-tense claims must map
-to `VERIFIED` rows, weak prototype claims must be labeled preliminary, and
+`docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` and
+`docs/sbir/TECHNICAL_VOLUME_OUTLINE_2026-07-27.md`. Present-tense claims must
+map to `VERIFIED` rows, weak prototype claims must be labeled preliminary, and
 `NO-GO` rows must not appear as technical claims.

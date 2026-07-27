@@ -58,6 +58,12 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
 - `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` now records official package
   sources, fingerprints, confirmed submission facts, operator/company blockers,
   and proposal no-go rules.
+- `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` has been reconciled with
+  the official DSIP/MDA compliance register so package facts are no longer
+  mislabeled as secondary, weak, or blocked.
+- `docs/sbir/TECHNICAL_VOLUME_OUTLINE_2026-07-27.md` now provides a 15-page
+  MDA Technical Volume outline in the official BAA section order, with claim
+  tags, no-go boundaries, page budget, and blocked business/team placeholders.
 - `CCF_Sovereign` source import audit completed on July 27, 2026. The Python
   source/tests/training scripts compiled with exit code 0.
 - `python test_mvp.py` ran from `C:\Primus\CCF_Sovereign` and exited 0 in 43.2
