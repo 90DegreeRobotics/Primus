@@ -29,11 +29,24 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   and `C:\corpus\THE_CHARTER_FOUNDATIONS_ANNEX.md`.
 - Two orphaned Python processes from an interrupted audit run were stopped:
   `src\main.py` and `python -u src\main.py`.
+- `SBIR_plan.md` was audited after the builder completed. It began as untracked
+  builder residue containing a Python wrapper, stale local artifact path,
+  broken sandbox download link, and chat-response tail. It has been converted
+  into a direct Markdown planning document with source-confidence boundaries.
+- The MDA neuromorphic hardware topic was rechecked against the official
+  SBIR.gov topic page and Defense SBIR/STTR opportunity guidance on July 27,
+  2026. DSIP and the MDA component-specific instructions remain controlling for
+  final submission requirements.
+- `docs/sbir/README.md` now exists as the SBIR source/compliance register for
+  this pursuit.
 
 ## Not Yet Verified
 
 - No full source import has been performed.
 - No product capability is marked live from this root status file.
-- The active builder's in-progress work has not been audited or staged.
 - `CCF_Sovereign` runtime and checkpoint claims require a separate audit before
   they can be treated as current repo truth.
+- SBIR administrative readiness remains operator/DSIP-blocked: UEI, SAM,
+  SBIR.gov Company Registry, SBC Control ID, DSIP account, exact cutoff time,
+  page limits, funding ceiling, and component-specific cybersecurity/export
+  language are not yet confirmed in this repo.
