@@ -157,6 +157,31 @@ Observed results:
 - Raw responses remain local/ignored. Committed summaries preserve hashes,
   missing criteria, and latency without publishing raw checkpoint outputs.
 
+## Shadow Compare Gate Update - 2026-07-27
+
+Commands run from `C:\Primus` or `C:\Primus\CCF_Sovereign`:
+
+```pwsh
+python -m compileall -q CCF_Sovereign\src CCF_Sovereign\test_shadow_compare.py
+python test_shadow_compare.py
+```
+
+Observed results:
+
+- `CCF_Sovereign\src\evaluation\shadow_compare.py` now compares
+  manifest-bound parent and candidate result JSON artifacts.
+- The gate rejects manifest SHA-256 mismatch, cycle ID mismatch, and case-set
+  mismatch before computing a verdict.
+- It computes pass delta, recovered failures, protected-task regressions, new
+  errors, per-case latency deltas, and mean case-latency delta without emitting
+  raw response text.
+- `CCF_Sovereign\test_shadow_compare.py` exited 0 with six fixture tests
+  covering candidate improvement, protected-regression rejection, new-error
+  rejection, manifest mismatch rejection, case-set mismatch rejection, and
+  comparison artifact writing.
+- No real candidate result exists yet. This is a referee gate, not proof of
+  candidate improvement.
+
 ## Evidence Boundary
 
 The original `test_mvp.py` was weak smoke evidence because it caught substrate
@@ -219,7 +244,8 @@ self-optimization in production, sentience, or a verified learned Council voice.
 
 ## Next Work
 
-- Add a parent/candidate benchmark runner that consumes the frozen manifest.
+- Generate a candidate result artifact from the frozen manifest and run it
+  through the comparison gate.
 - Add richer scoring that can judge quality without committing raw private
   responses.
 - Add real GPU/load telemetry or mark the circadian trigger as simulated.

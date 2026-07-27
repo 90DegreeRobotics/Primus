@@ -160,6 +160,7 @@ Create these alongside the code. Do not wait until the next solicitation appears
 - [x] First parent-baseline failure report.
 - [ ] Adversarial/regression test history.
 - [x] No-training parent baseline result writer.
+- [x] Parent/candidate comparison gate.
 - [ ] Retention and forgetting measurements.
 - [ ] Latency measurements.
 - [x] First live parent-baseline latency measurement.
@@ -183,12 +184,12 @@ This is the path from "interesting architecture" to "show me the results."
 - [x] Add a no-training parent baseline result writer that consumes a validated
   manifest, records raw responses, scores expected-string checks, captures
   responder errors, and marks mutation/promotion as forbidden.
-- [ ] Build a benchmark skeleton that compares parent vs candidate on identical
+- [x] Build a benchmark skeleton that compares parent vs candidate on identical
   frozen cases.
 - [x] Run a no-training parent baseline.
 - [ ] Run Shadow Run 001 and preserve failure if it fails.
 - [ ] Run at least three complete shadow cycles before claiming repeatability.
-- [ ] Add regression rejection criteria before any candidate promotion work.
+- [x] Add regression rejection criteria before any candidate promotion work.
 - [ ] Measure retention, forgetting, latency, runtime, memory/checkpoint growth,
   and compute utilization.
 - [ ] Only after measured software cycles exist, draft neuromorphic emulator

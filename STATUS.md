@@ -114,6 +114,11 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   `docs/defense_evidence/local_runs/shadow-001-parent-baseline/`; committed
   summaries exist under `docs/defense_evidence/benchmarks/` and
   `docs/defense_evidence/failures/`.
+- `CCF_Sovereign\src\evaluation\shadow_compare.py` now provides a
+  parent/candidate comparison gate for manifest-bound result artifacts, and
+  `python test_shadow_compare.py` exited 0 after testing candidate improvement,
+  protected-task regression rejection, new-error rejection, manifest mismatch
+  rejection, case-set mismatch rejection, and comparison artifact writing.
 - `docs/defense_evidence/README.md` now defines the non-confidential defense
   evidence package structure and exclusions for private, controlled, checkpoint,
   and raw-corpus material.
@@ -148,15 +153,16 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   the reopened gate in `SBIR_plan.md` Section 0A clears with operator/company
   evidence.
 - The defense evidence package has its first live parent-baseline failure
-  record, but it still needs candidate benchmark results, richer benchmark
-  scoring, retention/forgetting measurements, resource/cost measurements, and a
-  non-confidential capability statement before outreach can lead with data.
+  record and a parent/candidate comparison gate, but it still needs real
+  candidate benchmark results, richer benchmark scoring, retention/forgetting
+  measurements, resource/cost measurements, and a non-confidential capability
+  statement before outreach can lead with data.
 - `CCF_Sovereign\src\evaluation\shadow_manifest.py` and
   `CCF_Sovereign\src\evaluation\shadow_baseline.py` are manifest and
-  parent-baseline evidence primitives, not a full shadow-learning runner. No
-  candidate generation, training subprocess observation, parent/candidate
-  benchmark comparison, rich benchmark scoring, or atomic promotion is
-  implemented yet.
+  parent-baseline, and comparison evidence primitives, not a full
+  shadow-learning runner. No candidate generation, training subprocess
+  observation, live parent/candidate benchmark comparison, rich benchmark
+  scoring, or atomic promotion is implemented yet.
 - Public Topic Q&A should be rechecked before final submission. The public DSIP
   Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
   a nonzero topic question count.

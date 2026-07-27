@@ -39,6 +39,7 @@
   the first benchmark-result artifact shape.
 - [x] Ran the first live no-training parent baseline against the ignored local
   checkpoint and preserved the failed protected-case result as evidence.
+- [x] Added a parent/candidate comparison gate before candidate generation.
 - [ ] Complete the operator/company administrative gate if the August 19 prime-submission track is reopened.
 
 ---
@@ -247,8 +248,9 @@ This keeps the proposal technically honest while making the software prototype v
 - [x] Add a no-training parent baseline result writer bound to manifest hash.
 - [x] Run the no-training parent baseline against the frozen parent checkpoint.
 - [ ] Run parent and candidate against the same frozen benchmark.
-- [ ] Compute per-case and aggregate metrics from raw results.
-- [ ] Detect protected-task regression.
+- [x] Add a gate that computes per-case and aggregate comparison metrics from
+  parent/candidate result artifacts.
+- [x] Add protected-task regression detection to the comparison gate.
 - [ ] Detect train/eval leakage from actual manifests.
 - [ ] Verify candidate hash at final decision.
 - [ ] Seal cycle through Forever Law.
@@ -259,7 +261,8 @@ This keeps the proposal technically honest while making the software prototype v
 **Current earned evidence:** The repo now has manifest primitives, a parent-only
 no-training result writer with tests, and a live parent baseline against the
 ignored local checkpoint. The first baseline passed `0/3` protected
-expected-text checks. It still does not compare parent versus candidate.
+expected-text checks. The comparison gate exists, but no real candidate result
+has been generated or compared yet.
 
 **Deliverable:** Repeatable, auditable candidate-generation pipeline.
 
