@@ -1,0 +1,62 @@
+# Python environments and caches
+.venv/
+**/venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local configuration and secrets
+.env
+.env.*
+*.key
+*.pem
+*.seed
+
+# Model weights, checkpoints, and large binaries
+*.gguf
+*.safetensors
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.bin
+checkpoints/
+**/checkpoints/
+
+# Local corpus exports and derived training payloads
+NeuroCognica_Primus/convos/
+**/training/training_data/*.jsonl
+**/training/training_data/*.manifest.json
+
+# Generated maps, reports, logs, and process state
+/primus-map.txt
+/primus-tree.txt
+*.log
+*.pid
+reports/*.json
+!reports/.gitkeep
+
+# Build, scratch, and generated output
+out/
+renders/
+artifacts/
+tmp/
+tmp_*_probe/
+*_probe/
+test_output/
+
+# IDE and OS noise
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# Agent-local state
+.claude/
+.claire/
+.aider*

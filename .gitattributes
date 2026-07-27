@@ -1,0 +1,57 @@
+# Primus line-ending policy.
+#
+# Normalize text to LF in git history. Windows-only launch scripts keep CRLF so
+# cmd.exe and PowerShell handle them cleanly.
+
+* text=auto eol=lf
+
+# Explicit text classification.
+*.md        text eol=lf
+*.py        text eol=lf diff=python
+*.json      text eol=lf
+*.jsonl     text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.toml      text eol=lf
+*.txt       text eol=lf
+*.cfg       text eol=lf
+*.ini       text eol=lf
+*.sh        text eol=lf
+*.html      text eol=lf
+*.css       text eol=lf
+*.js        text eol=lf
+*.ts        text eol=lf
+*.tsx       text eol=lf
+
+# Windows scripts.
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# Binary assets and model artifacts.
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.webp      binary
+*.bmp       binary
+*.ico       binary
+*.mp4       binary
+*.webm      binary
+*.mov       binary
+*.wav       binary
+*.mp3       binary
+*.ogg       binary
+*.flac      binary
+*.zip       binary
+*.7z        binary
+*.tar       binary
+*.tar.gz    binary
+*.tgz       binary
+*.gguf      binary
+*.safetensors binary
+*.onnx      binary
+*.pt        binary
+*.pth       binary
+*.ckpt      binary
+*.bin       binary
