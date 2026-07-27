@@ -58,6 +58,12 @@ shadow-manifest evidence primitives.
 - `rg` overclaim/stale-language scans across CCF/SBIR/status surfaces.
 - `rg -n "[^\x00-\x7F]"` against new/modified code and new evidence docs; no
   matches in the checked new surfaces.
+- `git diff --check --cached`; exit 0.
+- `git commit --author "NeuroCognica <holtmichael1@gmail.com>" -m "test(ccf): harden component evidence" ...`
+- `git push origin main`; pushed `34a2eab..c4a9eec`.
+- `git rev-parse HEAD`; `c4a9eec4be5e3e290032b7fb3185dd308b6c7ebd`.
+- `git rev-parse origin/main`;
+  `c4a9eec4be5e3e290032b7fb3185dd308b6c7ebd`.
 
 ## What Was Not Run
 
@@ -103,7 +109,8 @@ Expected changed/untracked paths before staging:
 - `plan_2026-07-27_1202_ccf-hardening-shadow-evidence.md`
 - `handoff_codex_2026-07-27_ccf-hardening-shadow-evidence.md`
 
-Ignored local artifacts remain intentionally unstaged.
+Ignored local artifacts remain intentionally unstaged. The substantive hardening
+commit was pushed and verified before the final ledger-close update.
 
 ## Next Step
 

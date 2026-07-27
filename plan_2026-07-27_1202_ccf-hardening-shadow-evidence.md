@@ -1,7 +1,7 @@
 # Plan: CCF hardening and shadow evidence skeleton - 2026-07-27 12:02
 
 ## Status
-IN PROGRESS
+COMPLETE
 
 ## Goal
 Keep building the defense-relevant technical path by hardening the CCF smoke
@@ -70,8 +70,8 @@ and creating the first shadow-cycle evidence skeleton for future measured runs.
 - [x] Stage explicit paths.
 - [x] Run Python compile/test gates.
 - [x] Run `git diff --check --cached`.
-- [ ] Commit and push to `origin main`.
-- [ ] Verify `HEAD == origin/main`.
+- [x] Commit and push to `origin main`.
+- [x] Verify `HEAD == origin/main`.
 
 ## Test Gate
 
