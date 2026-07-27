@@ -54,6 +54,12 @@ baseline result artifacts.
 - `python test_shadow_compare.py`; 6 tests, exit 0.
 - `python test_mvp.py`; 6 tests, exit 0.
 - `rg` stale-language and non-ASCII checks against the new comparison surfaces.
+- `git diff --check --cached`; exit 0.
+- `git commit --author "NeuroCognica <holtmichael1@gmail.com>" -m "feat(ccf): add shadow comparison gate"`;
+  created `bcc49aa6c58015127b15ef5059e774c1df175614`.
+- `git push origin main`; pushed `69c83b3..bcc49aa`.
+- `git rev-parse HEAD`; `bcc49aa6c58015127b15ef5059e774c1df175614`.
+- `git rev-parse origin/main`; `bcc49aa6c58015127b15ef5059e774c1df175614`.
 
 ## What Was Not Run
 
@@ -74,7 +80,7 @@ baseline result artifacts.
 
 ## Dirty / Untracked State At Handoff Write
 
-Expected changed/untracked paths before staging:
+Expected paths staged and committed in the substantive comparison-gate commit:
 
 - `CCF_Sovereign/src/evaluation/__init__.py`
 - `CCF_Sovereign/src/evaluation/shadow_compare.py`
