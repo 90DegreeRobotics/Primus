@@ -46,6 +46,11 @@
 - `python test_shadow_manifest.py`; 4 tests, exit 0.
 - `python test_shadow_baseline.py`; 4 tests, exit 0.
 - `python test_mvp.py`; 6 tests, exit 0.
+- `git diff --check --cached`; exit 0.
+- `git commit --author "NeuroCognica <holtmichael1@gmail.com>" -m "feat(ccf): add shadow baseline runner"`; created `efe625cd80ae9a85abab041dad5ea2eb01da6a19`.
+- `git push origin main`; pushed `abc2484..efe625c`.
+- `git rev-parse HEAD`; `efe625cd80ae9a85abab041dad5ea2eb01da6a19`.
+- `git rev-parse origin/main`; `efe625cd80ae9a85abab041dad5ea2eb01da6a19`.
 
 ## What Was Not Run
 
@@ -67,7 +72,7 @@
 
 ## Dirty / Untracked State At Handoff Write
 
-Expected changed/untracked paths before staging:
+Expected paths staged and committed in the substantive runner commit:
 
 - `CCF_Sovereign/src/evaluation/__init__.py`
 - `CCF_Sovereign/src/evaluation/shadow_baseline.py`

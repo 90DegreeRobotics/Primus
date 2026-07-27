@@ -1,7 +1,7 @@
 # Plan: Shadow Baseline Runner - 2026-07-27 13:49
 
 ## Status
-IN PROGRESS
+COMPLETE
 
 ## Goal
 Add the first no-training shadow baseline runner for CCF evidence work. The
@@ -55,8 +55,8 @@ all claims scoped to component/evidence-pipeline proof.
 - [x] Stage explicit paths.
 - [x] Run Python compile/test gates.
 - [x] Run `git diff --check --cached`.
-- [ ] Commit and push to `origin main`.
-- [ ] Verify `HEAD == origin/main`.
+- [x] Commit and push to `origin main`.
+- [x] Verify `HEAD == origin/main`.
 
 ## Test Gate
 
