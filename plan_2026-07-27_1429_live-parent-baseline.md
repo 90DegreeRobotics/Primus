@@ -1,7 +1,7 @@
 # Plan: Live Parent Baseline - 2026-07-27 14:29
 
 ## Status
-IN PROGRESS
+COMPLETE
 
 ## Goal
 Build and run the first live no-training parent baseline against a real local
@@ -72,8 +72,8 @@ Local ignored outputs expected from the live run:
 - [x] Stage explicit paths.
 - [x] Run Python compile/test gates.
 - [x] Run `git diff --check --cached`.
-- [ ] Commit and push to `origin main`.
-- [ ] Verify `HEAD == origin/main`.
+- [x] Commit and push to `origin main`.
+- [x] Verify `HEAD == origin/main`.
 
 ## Test Gate
 

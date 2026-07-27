@@ -81,6 +81,12 @@ No raw model responses were committed.
 - `python test_shadow_baseline.py`; 4 tests, exit 0.
 - `python test_live_parent_baseline.py`; 4 tests, exit 0.
 - `python test_mvp.py`; 6 tests, exit 0.
+- `git diff --check --cached`; exit 0.
+- `git commit --author "NeuroCognica <holtmichael1@gmail.com>" -m "feat(ccf): run live parent baseline"`;
+  created `bec4b303d0bbba7a620609f6b64b76a4c89df5b5`.
+- `git push origin main`; pushed `ded3dd9..bec4b30`.
+- `git rev-parse HEAD`; `bec4b303d0bbba7a620609f6b64b76a4c89df5b5`.
+- `git rev-parse origin/main`; `bec4b303d0bbba7a620609f6b64b76a4c89df5b5`.
 
 ## What Was Not Run
 
@@ -107,7 +113,7 @@ No raw model responses were committed.
 
 ## Dirty / Untracked State At Handoff Write
 
-Expected changed/untracked paths before staging:
+Expected paths staged and committed in the substantive live-baseline commit:
 
 - `.gitignore`
 - `CCF_Sovereign/src/evaluation/live_parent_baseline.py`
