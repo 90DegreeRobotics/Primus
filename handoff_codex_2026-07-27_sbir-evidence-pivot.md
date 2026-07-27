@@ -53,6 +53,12 @@ defense evidence package while company/admin readiness remains blocked.
 - `git diff -- docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md docs/sbir/README.md docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md SBIR_plan.md STATUS.md plan_2026-07-27_1143_sbir-pivot-evidence-package.md`
 - `rg -n "SMD|SBIR/STTR Program Office|Defense Intelligence University|utm_source|94%|7 ms|Sorry, we already bought science|coffee thought" docs/sbir SBIR_plan.md STATUS.md`
 - `rg -n "[^\x00-\x7F]" docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md docs/sbir/README.md docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md SBIR_plan.md STATUS.md plan_2026-07-27_1143_sbir-pivot-evidence-package.md`
+- `git add -- SBIR_plan.md STATUS.md docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md docs/sbir/README.md docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md plan_2026-07-27_1143_sbir-pivot-evidence-package.md handoff_codex_2026-07-27_sbir-evidence-pivot.md`
+- `git diff --check --cached` - exit code 0.
+- `git commit --author "NeuroCognica <holtmichael1@gmail.com>" -m "docs(sbir): pivot to evidence package" ...`
+- `git push origin main`
+- `git rev-parse HEAD`
+- `git rev-parse origin/main`
 
 ## What Was Not Run
 
@@ -74,7 +80,7 @@ defense evidence package while company/admin readiness remains blocked.
   or hardware witness exists.
 - Public Topic Q&A discrepancy remains from earlier DSIP audit.
 
-## Dirty / Untracked State At Handoff Write
+## Dirty / Untracked State At Initial Handoff Write
 
 Expected docs-only tracked/untracked changes before staging:
 
@@ -86,11 +92,11 @@ Expected docs-only tracked/untracked changes before staging:
 - `plan_2026-07-27_1143_sbir-pivot-evidence-package.md`
 - `handoff_codex_2026-07-27_sbir-evidence-pivot.md`
 
-Ignored local artifacts remain intentionally unstaged.
+Ignored local artifacts remain intentionally unstaged. The substantive pivot
+commit was pushed and verified before the final ledger-close update.
 
 ## Next Step
 
-Stage only the docs paths above, run `git diff --check --cached`, commit, push
-`origin main`, and verify `HEAD == origin/main`. The next technical work should
-create the non-confidential evidence package structure and define the first
-shadow-cycle manifest plus parent/candidate benchmark skeleton.
+The next technical work should create the non-confidential evidence package
+structure and define the first shadow-cycle manifest plus parent/candidate
+benchmark skeleton.
