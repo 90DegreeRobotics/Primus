@@ -18,6 +18,7 @@ for the MDA26BZ04-NV006 neuromorphic hardware SBIR pursuit.
 | `https://www.defensesbirsttr.mil/SBIR-STTR/Opportunities/` | Checked 2026-07-27 | Defense SBIR/STTR submission rules and DSIP control warning |
 | `https://www.sbir.gov/faq/all` | Checked 2026-07-27 | SBIR eligibility, company registry, subcontract/workshare basics |
 | `https://www.bwcoconsulting.com/fod/mda26bz04-nv006` | Secondary, checked 2026-07-27 | Phase I amount and detailed Phase I/II/III reproduction pending DSIP confirmation |
+| `docs/ccf/CCF_SOURCE_AUDIT_2026-07-27.md` | Checked 2026-07-27 | Current Primus/CCF technical source baseline and claim limits |
 
 ## Blocking Gates
 
@@ -36,3 +37,8 @@ for the MDA26BZ04-NV006 neuromorphic hardware SBIR pursuit.
 No proposal text may claim that Primus, CCF, or Chronos already demonstrates
 neuromorphic hardware. Current software may be used as evidence for an auditable
 continual-learning lifecycle and as a Phase I requirements/emulator path.
+
+The current CCF evidence boundary is prototype-level: source compiles, component
+smoke tests run, and a local ignored checkpoint can generate text. It does not
+prove product readiness, RF waveform adaptation, neuromorphic hardware, or a
+verified learned Council persona.

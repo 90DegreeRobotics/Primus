@@ -35,7 +35,9 @@ NeuroCognica_Primus/convos/
 /primus-map.txt
 /primus-tree.txt
 *.log
+*.bak
 *.pid
+CCF_Sovereign/training_log.txt
 reports/*.json
 !reports/.gitkeep
 
