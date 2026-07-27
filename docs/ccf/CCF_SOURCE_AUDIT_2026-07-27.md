@@ -67,16 +67,49 @@ Observed results:
   normalization and 23.4 seconds after final whitespace normalization, using
   CUDA and the ignored local checkpoint.
 
+## Hardening Update - 2026-07-27
+
+Commands run from `C:\Primus` or `C:\Primus\CCF_Sovereign`:
+
+```pwsh
+python test_mvp.py
+python -m compileall -q CCF_Sovereign\src CCF_Sovereign\test_mvp.py CCF_Sovereign\test_shadow_manifest.py
+python test_shadow_manifest.py
+python test_mvp.py
+```
+
+Observed results:
+
+- The pre-hardening `python test_mvp.py` baseline still exited 0 and printed
+  `CORE TESTS PASSED - MVP IS READY`, confirming the false-green surface.
+- `test_mvp.py` was replaced with six assertion-backed `unittest` component
+  checks using a tiny CPU config.
+- The hardened `python test_mvp.py` exited 0. It verified config sanity,
+  tokenizer fallback without Hugging Face dependency, STEB high-surprise
+  gating, deterministic HRR identity-key round trip, tiny substrate forward
+  shapes/finite tensors, and real circadian sleep consolidation using the
+  AdamW fallback path when `galore_torch` is absent.
+- `CCF_Sovereign\src\lifecycles\circadian_controller.py` now creates a real
+  AdamW sleep optimizer fallback instead of only printing a fallback message.
+- `CCF_Sovereign\src\evaluation\shadow_manifest.py` and
+  `CCF_Sovereign\test_shadow_manifest.py` now define and test deterministic
+  shadow-cycle manifests, SHA-256 file evidence, duplicate benchmark-case
+  rejection, and train/eval source-overlap rejection.
+- `python test_shadow_manifest.py` exited 0 after correcting a deliberately
+  exposed bad expected hash in the new test.
+- `python -m compileall -q ...` exited 0.
+
 ## Evidence Boundary
 
-`test_mvp.py` proves that several components instantiate and can execute a small
-forward path: config, tokenizer, STEB buffer, holographic memory, custom Mamba
-substrate, and circadian controller initialization.
+The original `test_mvp.py` was weak smoke evidence because it caught substrate
+and circadian exceptions, printed skipped warnings, and still printed
+`CORE TESTS PASSED - MVP IS READY` at the end.
 
-It does not prove product readiness. The test catches substrate and circadian
-exceptions, prints skipped warnings, and still prints `CORE TESTS PASSED - MVP
-IS READY` at the end. Treat it as a weak smoke test until assertions and failure
-paths are hardened.
+The hardened `test_mvp.py` is now fail-hard component evidence. It proves that a
+tiny CPU configuration can instantiate and exercise selected components without
+silent skip-success behavior. It still does not prove product readiness,
+autonomous continual learning, reliable daemon behavior, RF waveform adaptation,
+neuromorphic hardware behavior, or learned Council persona quality.
 
 `test_inference.py` proves that the ignored checkpoint loads and produces text.
 It does not prove that Council agency, robust persona learning, or general
@@ -90,13 +123,15 @@ untrusted pickle execution risk.
 
 - `CCF_Sovereign/MVP_STATUS.md` contains historical overclaim language:
   `COMPLETE - ALL SYSTEMS OPERATIONAL`, `fully operational`, `MISSION
-  ACCOMPLISHED`, and `System is LIVE` style framing.
+  ACCOMPLISHED`, and `System is LIVE` style framing. It now has a current audit
+  warning at the top, but the historical language remains below it.
 - `CCF_Sovereign/README_MVP.md` correctly admits `Generative replay stubbed`.
 - `CCF_Sovereign/src/lifecycles/circadian_controller.py` has a placeholder GPU
   load implementation: `_get_gpu_load()` returns `0.05`.
-- The same controller prints `galore_torch not installed, using standard Adam`
-  on import failure, but no Adam fallback optimizer is created in that exception
-  branch.
+- The prior circadian controller printed `galore_torch not installed, using
+  standard Adam` on import failure, but did not create the fallback optimizer.
+  This was fixed on 2026-07-27; the fallback is now real AdamW component
+  behavior covered by `test_mvp.py`.
 - `CCF_Sovereign/src/main.py` drives the loop through blocking `input()`, so the
   idle/sleep behavior is not yet proven as a reliable daemon loop.
 - `CCF_Sovereign/requirements.txt` names `mamba-ssm` and `galore-torch`, but
@@ -125,8 +160,8 @@ self-optimization in production, sentience, or a verified learned Council voice.
 
 ## Next Work
 
-- Replace `test_mvp.py` print-only success with assertions and hard failures.
-- Add a real optimizer fallback or remove the Adam fallback message.
+- Generate the first real shadow-cycle manifest from live artifacts.
+- Add a parent/candidate benchmark runner that consumes the manifest.
 - Add real GPU/load telemetry or mark the circadian trigger as simulated.
 - Build a nonblocking runtime harness that can prove idle transition and sleep
   consolidation behavior.

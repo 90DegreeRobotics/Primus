@@ -645,7 +645,10 @@ The official DSIP/MDA package confirms this topic is subject to ITAR/EAR restric
 - [x] Draft TRL-6 roadmap.
 - [x] Draft Phase II hardware/software/material list.
 - [x] Draft DTE plan.
-- [ ] Create non-confidential defense evidence package structure.
+- [x] Create non-confidential defense evidence package structure.
+- [x] Add deterministic shadow-manifest code primitives for artifact hashing,
+  benchmark case records, manifest hashes, and train/eval source-overlap
+  rejection.
 - [ ] Define first shadow-cycle manifest and parent/candidate benchmark schema.
 - [ ] Preserve raw failure reports instead of polishing them away.
 

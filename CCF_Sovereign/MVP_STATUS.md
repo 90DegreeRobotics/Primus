@@ -1,3 +1,14 @@
+# MVP Delivery Status - Historical Builder Artifact
+
+> Current audit warning, 2026-07-27: this file is preserved as historical source
+> context, not current product truth. The root `STATUS.md` and
+> `docs/ccf/CCF_SOURCE_AUDIT_2026-07-27.md` supersede its original
+> "all systems operational" framing. `test_mvp.py` has since been hardened into
+> assertion-backed fail-hard component tests, but CCF is still a local prototype.
+> It does not yet prove product readiness, autonomous continual learning,
+> reliable daemon behavior, neuromorphic hardware, adaptive RF waveform
+> generation, or a verified learned Council persona.
+
 # 🎉 MVP DELIVERY STATUS
 
 ## ✅ COMPLETE - ALL SYSTEMS OPERATIONAL

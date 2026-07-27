@@ -154,7 +154,7 @@ Create these alongside the code. Do not wait until the next solicitation appears
 - [ ] Claim/evidence matrix refreshed after each measured run.
 - [ ] Reproduction instructions for every benchmark.
 - [ ] Immutable audit-report format.
-- [ ] Benchmark manifest schema.
+- [x] Benchmark manifest schema.
 - [ ] Raw benchmark result retention policy.
 - [ ] Candidate lineage record.
 - [ ] Failure report template.
@@ -165,6 +165,7 @@ Create these alongside the code. Do not wait until the next solicitation appears
 - [ ] Power measurements or explicit "not instrumented" notes.
 - [ ] Hardware translation roadmap.
 - [ ] Partner/outreach register.
+- [x] Non-confidential defense evidence package folder.
 
 ## First Technical Evidence Sequence
 
@@ -173,6 +174,9 @@ This is the path from "interesting architecture" to "show me the results."
 - [ ] Freeze the current `chronos_circadian` and Primus/CCF baseline.
 - [ ] Define a shadow-cycle manifest with parent hash, training traces,
   evaluation set, protected tasks, metric schema, and output paths.
+- [x] Add deterministic shadow-manifest code primitives for file hashes,
+  benchmark cases, canonical JSON, manifest hashes, and train/eval source
+  overlap rejection.
 - [ ] Build a benchmark skeleton that compares parent vs candidate on identical
   frozen cases.
 - [ ] Run a no-training parent baseline.

@@ -26,6 +26,10 @@ for the MDA26BZ04-NV006 neuromorphic hardware SBIR pursuit.
 | `docs/sbir/COMPLIANCE_REGISTER_2026-07-27.md` | Checked 2026-07-27 | DSIP package fingerprints, confirmed submission facts, operator-blocked gates, and no-go rules |
 | `docs/sbir/TECHNICAL_VOLUME_OUTLINE_2026-07-27.md` | Created 2026-07-27 | 15-page Volume 2 outline in the official section order with claim tags and no-go boundaries |
 | `docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md` | Created 2026-07-27 | Source-audited pivot from August 19 proposal race to defense evidence package while company/admin readiness is blocked |
+| `docs/defense_evidence/README.md` | Created 2026-07-27 | Non-confidential defense evidence package structure and exclusions |
+| `CCF_Sovereign/src/evaluation/shadow_manifest.py` | Created 2026-07-27 | Shadow-cycle manifest primitives for file hashes, benchmark cases, canonical JSON, manifest hashes, and train/eval source-overlap rejection |
+| `CCF_Sovereign/test_shadow_manifest.py` | Created 2026-07-27 | Tests for shadow manifest hashing, deterministic save/load, duplicate case rejection, and leakage rejection |
+| `CCF_Sovereign/test_mvp.py` | Hardened 2026-07-27 | Assertion-backed fail-hard component tests replacing print-only success behavior |
 | `https://www.mda.mil/business/SBIR/SBIR_STTR_programs.html` | Checked 2026-07-27 | MDA SBIR/STTR program focus, technology transition framing, Phase I/II/III overview |
 | `https://www.mda.mil/business/SBIR/resources.html` | Checked 2026-07-27 | MDA SBIR/STTR contacts and capability-briefing email |
 | `https://www.mda.mil/business/smallbus_programs.html` | Checked 2026-07-27 | MDA OSBP mission, SAM opportunity guidance, outreach email |
@@ -51,6 +55,8 @@ for the MDA26BZ04-NV006 neuromorphic hardware SBIR pursuit.
 - [ ] Confirm UEI, SAM, SBIR.gov Company Registry, SBC Control ID, and DSIP access.
 - [x] Record strategic pivot: August 19 is a conditional/admin-gated track, not
   the expiration date for the technology program.
+- [x] Create non-confidential defense evidence package structure.
+- [x] Add deterministic shadow-manifest primitives and tests.
 
 ## Truth Rule
 
@@ -63,10 +69,11 @@ defense evidence package in
 `docs/sbir/DEFENSE_EVIDENCE_PIVOT_2026-07-27.md`, not a cosmetic late-stage
 proposal sprint.
 
-The current CCF evidence boundary is prototype-level: source compiles, component
-smoke tests run, and a local ignored checkpoint can generate text. It does not
-prove product readiness, RF waveform adaptation, neuromorphic hardware, or a
-verified learned Council persona.
+The current CCF evidence boundary is prototype-level: source compiles,
+assertion-backed component tests run, shadow-manifest primitives are tested, and
+a local ignored checkpoint can generate text. It does not prove product
+readiness, RF waveform adaptation, neuromorphic hardware, or a verified learned
+Council persona.
 
 Before drafting proposal text, check
 `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` and

@@ -59,47 +59,79 @@ class CircadianController:
         """Enter Deep Sleep: Consolidate STEB via GaLore"""
         print("[Circadian] Entering DEEP SLEEP...")
 
+        if self.mind is None:
+            print("[Circadian] No mind attached, skipping consolidation")
+            return False
+
         if not hasattr(self, 'steb') or self.steb is None:
             print("[Circadian] No STEB buffer, skipping consolidation")
-            return
+            return False
 
         if len(self.steb) == 0:
             print("[Circadian] STEB empty, skipping consolidation")
-            return
+            return False
 
         print(f"[Circadian] Consolidating {len(self.steb)} episodes...")
 
         try:
-            from galore_torch import GaLoreAdamW
-            optimizer = GaLoreAdamW(
-                self.mind.backbone.parameters(),
-                lr=self.config.SLEEP_LEARNING_RATE,
-                rank=self.config.GALORE_RANK
-            )
+            optimizer, optimizer_name = self._build_sleep_optimizer()
+            print(f"[Circadian] Sleep optimizer: {optimizer_name}")
+            device = next(self.mind.parameters()).device
 
             num_sleep_epochs = 3
+            optimized_steps = 0
             for epoch in range(num_sleep_epochs):
                 episodes = self.steb.sample_batch(batch_size=8)
 
                 for ep in episodes:
+                    token_ids = ep.token_ids.to(device=device, dtype=torch.long)
+                    if token_ids.numel() < 2:
+                        continue
+
                     optimizer.zero_grad()
-                    logits, _, _ = self.mind(ep.token_ids.unsqueeze(0), compute_surprise=False)
+                    logits, _, _ = self.mind(token_ids.unsqueeze(0), compute_surprise=False)
                     loss = F.cross_entropy(
                         logits[:, :-1, :].reshape(-1, logits.size(-1)),
-                        ep.token_ids[1:].reshape(-1)
+                        token_ids[1:].reshape(-1)
                     )
                     loss.backward()
                     optimizer.step()
+                    optimized_steps += 1
 
                 print(f"[Circadian] Sleep epoch {epoch+1}/{num_sleep_epochs} complete")
 
+            if optimized_steps == 0:
+                print("[Circadian] No valid sleep episodes, skipping buffer clear")
+                return False
+
             self.steb.clear()
             print("[Circadian] Consolidation complete")
-
-        except ImportError:
-            print("[Circadian] galore_torch not installed, using standard Adam")
+            return True
         except Exception as e:
             print(f"[Circadian] Error during consolidation: {e}")
+            return False
+
+    def _build_sleep_optimizer(self):
+        """Build the sleep optimizer with a real AdamW fallback."""
+        try:
+            from galore_torch import GaLoreAdamW
+            return (
+                GaLoreAdamW(
+                    self.mind.backbone.parameters(),
+                    lr=self.config.SLEEP_LEARNING_RATE,
+                    rank=self.config.GALORE_RANK
+                ),
+                "GaLoreAdamW",
+            )
+        except ImportError:
+            return (
+                torch.optim.AdamW(
+                    self.mind.backbone.parameters(),
+                    lr=self.config.SLEEP_LEARNING_RATE,
+                    weight_decay=0.0,
+                ),
+                "AdamW fallback",
+            )
 
     def _initiate_wake_protocol(self):
         """Wake up and resume inference"""

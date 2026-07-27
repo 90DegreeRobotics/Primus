@@ -84,6 +84,23 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   whitespace normalization. Treat this as a component smoke test, not product
   readiness, because the script can skip failures and still print a success
   banner.
+- `CCF_Sovereign\test_mvp.py` was hardened on July 27, 2026 into six
+  assertion-backed `unittest` component checks using a tiny CPU config. The
+  hardened `python test_mvp.py` exited 0 and verified config sanity, tokenizer
+  fallback, STEB high-surprise gating, deterministic HRR identity-key round
+  trip, tiny substrate forward outputs, and real circadian sleep consolidation
+  through the AdamW fallback path.
+- `CCF_Sovereign\src\lifecycles\circadian_controller.py` now creates a real
+  AdamW sleep optimizer fallback when `galore_torch` is absent, instead of only
+  printing a fallback message.
+- `CCF_Sovereign\src\evaluation\shadow_manifest.py` now provides deterministic
+  JSON/SHA-256 shadow-cycle manifest primitives, and
+  `python test_shadow_manifest.py` exited 0 after testing file hashing,
+  manifest save/load hash stability, duplicate benchmark-case rejection, and
+  train/eval source-overlap rejection.
+- `docs/defense_evidence/README.md` now defines the non-confidential defense
+  evidence package structure and exclusions for private, controlled, checkpoint,
+  and raw-corpus material.
 - `python test_inference.py` ran from `C:\Primus\CCF_Sovereign` and exited 0 in
   34.7 seconds before whitespace normalization and 23.4 seconds after final
   whitespace normalization against the ignored local checkpoint
@@ -115,9 +132,14 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   the reopened gate in `SBIR_plan.md` Section 0A clears with operator/company
   evidence.
 - The defense evidence package is not built yet. The repo still needs measured
-  shadow cycles, benchmark manifests, raw results, failure reports, latency and
-  retention/forgetting measurements, resource/cost measurements, and a
-  non-confidential capability statement before outreach can lead with data.
+  shadow cycles from real artifacts, parent/candidate benchmark results, raw
+  results, failure reports, latency and retention/forgetting measurements,
+  resource/cost measurements, and a non-confidential capability statement before
+  outreach can lead with data.
+- `CCF_Sovereign\src\evaluation\shadow_manifest.py` is a manifest/evidence
+  skeleton, not a shadow-learning runner. No candidate generation, training
+  subprocess observation, benchmark scoring, or atomic promotion is implemented
+  yet.
 - Public Topic Q&A should be rechecked before final submission. The public DSIP
   Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
   a nonzero topic question count.
