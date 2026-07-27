@@ -1,0 +1,106 @@
+# SBIR Claim/Evidence Matrix - 2026-07-27
+
+## Purpose
+
+This matrix is the guardrail for proposal language on the MDA26BZ04-NV006
+Neuromorphic Hardware SBIR pursuit. It separates current repo evidence from
+proposal hypotheses and future work.
+
+No proposal text should promote a claim unless its row below supports that
+claim. When in doubt, downgrade the language.
+
+## Classification Vocabulary
+
+| Status | Meaning | Proposal Use |
+| --- | --- | --- |
+| `VERIFIED` | Checked against current repo files, recorded commands, or cited source register. | May be stated as current evidence, with scope limits. |
+| `WEAK EVIDENCE` | Some command or artifact exists, but the proof is smoke-level, unscored, local-only, or known to have false-green risk. | May be described as preliminary evidence only. |
+| `HYPOTHESIS` | Plausible technical thesis, not yet demonstrated in this repo. | May be framed as Phase I hypothesis or objective. |
+| `FUTURE WORK` | Required task not yet performed. | May appear only as planned work, milestone, or deliverable. |
+| `BLOCKED` | Requires operator, DSIP, administrative, partner, hardware, or external access not present in this repo. | Must stay on compliance/blocker lists until resolved. |
+| `NO-GO` | Unsupported or contradicted by current evidence. | Must not appear as a proposal claim. |
+
+## Proposal Language Rule
+
+- Use present tense only for `VERIFIED` rows.
+- Use "prototype", "smoke-tested", "source baseline", or "preliminary" for
+  `WEAK EVIDENCE` rows.
+- Use "Phase I will test", "Phase I will quantify", or "Phase I will produce"
+  for `HYPOTHESIS` and `FUTURE WORK` rows.
+- Do not use "sentient", "conscious hardware", "finished neuromorphic system",
+  "flawless integration", "zero resistance", "hardware demonstrated", or
+  "learned Council persona" unless a future audit adds direct evidence.
+
+## Opportunity And Compliance Claims
+
+| Claim | Status | Current Evidence | Missing Evidence | Proposed Phase I Proof / Next Gate |
+| --- | --- | --- | --- | --- |
+| MDA26BZ04-NV006 exists as a neuromorphic hardware topic. | `VERIFIED` | `SBIR_plan.md` records official SBIR.gov topic check on 2026-07-27; `docs/sbir/README.md` source register points to SBIR.gov topic page. | None for topic existence. | Preserve source link and date in proposal source register. |
+| Topic status, release date, open date, and due date are known from SBIR.gov. | `VERIFIED` | `SBIR_plan.md` lists status open, release 2026-07-01, open 2026-07-22, due 2026-08-19. | Exact cutoff time is not confirmed. | Confirm cutoff time in DSIP/MDA component instructions before submission. |
+| DSIP and MDA component instructions control final submission requirements. | `VERIFIED` | `SBIR_plan.md` and `docs/sbir/README.md` explicitly preserve this control hierarchy. | Actual DSIP package is not archived in repo. | Download official 26.BZ BAA/CSO and MDA component instructions. |
+| Phase I amount is up to $314,000. | `WEAK EVIDENCE` | `SBIR_plan.md` says this is from a secondary reproduction. | Official DSIP/MDA confirmation. | Confirm in DSIP before budget language is finalized. |
+| Company is administratively ready to submit. | `BLOCKED` | `STATUS.md` and `docs/sbir/README.md` list UEI, SAM, Company Registry, SBC Control ID, DSIP access, deadline, page limits, and cyber/export language as unconfirmed. | Operator/company records and DSIP access. | Complete administrative readiness checklist and archive non-sensitive proof. |
+| ITAR/EAR/CMMC language is known. | `BLOCKED` | `SBIR_plan.md` marks export-control and cybersecurity language as DSIP/MDA must-verify. | Official component instructions and team/foreign-national facts. | Create compliance memo after DSIP package review. |
+
+## Current Technical Evidence Claims
+
+| Claim | Status | Current Evidence | Missing Evidence | Proposed Phase I Proof / Next Gate |
+| --- | --- | --- | --- | --- |
+| Primus repo is under git governance on `main` with origin at `90DegreeRobotics/Primus.git`. | `VERIFIED` | `README.md`, `AGENTS.md`, `STATUS.md`, and pushed commits establish branch/remote rules. | None for repo governance. | Keep direct-main commit/push workflow and explicit staging. |
+| CCF first-party source is present in git. | `VERIFIED` | `docs/ccf/CCF_SOURCE_AUDIT_2026-07-27.md` lists imported CCF source/docs/tests; commit `6bad02e` imported it. | No missing evidence for source presence. | Treat as source baseline, not product proof. |
+| CCF Python source and scripts compile. | `VERIFIED` | Audit recorded `python -m compileall -q CCF_Sovereign\src CCF_Sovereign\training CCF_Sovereign\train.py CCF_Sovereign\test_mvp.py CCF_Sovereign\test_inference.py` exit code 0. | None for syntax compilation. | Re-run after Python changes. |
+| CCF component smoke path runs. | `WEAK EVIDENCE` | Audit recorded `python test_mvp.py` exit code 0; it instantiated config, tokenizer, STEB, holographic memory, custom Mamba substrate, and circadian controller. | Real assertions, hard failures, coverage of consolidation paths. | Harden `test_mvp.py` into a failing test suite and rerun. |
+| CCF checkpoint loads and generates text locally. | `WEAK EVIDENCE` | Audit recorded `python test_inference.py` exit code 0 using ignored local checkpoint with CUDA. | Scored benchmark, stable prompts/outputs, checkpoint provenance, safe `torch.load` mode. | Create scored inference/persona benchmark and checkpoint manifest. |
+| CCF has a verified learned Council persona. | `NO-GO` | Audit saw mixed output, corpus echo, topic drift, SQL fragment, box-drawing fragment, and no scored benchmark. | Direct scored persona benchmark with acceptance criteria. | Do not claim; propose benchmark as Phase I or internal hardening work. |
+| CCF is product-live or product-ready. | `NO-GO` | `STATUS.md` says no product capability is marked live; audit says prototype only. | End-to-end runtime witness, robust tests, nonblocking service harness, failure behavior. | Do not claim; use "local prototype" only. |
+| CCF demonstrates autonomous continual learning. | `NO-GO` | No training run, shadow cycle, or reliable sleep consolidation was executed. | Observed learning cycles with manifests, candidate outputs, benchmarks, and promotion/rejection records. | Phase I shadow-cycle proof. |
+| CCF demonstrates reliable sleep consolidation. | `NO-GO` | Audit found blocking `input()` loop, placeholder GPU load, missing `galore-torch`, and no real Adam fallback despite message. | Nonblocking harness, real idle telemetry, consolidation test with STEB data, optimizer proof. | Build runtime harness and consolidation test before claiming. |
+| Current repo contains a real training command and training code. | `WEAK EVIDENCE` | `CCF_Sovereign/train.py`, parser scripts, and requirements are imported. | No current training run; `training_data` is ignored/local; missing `galore-torch`; no manifest in git. | Run controlled training from frozen manifest and record output hashes. |
+| Current repo contains a canonical checkpoint/candidate format. | `WEAK EVIDENCE` | `test_inference.py` loads an ignored `.pt` checkpoint with `model_state_dict`, `training_turns`, and `epochs` keys. | Checkpoint is not in git; no manifest; no candidate schema; no safe unpickle policy. | Define candidate/checkpoint manifest and hashing policy. |
+| Root research documents support conceptual hardware mapping. | `WEAK EVIDENCE` | Root Markdown docs are imported as source notes. | Source claims not independently revalidated in this pass; some language is speculative. | Use as hypothesis context only; cite primary technical sources separately in proposal. |
+
+## Proposal Technical Claims
+
+| Claim | Status | Current Evidence | Missing Evidence | Proposed Phase I Proof / Next Gate |
+| --- | --- | --- | --- | --- |
+| NeuroCognica can propose an auditable continual-learning control layer for neuromorphic processors. | `HYPOTHESIS` | `SBIR_plan.md` defines the architecture story; CCF provides prototype source context; Charter/Annex define audit, authority, and memory doctrine. | No integrated shadow-learning loop yet. | Build and test shadow loop with frozen manifests, benchmark evidence, and rejection/promotion logs. |
+| Separating wake acquisition from controlled consolidation can reduce silent regression. | `HYPOTHESIS` | CCF design docs and SBIR plan describe the lifecycle. | No controlled experiment comparing ordinary adaptation vs circadian lifecycle. | Run continual-learning control experiment and report retention/regression metrics. |
+| Candidate states can be validated against protected prior capability before promotion. | `FUTURE WORK` | `SBIR_plan.md` defines this as Phase 2/4 work. | Parent/candidate benchmark harness, protected-task suite, atomic promotion mechanism. | Execute at least three complete shadow cycles. |
+| Candidate promotion can be cryptographically bound to evidence. | `FUTURE WORK` | Charter/Annex and SBIR plan define provenance/Forever Law need. | No Forever Law event-chain integration verified in Primus path. | Implement and verify event-chain sealing for training/evaluation/promotion. |
+| The software lifecycle can be translated into neuromorphic hardware requirements. | `HYPOTHESIS` | `SBIR_plan.md` defines translation study and hardware requirement categories. | No measured lifecycle data, no hardware partner input, no physical substrate decision. | Phase I translation study from measured software runs to substrate requirements. |
+| A substrate-independent neuromorphic emulator can model intended hardware behavior. | `FUTURE WORK` | `SBIR_plan.md` defines emulator scope. | No emulator exists in repo. | Build emulator with explicit time constants, energy/latency assumptions, and plasticity model. |
+| The program can produce a TRL-6 roadmap. | `HYPOTHESIS` | `SBIR_plan.md` drafts roadmap structure and DTE package. | Official MDA instructions, partner/lab assumptions, measured Phase I data. | Produce MDA deliverable package after DSIP and technical evidence gates. |
+| Phase II should demonstrate adaptive RF waveform generation on or with neuromorphic processing. | `FUTURE WORK` | `SBIR_plan.md` maps this to topic direction. | RF partner, waveform workload, neuromorphic substrate, representative RF test environment. | Add RF/waveform advisor or partner and define hardware-in-loop test concept. |
+
+## Explicit No-Go Claims
+
+| Claim | Status | Current Evidence | Missing Evidence | Proposed Phase I Proof / Next Gate |
+| --- | --- | --- | --- | --- |
+| NeuroCognica already demonstrates neuromorphic hardware. | `NO-GO` | `docs/sbir/README.md`, `SBIR_plan.md`, and CCF audit all say current software is not hardware. | Physical/hardware-in-loop witness does not exist. | Do not claim. Phase I may derive requirements and emulator; Phase II targets hardware. |
+| Current stack already demonstrates adaptive RF waveform generation. | `NO-GO` | No RF waveform workload or test exists in current audit record. | RF workload, RF-contested test, measurements. | Future Phase II target only. |
+| Primus/CCF is sentient or conscious. | `NO-GO` | Current evidence is source/smoke/inference only; CCF audit rejects sentience/persona overclaims. | Not a proposal-appropriate technical claim. | Avoid language. Use constitutional doctrine only as governance philosophy if relevant. |
+| System has flawless integration or zero resistance cognition. | `NO-GO` | Root research docs contain such phrases, but audit classifies them as speculative source notes. | Direct engineering proof does not exist. | Remove from technical proposal language. |
+| Current tests prove MVP/product readiness. | `NO-GO` | `test_mvp.py` can skip failures and still print success; audit labels it weak smoke evidence. | Hardened tests and runtime witness. | Replace with "component smoke test passed." |
+
+## Minimum Proposal Acceptance Gates
+
+- [ ] DSIP 26.BZ BAA/CSO and MDA component instructions archived or summarized
+  in a non-sensitive compliance memo.
+- [ ] Exact deadline time, page limits, funding ceiling, period of performance,
+  required forms, cybersecurity, and export language confirmed.
+- [ ] Company readiness confirmed: UEI, SAM, SBIR.gov Company Registry, SBC
+  Control ID, DSIP access, ownership/control, and employee count.
+- [ ] CCF/Primus technical claims limited to `VERIFIED` and `WEAK EVIDENCE`
+  rows unless phrased as Phase I work.
+- [ ] No `NO-GO` claim appears in the technical volume.
+- [ ] Every metric claim names raw artifact, command, or measurement source.
+- [ ] Any partner-dependent claim has a named partner, letter, SOW, or explicit
+  "to be secured" risk.
+
+## Immediate Next Work
+
+1. Pull official DSIP package and component instructions.
+2. Build a Phase I compliance register from the official package.
+3. Harden `CCF_Sovereign/test_mvp.py` into a real failing test suite.
+4. Define the first Primus shadow-cycle manifest and benchmark skeleton.
+5. Identify RF/waveform and neuromorphic hardware partner candidates.

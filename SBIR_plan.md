@@ -25,6 +25,7 @@
 - [x] Preserved the hard boundary: current NeuroCognica software is a risk-reduction and verification layer, not already neuromorphic hardware.
 - [x] Added proposal assembly content: innovation sentence, mission problem, hypothesis, objectives, milestones, success criteria, risk table, Phase II/III path, team gaps, and budget framework.
 - [x] Established `docs/sbir/` as the proposal compliance/source register folder.
+- [x] Created `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` to classify proposal claims against current evidence.
 - [ ] Download and archive the official DSIP 26.BZ BAA/CSO and MDA component-specific instructions.
 - [ ] Confirm exact Phase I ceiling, period of performance, cutoff time, page limits, and required forms inside DSIP.
 - [ ] Confirm company administrative readiness: UEI, SAM, SBIR Company Registry, SBC Control ID, DSIP account, ownership/control, and employee count.
@@ -163,12 +164,12 @@ This keeps the proposal technically honest while making the software prototype v
 
 - [ ] Preserve `chronos_circadian` audit history v0.1–v0.4.
 - [ ] Complete Primus/CCF/live-lab integration audit.
-- [ ] Record actual build/test results.
+- [x] Record actual build/test results.
 - [ ] Identify real training command and environment.
 - [ ] Identify real candidate/checkpoint format.
 - [ ] Identify real benchmark entry points.
 - [ ] Verify Forever Law event-chain functionality in the integration path.
-- [ ] Produce a single claim/evidence matrix:
+- [x] Produce a single claim/evidence matrix:
   - claim;
   - current evidence;
   - missing evidence;
@@ -599,6 +600,7 @@ The topic is reported by a secondary reproduction as subject to ITAR/EAR restric
 - [x] MDA mission problem.
 - [x] Technical hypothesis.
 - [x] Existing evidence.
+- [x] Claim/evidence matrix.
 - [x] Phase I technical objectives.
 - [x] Work plan / milestones.
 - [x] Quantitative success criteria.

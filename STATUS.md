@@ -42,6 +42,9 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   final submission requirements.
 - `docs/sbir/README.md` now exists as the SBIR source/compliance register for
   this pursuit.
+- `docs/sbir/CLAIM_EVIDENCE_MATRIX_2026-07-27.md` now classifies current SBIR
+  proposal claims as verified, weak evidence, hypothesis, future work, blocked,
+  or no-go.
 - `CCF_Sovereign` source import audit completed on July 27, 2026. The Python
   source/tests/training scripts compiled with exit code 0.
 - `python test_mvp.py` ran from `C:\Primus\CCF_Sovereign` and exited 0 in 43.2
