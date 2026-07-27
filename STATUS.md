@@ -103,6 +103,17 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   manifest hash, and `python test_shadow_baseline.py` exited 0 after testing
   pass/fail scoring, raw result artifact writing, responder-error capture,
   non-string response rejection, and explicit no-mutation/no-promotion flags.
+- `CCF_Sovereign\src\evaluation\live_parent_baseline.py` now runs a live
+  no-training parent baseline against the ignored local checkpoint while keeping
+  raw responses in ignored local evidence storage.
+- The first live parent baseline ran on July 27, 2026 with
+  `python -m src.evaluation.live_parent_baseline --max-new-tokens 64 --device auto`.
+  It loaded the ignored checkpoint with `weights_only`, used CUDA, used the
+  local GPT-2 tokenizer cache, and produced 0 passed / 3 failed protected cases
+  with 0 execution errors. Raw JSON remains under ignored
+  `docs/defense_evidence/local_runs/shadow-001-parent-baseline/`; committed
+  summaries exist under `docs/defense_evidence/benchmarks/` and
+  `docs/defense_evidence/failures/`.
 - `docs/defense_evidence/README.md` now defines the non-confidential defense
   evidence package structure and exclusions for private, controlled, checkpoint,
   and raw-corpus material.
@@ -136,17 +147,16 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
 - The August 19 prime-submission track should not be treated as active unless
   the reopened gate in `SBIR_plan.md` Section 0A clears with operator/company
   evidence.
-- The defense evidence package is not built yet. The repo still needs measured
-  shadow cycles from real artifacts, parent/candidate benchmark results, raw
-  results, failure reports, latency and retention/forgetting measurements,
-  resource/cost measurements, and a non-confidential capability statement before
-  outreach can lead with data.
+- The defense evidence package has its first live parent-baseline failure
+  record, but it still needs candidate benchmark results, richer benchmark
+  scoring, retention/forgetting measurements, resource/cost measurements, and a
+  non-confidential capability statement before outreach can lead with data.
 - `CCF_Sovereign\src\evaluation\shadow_manifest.py` and
   `CCF_Sovereign\src\evaluation\shadow_baseline.py` are manifest and
   parent-baseline evidence primitives, not a full shadow-learning runner. No
-  live parent baseline against the ignored checkpoint, candidate generation,
-  training subprocess observation, parent/candidate benchmark comparison, rich
-  benchmark scoring, or atomic promotion is implemented yet.
+  candidate generation, training subprocess observation, parent/candidate
+  benchmark comparison, rich benchmark scoring, or atomic promotion is
+  implemented yet.
 - Public Topic Q&A should be rechecked before final submission. The public DSIP
   Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
   a nonzero topic question count.

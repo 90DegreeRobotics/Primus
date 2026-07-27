@@ -37,6 +37,8 @@
 - [x] Established a defense evidence package backlog for future MDA, DIU, DARPA, prime-subcontract, and later SBIR/STTR paths.
 - [x] Added a no-training parent baseline result writer and fail-hard tests for
   the first benchmark-result artifact shape.
+- [x] Ran the first live no-training parent baseline against the ignored local
+  checkpoint and preserved the failed protected-case result as evidence.
 - [ ] Complete the operator/company administrative gate if the August 19 prime-submission track is reopened.
 
 ---
@@ -243,6 +245,7 @@ This keeps the proposal technically honest while making the software prototype v
 - [ ] Run training as an observed child process.
 - [ ] Hash real candidate output from disk.
 - [x] Add a no-training parent baseline result writer bound to manifest hash.
+- [x] Run the no-training parent baseline against the frozen parent checkpoint.
 - [ ] Run parent and candidate against the same frozen benchmark.
 - [ ] Compute per-case and aggregate metrics from raw results.
 - [ ] Detect protected-task regression.
@@ -253,9 +256,10 @@ This keeps the proposal technically honest while making the software prototype v
 - [ ] Execute at least three complete shadow cycles.
 - [ ] Record failures rather than repairing them before audit.
 
-**Current earned evidence:** The repo now has manifest primitives and a
-parent-only no-training result writer with tests. It has not yet run against the
-real local checkpoint and does not compare parent versus candidate.
+**Current earned evidence:** The repo now has manifest primitives, a parent-only
+no-training result writer with tests, and a live parent baseline against the
+ignored local checkpoint. The first baseline passed `0/3` protected
+expected-text checks. It still does not compare parent versus candidate.
 
 **Deliverable:** Repeatable, auditable candidate-generation pipeline.
 

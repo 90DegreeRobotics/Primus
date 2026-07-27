@@ -45,6 +45,7 @@ reports/*.json
 out/
 renders/
 artifacts/
+docs/defense_evidence/local_runs/
 tmp/
 tmp_*_probe/
 *_probe/

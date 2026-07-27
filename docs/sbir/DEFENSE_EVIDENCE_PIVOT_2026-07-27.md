@@ -152,16 +152,17 @@ Create these alongside the code. Do not wait until the next solicitation appears
 - [ ] Non-confidential one-page capability statement.
 - [ ] Architecture paper for the circadian adaptive computing control layer.
 - [ ] Claim/evidence matrix refreshed after each measured run.
-- [ ] Reproduction instructions for every benchmark.
+- [x] Reproduction instructions for the first live parent baseline.
 - [ ] Immutable audit-report format.
 - [x] Benchmark manifest schema.
 - [ ] Raw benchmark result retention policy.
 - [ ] Candidate lineage record.
-- [ ] Failure report template.
+- [x] First parent-baseline failure report.
 - [ ] Adversarial/regression test history.
 - [x] No-training parent baseline result writer.
 - [ ] Retention and forgetting measurements.
 - [ ] Latency measurements.
+- [x] First live parent-baseline latency measurement.
 - [ ] Resource/cost measurements.
 - [ ] Power measurements or explicit "not instrumented" notes.
 - [ ] Hardware translation roadmap.
@@ -172,8 +173,9 @@ Create these alongside the code. Do not wait until the next solicitation appears
 
 This is the path from "interesting architecture" to "show me the results."
 
-- [ ] Freeze the current `chronos_circadian` and Primus/CCF baseline.
-- [ ] Define a shadow-cycle manifest with parent hash, training traces,
+- [x] Freeze the current Primus/CCF parent baseline by checkpoint hash for
+  shadow run 001.
+- [x] Define a shadow-cycle manifest with parent hash, training traces,
   evaluation set, protected tasks, metric schema, and output paths.
 - [x] Add deterministic shadow-manifest code primitives for file hashes,
   benchmark cases, canonical JSON, manifest hashes, and train/eval source
@@ -183,7 +185,7 @@ This is the path from "interesting architecture" to "show me the results."
   responder errors, and marks mutation/promotion as forbidden.
 - [ ] Build a benchmark skeleton that compares parent vs candidate on identical
   frozen cases.
-- [ ] Run a no-training parent baseline.
+- [x] Run a no-training parent baseline.
 - [ ] Run Shadow Run 001 and preserve failure if it fails.
 - [ ] Run at least three complete shadow cycles before claiming repeatability.
 - [ ] Add regression rejection criteria before any candidate promotion work.

@@ -123,17 +123,52 @@ Observed results:
 - This is still parent-only evidence plumbing. It has not run against the real
   ignored checkpoint and does not compare a candidate.
 
+## Live Parent Baseline Update - 2026-07-27
+
+Commands run from `C:\Primus` or `C:\Primus\CCF_Sovereign`:
+
+```pwsh
+Get-FileHash -Algorithm SHA256 CCF_Sovereign\checkpoints\primus_council_trained.pt
+python -m compileall -q CCF_Sovereign\src CCF_Sovereign\test_live_parent_baseline.py
+python test_live_parent_baseline.py
+python test_mvp.py
+python -m src.evaluation.live_parent_baseline --max-new-tokens 64 --device auto
+```
+
+Observed results:
+
+- The ignored local checkpoint existed at
+  `CCF_Sovereign\checkpoints\primus_council_trained.pt`, measured
+  `1784989658` bytes, and hashed to
+  `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`.
+- `CCF_Sovereign\src\evaluation\live_parent_baseline.py` now builds a live
+  manifest, loads the parent checkpoint with `weights_only`, uses deterministic
+  greedy decoding, and writes raw JSON evidence under ignored
+  `docs\defense_evidence\local_runs\shadow-001-parent-baseline\`.
+- The final live command exited 0 on CUDA with torch `2.5.1+cu121`, GPT-2
+  tokenizer loaded from local cache only, checkpoint metadata
+  `training_turns=845`, `epochs=15`, manifest SHA-256
+  `6aff06c9c16574b43f547d91984f517d27d0ed4a6eb8414f71cb8dee7a447ea4`, and
+  result SHA-256
+  `fba068afb8ae583cc04088461cbc99b88584937c9f47a509071b0adad2040608`.
+- The baseline produced 0 passed / 3 failed protected cases, 0 execution errors,
+  and mean latency `2255.469` ms. The missing expected strings were
+  `sovereignty`, `risk`, and `audit`.
+- Raw responses remain local/ignored. Committed summaries preserve hashes,
+  missing criteria, and latency without publishing raw checkpoint outputs.
+
 ## Evidence Boundary
 
 The original `test_mvp.py` was weak smoke evidence because it caught substrate
 and circadian exceptions, printed skipped warnings, and still printed
 `CORE TESTS PASSED - MVP IS READY` at the end.
 
-The hardened `test_mvp.py` is now fail-hard component evidence. It proves that a
-tiny CPU configuration can instantiate and exercise selected components without
-silent skip-success behavior. It still does not prove product readiness,
-autonomous continual learning, reliable daemon behavior, RF waveform adaptation,
-neuromorphic hardware behavior, or learned Council persona quality.
+The hardened `test_mvp.py` is now fail-hard component evidence. The live parent
+baseline proves the ignored checkpoint can be bound to a manifest and evaluated
+without training or mutation. The failed checks mean it still does not prove
+product readiness, autonomous continual learning, reliable daemon behavior, RF
+waveform adaptation, neuromorphic hardware behavior, or learned Council persona
+quality.
 
 `test_inference.py` proves that the ignored checkpoint loads and produces text.
 It does not prove that Council agency, robust persona learning, or general
@@ -184,10 +219,9 @@ self-optimization in production, sentience, or a verified learned Council voice.
 
 ## Next Work
 
-- Generate the first real shadow-cycle manifest from live artifacts.
-- Run the no-training parent baseline against the live manifest and ignored
-  local checkpoint or another real parent artifact.
-- Add a parent/candidate benchmark runner that consumes the manifest.
+- Add a parent/candidate benchmark runner that consumes the frozen manifest.
+- Add richer scoring that can judge quality without committing raw private
+  responses.
 - Add real GPU/load telemetry or mark the circadian trigger as simulated.
 - Build a nonblocking runtime harness that can prove idle transition and sleep
   consolidation behavior.

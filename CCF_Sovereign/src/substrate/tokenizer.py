@@ -6,16 +6,22 @@ import torch
 class SimpleTokenizer:
     """Minimal tokenizer for MVP - wraps a basic GPT-2 tokenizer"""
 
-    def __init__(self):
+    def __init__(self, local_files_only: bool = True):
+        self.local_files_only = local_files_only
         try:
             from transformers import AutoTokenizer
-            self.tokenizer = AutoTokenizer.from_pretrained("gpt2")
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                "gpt2",
+                local_files_only=local_files_only,
+            )
             self.vocab_size = self.tokenizer.vocab_size
+            self.backend = "gpt2"
         except Exception as e:
             print(f"[Tokenizer] Warning: Could not load GPT-2 tokenizer: {e}")
             print("[Tokenizer] Using fallback character-level tokenizer")
             self.tokenizer = None
             self.vocab_size = 256  # Byte-level fallback
+            self.backend = "byte_fallback"
 
     def encode(self, text: str) -> torch.Tensor:
         """Convert text to token IDs"""
