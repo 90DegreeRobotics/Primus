@@ -1,7 +1,7 @@
 # Plan: complete SBIR plan - 2026-07-27 10:02
 
 ## Status
-IN-PROGRESS
+COMPLETED
 
 ## Goal
 Turn the builder's `SBIR_plan.md` residue into a clean, repo-ready Markdown plan for the MDA26BZ04-NV006 neuromorphic hardware SBIR opportunity, with source confidence, proposal work products, immediate next actions, and no unsupported claims.
@@ -60,7 +60,7 @@ Turn the builder's `SBIR_plan.md` residue into a clean, repo-ready Markdown plan
 - Expected outcome: No Python/sandbox/utm residue remains; `git diff --check` is clean.
 
 ### Step 5 - Commit and push scoped work
-- [ ] Action: Stage only explicit SBIR/doc paths, commit, push `origin main`, and verify `HEAD == origin/main`.
+- [x] Action: Stage only explicit SBIR/doc paths, commit, push `origin main`, and verify `HEAD == origin/main`.
 - Files touched: git metadata only.
 - Expected outcome: Remote has the completed SBIR plan without importing unrelated local source/corpus artifacts.
 
