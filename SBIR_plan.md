@@ -40,6 +40,8 @@
 - [x] Ran the first live no-training parent baseline against the ignored local
   checkpoint and preserved the failed protected-case result as evidence.
 - [x] Added a parent/candidate comparison gate before candidate generation.
+- [x] Audited the existing CCF training path for Candidate 001 safety.
+- [ ] Generate Candidate 001 as an isolated artifact.
 - [ ] Complete the operator/company administrative gate if the August 19 prime-submission track is reopened.
 
 ---
@@ -218,8 +220,8 @@ This keeps the proposal technically honest while making the software prototype v
 - [ ] Preserve `chronos_circadian` audit history v0.1–v0.4.
 - [ ] Complete Primus/CCF/live-lab integration audit.
 - [x] Record actual build/test results.
-- [ ] Identify real training command and environment.
-- [ ] Identify real candidate/checkpoint format.
+- [x] Identify real training command and environment.
+- [x] Identify real candidate/checkpoint format boundary.
 - [ ] Identify real benchmark entry points.
 - [ ] Verify Forever Law event-chain functionality in the integration path.
 - [x] Produce a single claim/evidence matrix:
@@ -240,6 +242,7 @@ This keeps the proposal technically honest while making the software prototype v
 ### Checklist
 
 - [ ] Connect actual CCF/Primus training process to `TrustedObserver`.
+- [x] Audit existing trainer for parent/candidate mutation risk.
 - [ ] Freeze wake traces at T0.
 - [ ] Generate immutable training manifest.
 - [ ] Produce isolated candidate workspace.
@@ -261,8 +264,10 @@ This keeps the proposal technically honest while making the software prototype v
 **Current earned evidence:** The repo now has manifest primitives, a parent-only
 no-training result writer with tests, and a live parent baseline against the
 ignored local checkpoint. The first baseline passed `0/3` protected
-expected-text checks. The comparison gate exists, but no real candidate result
-has been generated or compared yet.
+expected-text checks. The comparison gate exists. The existing trainer has now
+been audited and is not safe for Candidate 001 because it writes checkpoints to
+the frozen parent filename. No real candidate result has been generated or
+compared yet.
 
 **Deliverable:** Repeatable, auditable candidate-generation pipeline.
 

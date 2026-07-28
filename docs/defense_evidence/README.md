@@ -21,6 +21,8 @@ checkpoints, model weights, or training corpora here.
 - [x] First real shadow-cycle manifest generated from live artifacts.
 - [x] First live parent baseline run against a real parent artifact.
 - [x] Parent/candidate comparison gate exists with fixture tests.
+- [x] Candidate-generation path audited for parent mutation risk.
+- [ ] Candidate 001 generated as an isolated artifact.
 - [ ] First parent/candidate benchmark run.
 - [x] First raw failure record preserved locally and summarized without raw
   responses.
@@ -56,6 +58,8 @@ Create these only when there is real content to preserve:
 
 ## First Build Target
 
-The next technical target is candidate generation that writes a result artifact
-against the same frozen manifest as the parent baseline. That candidate result
-must pass the comparison gate before any improvement claim is allowed.
+The next technical target is a hardened candidate-generation entry point that
+cannot overwrite the parent checkpoint, requires an explicit candidate ID/output
+path, records input/output hashes, and writes a result artifact against the same
+frozen manifest as the parent baseline. That candidate result must pass the
+comparison gate before any improvement claim is allowed.

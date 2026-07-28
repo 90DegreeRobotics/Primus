@@ -58,8 +58,9 @@ claim. When in doubt, downgrade the language.
 | CCF is product-live or product-ready. | `NO-GO` | `STATUS.md` says no product capability is marked live; audit says prototype only. | End-to-end runtime witness, robust tests, nonblocking service harness, failure behavior. | Do not claim; use "local prototype" only. |
 | CCF demonstrates autonomous continual learning. | `NO-GO` | No training run, shadow cycle, or reliable sleep consolidation was executed. | Observed learning cycles with manifests, candidate outputs, benchmarks, and promotion/rejection records. | Phase I shadow-cycle proof. |
 | CCF demonstrates reliable sleep consolidation. | `NO-GO` | Audit found blocking `input()` loop, placeholder GPU load, missing `galore-torch`, and no real Adam fallback despite message. | Nonblocking harness, real idle telemetry, consolidation test with STEB data, optimizer proof. | Build runtime harness and consolidation test before claiming. |
-| Current repo contains a real training command and training code. | `WEAK EVIDENCE` | `CCF_Sovereign/train.py`, parser scripts, and requirements are imported. | No current training run; `training_data` is ignored/local; missing `galore-torch`; no manifest in git. | Run controlled training from frozen manifest and record output hashes. |
-| Current repo contains a canonical checkpoint/candidate format. | `WEAK EVIDENCE` | `test_inference.py` loads an ignored `.pt` checkpoint with `model_state_dict`, `training_turns`, and `epochs` keys. | Checkpoint is not in git; no manifest; no candidate schema; no safe unpickle policy. | Define candidate/checkpoint manifest and hashing policy. |
+| Current repo contains a real training command and training code. | `BLOCKED` | `CCF_Sovereign/train.py`, parser scripts, and requirements are imported, and local training data exists with `845` lines and SHA-256 `8e07223c24ab9234a4b823905d73352eebcb681c04663a592ee7067b0309c556`. | The trainer has no CLI output override and saves to `CCF_Sovereign\checkpoints\primus_council_trained.pt`, so it is not safe for Candidate 001. | Harden candidate generation with explicit candidate ID/output path, parent-hash guard, input hash, output hash, and manifest capture. |
+| Current repo contains a canonical checkpoint/candidate format. | `WEAK EVIDENCE` | `test_inference.py` loads an ignored `.pt` checkpoint with `model_state_dict`, `training_turns`, and `epochs` keys; the parent checkpoint SHA-256 is `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`. | Checkpoint is not in git; no candidate artifact exists; no candidate manifest schema is bound to the training runner; no safe unpickle policy. | Define candidate/checkpoint manifest and hashing policy. |
+| Existing CCF trainer can create Candidate 001 without mutating the parent. | `NO-GO` | Candidate-generation audit found hardcoded checkpoint writes to `CCF_Sovereign\checkpoints\primus_council_trained.pt`; Candidate 001 was not created. | Safe isolated candidate generation path, parent hash pre/post verification, and observed child-process training. | Repair the trainer before any candidate run. |
 | Root research documents support conceptual hardware mapping. | `WEAK EVIDENCE` | Root Markdown docs are imported as source notes. | Source claims not independently revalidated in this pass; some language is speculative. | Use as hypothesis context only; cite primary technical sources separately in proposal. |
 
 ## Proposal Technical Claims
@@ -114,7 +115,8 @@ claim. When in doubt, downgrade the language.
    count, TABA decision, and corporate official certification.
 3. Generate the first real Primus shadow-cycle manifest from live artifacts.
 4. Run the no-training parent baseline against that real manifest.
-5. Generate a first candidate result artifact from the frozen manifest and run
-   the comparison gate.
+5. Harden candidate generation so Candidate 001 cannot overwrite the parent,
+   then generate a first candidate result artifact from the frozen manifest and
+   run the comparison gate.
 6. Recheck public Topic Q&A before any final MDA submission.
 7. Identify RF/waveform and neuromorphic hardware partner candidates.

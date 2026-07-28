@@ -182,6 +182,44 @@ Observed results:
 - No real candidate result exists yet. This is a referee gate, not proof of
   candidate improvement.
 
+## Candidate Generation Audit - 2026-07-27
+
+Commands and read-only checks used:
+
+```pwsh
+rg -n "(argparse|checkpoint|torch\.save|training_data|candidate|parent)" CCF_Sovereign\train.py CCF_Sovereign\training CCF_Sovereign\src\evaluation
+Get-ChildItem CCF_Sovereign\training\training_data -Force
+Get-ChildItem CCF_Sovereign\checkpoints -Force
+Get-FileHash -Algorithm SHA256 CCF_Sovereign\training\training_data\council_turns.jsonl
+Get-FileHash -Algorithm SHA256 CCF_Sovereign\checkpoints\primus_council_trained.pt
+git check-ignore -v CCF_Sovereign\training\training_data\council_turns.jsonl CCF_Sovereign\training\training_data\council_turns.manifest.json CCF_Sovereign\checkpoints\primus_council_trained.pt
+```
+
+Observed results:
+
+- Local training data exists at
+  `CCF_Sovereign\training\training_data\council_turns.jsonl`, measured
+  `3399338` bytes, `845` lines, and SHA-256
+  `8e07223c24ab9234a4b823905d73352eebcb681c04663a592ee7067b0309c556`.
+- The local training manifest exists, reports parser version `3.0`, `845`
+  turns, and `36` source files. It was inspected by metadata only.
+- The frozen parent checkpoint remains
+  `CCF_Sovereign\checkpoints\primus_council_trained.pt`, measured
+  `1784989658` bytes, and SHA-256
+  `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`.
+- `.gitignore` excludes the local training JSONL, training manifest,
+  checkpoints, and `docs\defense_evidence\local_runs\`.
+- `CCF_Sovereign\train.py` has no CLI output override, initializes a fresh
+  substrate, and saves every checkpoint to
+  `CCF_Sovereign\checkpoints\primus_council_trained.pt`.
+- The current trainer was not run. Candidate 001 was not created because the
+  audited path would mutate the frozen parent checkpoint filename.
+
+Required repair before Candidate 001: add an explicit candidate-generation
+entry point with candidate ID, isolated output path, parent hash pre/post guard,
+training input hash, candidate hash, environment capture, and same-manifest
+candidate evaluation before comparison.
+
 ## Evidence Boundary
 
 The original `test_mvp.py` was weak smoke evidence because it caught substrate
@@ -246,6 +284,8 @@ self-optimization in production, sentience, or a verified learned Council voice.
 
 - Generate a candidate result artifact from the frozen manifest and run it
   through the comparison gate.
+- Harden candidate generation so it cannot target
+  `CCF_Sovereign\checkpoints\primus_council_trained.pt`.
 - Add richer scoring that can judge quality without committing raw private
   responses.
 - Add real GPU/load telemetry or mark the circadian trigger as simulated.

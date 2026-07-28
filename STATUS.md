@@ -119,6 +119,10 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   `python test_shadow_compare.py` exited 0 after testing candidate improvement,
   protected-task regression rejection, new-error rejection, manifest mismatch
   rejection, case-set mismatch rejection, and comparison artifact writing.
+- The candidate-generation path was audited on July 27, 2026. Candidate 001 was
+  not created because `CCF_Sovereign\train.py` has no candidate output override
+  and writes checkpoint saves to the frozen parent path
+  `CCF_Sovereign\checkpoints\primus_council_trained.pt`.
 - `docs/defense_evidence/README.md` now defines the non-confidential defense
   evidence package structure and exclusions for private, controlled, checkpoint,
   and raw-corpus material.
@@ -157,6 +161,9 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   candidate benchmark results, richer benchmark scoring, retention/forgetting
   measurements, resource/cost measurements, and a non-confidential capability
   statement before outreach can lead with data.
+- Candidate 001 does not exist. The current CCF trainer is blocked for shadow
+  candidate generation until it can write to an isolated candidate path, record a
+  manifest, and prove the parent checkpoint hash remains unchanged.
 - `CCF_Sovereign\src\evaluation\shadow_manifest.py` and
   `CCF_Sovereign\src\evaluation\shadow_baseline.py` are manifest and
   parent-baseline, and comparison evidence primitives, not a full
