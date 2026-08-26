@@ -1,7 +1,28 @@
 # Plan — re-run the scaling ladder on the chunked scan
 
 **Created:** 2026-08-26 10:45
-**Status:** IN FLIGHT - primary question ANSWERED, run still executing.
+**Status:** COMPLETE (stopped deliberately at step 85/300, 2026-08-26 17:45).
+
+**Answered, but narrower than first reported:** 155,347,584 params ran 6.39
+hours at ~12.08 GB at the exact config that OOMed after one step under the old
+full-state scan. The memory ceiling is gone. **Memory-viable, not
+training-viable** - see the stability finding below.
+
+**Measured via py-spy on the live process (operator-approved install):**
+completed_steps 85 of 300 - 0.95 tok/s - 271 s per step - 22.6 h projected,
+16.2 h remaining when stopped.
+
+**THE 150M CONFIGURATION DOES NOT TRAIN.** Mean loss 112.93 against a random
+baseline of ln(2048) = 7.62 - about 15x worse than guessing, flat across steps
+2-85 (~105 average). Compare 5m 7.58, 15m 6.92, 50m 6.84, all at or below
+random. NOT the chunked scan: day one 150m under the OLD scan logged 783.02 on
+its single step. Both implementations show it, so this is an
+optimization/initialization defect at depth 30 - lr 3e-4 with no warmup through
+30 layers is the leading suspect.
+
+**Consequence:** fixing dispatch overhead alone will not make 155M usable, and
+53.93M is now BETTER supported as the starting size - it is the largest rung
+that trained stably.
 
 **Answered:** 155,347,584 params have trained 4.5+ hours at ~12.08 GB at the
 exact configuration that OOMed after one step under the old full-state scan.
