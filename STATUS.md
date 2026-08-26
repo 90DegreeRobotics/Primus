@@ -161,15 +161,17 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   candidate benchmark results, richer benchmark scoring, retention/forgetting
   measurements, resource/cost measurements, and a non-confidential capability
   statement before outreach can lead with data.
-- Candidate 001 does not exist. The current CCF trainer is blocked for shadow
-  candidate generation until it can write to an isolated candidate path, record a
-  manifest, and prove the parent checkpoint hash remains unchanged.
-- `CCF_Sovereign\src\evaluation\shadow_manifest.py` and
-  `CCF_Sovereign\src\evaluation\shadow_baseline.py` are manifest and
-  parent-baseline, and comparison evidence primitives, not a full
-  shadow-learning runner. No candidate generation, training subprocess
-  observation, live parent/candidate benchmark comparison, rich benchmark
-  scoring, or atomic promotion is implemented yet.
+- Candidate 001 still does not exist. On August 26, 2026, the CCF trainer was
+  changed to require an isolated candidate ID, verify the frozen parent and corpus
+  manifest hashes before every run/checkpoint, and write a per-run evidence
+  manifest under the ignored candidate directory. The four-test safety suite and
+  the six inherited MVP tests pass. No candidate training has run yet.
+- `CCF_Sovereign\src\evaluation\shadow_manifest.py`,
+  `CCF_Sovereign\src\evaluation\shadow_baseline.py`, and the new candidate-run
+  safety layer are evidence primitives, not proof of candidate quality. Training
+  subprocess observation, live parent/candidate comparison, rich scoring, and a
+  verified promotion event remain unproven. `promote_candidate.py` is a separate
+  hash-gated atomic command and has not been executed.
 - Public Topic Q&A should be rechecked before final submission. The public DSIP
   Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
   a nonzero topic question count.

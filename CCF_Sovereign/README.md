@@ -71,3 +71,25 @@ data/
 2. Episodic truth is append-only.
 3. Dream output is a candidate mutation until validation against source events.
 4. Every sleep boundary emits Merkle roots T0 and T1.
+
+## Candidate training safety
+
+Training is fail-closed and candidate-only:
+
+```bat
+python train.py --candidate-id candidate-001
+```
+
+A run verifies the frozen parent and corpus-manifest hashes, refuses an existing
+candidate destination, writes checkpoints only below
+`checkpoints/candidates/<candidate-id>/`, and records config, data hashes, seed,
+code commit, metrics, and output paths in `run.manifest.json`. Training cannot
+promote a candidate. Promotion is a separate explicit command requiring the
+completed manifest and exact candidate SHA-256. No candidate training result is
+claimed until the GPU ladder or a later governed run actually completes.
+
+Regression gate:
+
+```bat
+python test_candidate_training.py
+```

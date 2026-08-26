@@ -295,3 +295,13 @@ self-optimization in production, sentience, or a verified learned Council voice.
   acceptance criteria.
 - Create the SBIR claim/evidence matrix using this file as the CCF source
   baseline.
+
+## Candidate-generation safety update — 2026-08-26
+
+The July blocker is closed at the code and regression-test level. `train.py` now
+requires a unique candidate ID and delegates all output to
+`training/candidate_run.py`. The run refuses parent or corpus-manifest hash drift,
+writes only under the candidate directory, emits a run manifest, and checks the
+parent again before every checkpoint. `promote_candidate.py` is a separate
+hash-gated atomic operation. This update does not claim that Candidate 001 has
+been trained, compared, or promoted.
