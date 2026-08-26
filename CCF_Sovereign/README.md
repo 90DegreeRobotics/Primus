@@ -93,3 +93,20 @@ Regression gate:
 ```bat
 python test_candidate_training.py
 ```
+
+## GPU scaling ladder
+
+The candidate-only ladder measures the current scan on identical local data with
+a locally trained byte-level BPE, tied input/output embeddings, and no backbone
+bottleneck:
+
+```bat
+python -m src.benchmarks.scaling_ladder ^
+  --run-prefix ladder-20260826 ^
+  --rungs 5m,15m,50m,150m
+```
+
+Configured/actual parameter counts at vocabulary 2,048 are approximately
+5.34M, 16.21M, 53.93M, and 155.35M. The ladder records throughput, peak VRAM,
+OOM status, loss as a harness sanity signal, and batch-probe ceilings. Its loss
+curve is explicitly not capability or generalization evidence.

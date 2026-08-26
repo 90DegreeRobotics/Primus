@@ -175,3 +175,13 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
 - Public Topic Q&A should be rechecked before final submission. The public DSIP
   Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
   a nonzero topic question count.
+
+## GPU scaling ladder harness update — 2026-08-26
+
+`CCF_Sovereign\src\benchmarks\scaling_ladder.py` now defines isolated
+approximately 5M/15M/50M/150M runs using a local byte-level BPE, tied
+embedding/output weights, and an equal-width Mamba backbone. The two focused CPU
+tests pass, including a real backward pass. Exact configured counts are 5.34M,
+16.21M, 53.93M, and 155.35M parameters at vocabulary 2,048. No GPU ladder result
+is claimed until the committed harness is launched from a clean tree and emits
+its ignored local evidence plus a later committed non-confidential summary.

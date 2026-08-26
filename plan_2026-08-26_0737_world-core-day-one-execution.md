@@ -25,7 +25,7 @@
 
 ## Workstream D — scaling ladder
 
-- [ ] Add or verify 5M/15M/50M/150M configurations using a small vocabulary and tied head.
+- [x] Add or verify 5M/15M/50M/150M configurations using a small vocabulary and tied head.
 - [ ] Record tokens/sec, peak VRAM, OOM status, loss only as a sanity measurement, exact config, seed, and commit.
 - [ ] Launch only after Workstream A is on `origin/main`.
 - [ ] Preserve results under ignored local-run paths and publish a non-confidential summary.
