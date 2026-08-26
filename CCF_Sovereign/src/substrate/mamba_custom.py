@@ -39,6 +39,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from typing import Optional, Tuple
 
+from .selective_scan import DEFAULT_SCAN_CHUNK_SIZE, chunked_selective_scan
+
 
 class RMSNorm(nn.Module):
     """Root Mean Square Layer Normalization.
@@ -116,7 +118,7 @@ class SelectiveScan(nn.Module):
         return b
 
     @staticmethod
-    def forward_scan(
+    def forward_scan_reference(
         x: torch.Tensor,       # (B, L, D) — input sequence
         delta: torch.Tensor,    # (B, L, D) — discretization step
         A: torch.Tensor,        # (D, N) — state transition (negative, learned)
@@ -167,6 +169,32 @@ class SelectiveScan(nn.Module):
         y = y + x * D.unsqueeze(0).unsqueeze(0)
 
         return y
+
+    @staticmethod
+    def forward_scan(
+        x: torch.Tensor,
+        delta: torch.Tensor,
+        A: torch.Tensor,
+        B: torch.Tensor,
+        C: torch.Tensor,
+        D: torch.Tensor,
+        *,
+        chunk_size: int = DEFAULT_SCAN_CHUNK_SIZE,
+    ) -> torch.Tensor:
+        """Execute the memory-bounded production scan.
+
+        The full-state Hillis–Steele implementation remains available only as
+        ``forward_scan_reference`` for differential tests.
+        """
+        return chunked_selective_scan(
+            x,
+            delta,
+            A,
+            B,
+            C,
+            D,
+            chunk_size=chunk_size,
+        )
 
 
 class MambaBlock(nn.Module):
@@ -347,7 +375,7 @@ class MambaBlock(nn.Module):
             # softplus(x) = log(1 + exp(x)) — MUST be float32 to avoid fp16 exp overflow
             delta = F.softplus(self.dt_proj(delta_raw))  # (B, L, d_inner)
 
-            # Run selective scan (all float32)
+            # Run memory-bounded selective scan (all accumulation in float32)
             y = SelectiveScan.forward_scan(x, delta, A, B, C, D)
 
         return y.to(dtype)

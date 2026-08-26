@@ -1,6 +1,6 @@
 # Primus Status
 
-Last updated: 2026-07-27
+Last updated: 2026-08-26
 
 ## Repository State
 
@@ -132,6 +132,26 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   `CCF_Sovereign\checkpoints\primus_council_trained.pt`. It proves checkpoint
   load and text generation only; output quality was mixed, unscored, and not
   persona-certified.
+- Candidate training is now fail-closed and isolated. Four candidate-safety
+  tests and the six inherited MVP tests pass. Training cannot target the frozen
+  parent path, each run is commit/hash bound, and promotion is a separate atomic
+  command.
+- The August 26 scaling ladder ran from clean commit `eb560c0` on the RTX 3060.
+  The 5.34M, 16.21M, and 53.93M rungs each completed 3,940 steps. The 155.35M
+  rung completed one logged step and then hit an asynchronous CUDA out-of-memory
+  RuntimeError. Its initially interrupted manifest was atomically reconciled to
+  `failed`; no promotion occurred and the parent hash remained
+  `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`.
+- `src/world_schema` now defines object-agnostic entities, relations, cameras,
+  materials, compiler-owned operations, evidence, uncertainty, typed holdouts,
+  a 4K codec, and structural unique-program coverage. Eight focused tests pass,
+  including exact schema/token/S3V round trips. A generated fixture was also
+  accepted by ChronoSophia's real Rust S3V v1 parser.
+- The production Mamba path now uses a chunked associative selective scan while
+  retaining the former full-state scan only as a differential oracle. Seven
+  focused tests pass across output, final state, nonzero initial state, complete
+  gradients, long sequence, multiple `d_state`/`d_conv` values, and full Mamba
+  blocks.
 
 ## Not Yet Verified
 
@@ -161,11 +181,12 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   candidate benchmark results, richer benchmark scoring, retention/forgetting
   measurements, resource/cost measurements, and a non-confidential capability
   statement before outreach can lead with data.
-- Candidate 001 still does not exist. On August 26, 2026, the CCF trainer was
-  changed to require an isolated candidate ID, verify the frozen parent and corpus
-  manifest hashes before every run/checkpoint, and write a per-run evidence
-  manifest under the ignored candidate directory. The four-test safety suite and
-  the six inherited MVP tests pass. No candidate training has run yet.
+- Candidate 001 still does not exist as a quality candidate. Four isolated
+  scaling candidates did run on August 26, 2026: three completed harness passes
+  and the 155.35M rung failed at the measured CUDA limit. These runs measure
+  hardware and training-path behavior only; they were not parent/candidate
+  quality comparisons and none was promoted.
+
 - `CCF_Sovereign\src\evaluation\shadow_manifest.py`,
   `CCF_Sovereign\src\evaluation\shadow_baseline.py`, and the new candidate-run
   safety layer are evidence primitives, not proof of candidate quality. Training
@@ -176,12 +197,43 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   Q&A endpoint returned `[]` on July 27, 2026 despite topic metadata reporting
   a nonzero topic question count.
 
-## GPU scaling ladder harness update — 2026-08-26
+## GPU scaling ladder results — 2026-08-26
 
-`CCF_Sovereign\src\benchmarks\scaling_ladder.py` now defines isolated
-approximately 5M/15M/50M/150M runs using a local byte-level BPE, tied
-embedding/output weights, and an equal-width Mamba backbone. The two focused CPU
-tests pass, including a real backward pass. Exact configured counts are 5.34M,
-16.21M, 53.93M, and 155.35M parameters at vocabulary 2,048. No GPU ladder result
-is claimed until the committed harness is launched from a clean tree and emits
-its ignored local evidence plus a later committed non-confidential summary.
+`CCF_Sovereign\src\benchmarks\scaling_ladder.py` ran isolated 5M/15M/50M/150M
+configurations using a local 2,048-token byte-level BPE, tied embedding/output
+weights, an equal-width Mamba backbone, batch 1, sequence length 256, and seed
+base 20260826. The corpus contains 845 turns and 1,012,661 tokens; therefore loss
+is a harness sanity signal, not capability or scaling-law evidence.
+
+| Rung | Actual parameters | Steps | Tokens/s | Peak reserved VRAM | Mean loss | Outcome |
+|---|---:|---:|---:|---:|---:|---|
+| 5M | 5,342,720 | 3,940 | 1,194.65 | 2.28 GB | 7.58 | Completed |
+| 15M | 16,214,400 | 3,940 | 623.40 | 4.09 GB | 6.92 | Completed |
+| 50M | 53,932,160 | 3,940 | 308.84 | 8.73 GB | 6.84 | Completed |
+| 150M | 155,347,584 | 1 | Not recoverable | Not recoverable | 783.02 | CUDA OOM |
+
+The 150M asynchronous OOM originally surfaced as a generic `RuntimeError`, so
+its exact peak VRAM and throughput were not recoverable. The ignored summary and
+candidate manifest were reconciled from hashed stdout/stderr evidence, and the
+harness now recognizes both typed and asynchronous RuntimeError CUDA OOM forms.
+Three focused ladder tests pass. No candidate was promoted.
+
+## Chunked selective-scan result — 2026-08-26
+
+At batch 4, sequence 2,048, width 1,024, and state 16, the old full-state scan's
+reported allocator demand reached 16.23 GB during forward/backward on the 12.88
+GB RTX 3060 and throughput fell to 1,121.88 tokens/s. The chunked scan completed
+at 8.50 GB peak reserved and 9,507.04 tokens/s. That is a 1.91x reserved-memory
+reduction and an 8.47x throughput increase for this stress shape. At small shapes
+the chunked path is slower because launch/loop overhead dominates; this is a
+measured tradeoff, not a universal speedup claim.
+
+## Typed world-schema result — 2026-08-26
+
+`CCF_Sovereign\docs\WORLD_SCHEMA_V1.md` documents the domain-general contract.
+The schema does not encode object recipes as model architecture. It represents
+persistent state and compiler-owned actions, preserves explicit camera pose and
+evidence metadata, labels uncertainty and unavailable capabilities, and defines
+whole-object-class, whole-operation-family, and composition holdouts. The current
+implementation proves representation and round-trip behavior only; it does not
+prove learned world dynamics or a shipped world-builder.

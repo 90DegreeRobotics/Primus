@@ -305,3 +305,43 @@ writes only under the candidate directory, emits a run manifest, and checks the
 parent again before every checkpoint. `promote_candidate.py` is a separate
 hash-gated atomic operation. This update does not claim that Candidate 001 has
 been trained, compared, or promoted.
+
+## World-core execution update — 2026-08-26
+
+The candidate-safety prerequisite was committed and pushed before any GPU
+training. The scaling ladder then ran from clean commit `eb560c0` with a local
+2,048-token BPE, tied embedding/output weights, equal model/backbone width,
+sequence length 256, batch 1, seed base 20260826, and the 845-turn frozen corpus.
+The 5.34M, 16.21M, and 53.93M rungs completed 3,940 steps at 1,194.65, 623.40,
+and 308.84 tokens/s with 2.28, 4.09, and 8.73 GB peak reserved VRAM. These are
+hardware/harness measurements, not evidence of language or world-model quality.
+
+The 155.35M rung completed one logged step and then hit CUDA OOM. Because the
+asynchronous error surfaced as a generic `RuntimeError`, the original process
+exited before appending the rung to the ignored summary and before marking its
+manifest failed. The manifest and summary were atomically reconciled from hashed
+stdout/stderr evidence; exact peak VRAM and throughput are recorded as unavailable,
+not estimated. The harness now recognizes both typed and generic asynchronous
+CUDA OOM forms, and three focused ladder tests pass. No promotion occurred and
+the live parent SHA-256 remained
+`5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`.
+
+`src/world_schema` now implements a domain-general, quantized world-state and
+action contract with explicit entities, relations, cameras, materials, evidence,
+uncertainty, capability status, whole-family holdouts, a 4K bounded codec, and a
+structural unique-program signature. Eight focused tests pass. They prove exact
+canonical JSON, token, and schema-to-S3V-to-schema round trips, dangling-reference
+rejection, explicit pose/evidence preservation, and object-name-independent
+program coverage. A fixture also parsed and validated through ChronoSophia's real
+Rust `chronos_s3v` v1 crate. This is representation evidence, not learned world
+dynamics.
+
+The production Mamba path now uses a chunked associative scan with FP32
+accumulation and bounded per-chunk `(B,K,D,N)` state materialization. The former
+full-state scan remains only as a differential oracle. Seven focused tests pass
+for forward output, boundary state, nonzero initial state, complete input and
+parameter gradients, long sequences, multiple `d_state`/`d_conv` combinations,
+and complete Mamba blocks. On the RTX 3060 stress shape batch 4, sequence 2,048,
+width 1,024, state 16, forward/backward peak reserved allocator demand fell from
+16.23 GB to 8.50 GB and throughput rose from 1,121.88 to 9,507.04 tokens/s. Small
+shapes remain slower on the chunked path because chunk overhead dominates.

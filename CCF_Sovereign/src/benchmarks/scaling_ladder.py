@@ -192,6 +192,28 @@ def clear_device(device: torch.device) -> None:
         torch.cuda.empty_cache()
 
 
+def is_cuda_oom(error: BaseException) -> bool:
+    """Recognize both typed and asynchronously reported CUDA OOM failures."""
+    if isinstance(error, torch.cuda.OutOfMemoryError):
+        return True
+    message = str(error).lower()
+    return isinstance(error, RuntimeError) and "out of memory" in message and "cuda" in message
+
+
+def record_oom(error: BaseException, device: torch.device) -> str:
+    """Capture an OOM message without letting a deferred synchronize error escape."""
+    messages = [str(error)]
+    if device.type == "cuda":
+        try:
+            torch.cuda.synchronize(device)
+        except RuntimeError as synchronize_error:
+            if not is_cuda_oom(synchronize_error):
+                raise
+            messages.append(f"deferred CUDA error: {synchronize_error}")
+        torch.cuda.empty_cache()
+    return " | ".join(messages)
+
+
 def train_rung(
     rung: LadderRung,
     *,
@@ -287,10 +309,11 @@ def train_rung(
                     f"loss={float(loss.detach().cpu()):.4f}"
                 )
         synchronize(device)
-    except torch.cuda.OutOfMemoryError as error:
+    except (torch.cuda.OutOfMemoryError, RuntimeError) as error:
+        if not is_cuda_oom(error):
+            raise
         oom = True
-        oom_message = str(error)
-        synchronize(device)
+        oom_message = record_oom(error, device)
 
     elapsed = time.perf_counter() - started
     peak_reserved_gb = 0.0
@@ -327,12 +350,14 @@ def train_rung(
                         ),
                     }
                 )
-            except torch.cuda.OutOfMemoryError as error:
+            except (torch.cuda.OutOfMemoryError, RuntimeError) as error:
+                if not is_cuda_oom(error):
+                    raise
                 probe_results.append(
                     {
                         "batch_size": probe_batch,
                         "status": "oom",
-                        "error": str(error),
+                        "error": record_oom(error, device),
                     }
                 )
                 break

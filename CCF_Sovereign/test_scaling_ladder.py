@@ -16,6 +16,7 @@ from src.benchmarks.scaling_ladder import (
     LadderRung,
     TiedLadderModel,
     fixed_blocks,
+    is_cuda_oom,
     parameter_count,
     tokenize_corpus,
     train_small_bpe,
@@ -41,6 +42,12 @@ class ScalingLadderTests(unittest.TestCase):
         blocks = fixed_blocks(ids_a * 8, sequence_length=8)
         self.assertEqual(blocks.shape[1], 9)
         self.assertEqual(blocks.dtype, torch.long)
+
+    def test_cuda_oom_classifier_catches_async_runtime_form_only(self):
+        self.assertTrue(is_cuda_oom(torch.cuda.OutOfMemoryError("CUDA out of memory")))
+        self.assertTrue(is_cuda_oom(RuntimeError("CUDA error: out of memory")))
+        self.assertFalse(is_cuda_oom(RuntimeError("CUDA illegal memory access")))
+        self.assertFalse(is_cuda_oom(ValueError("out of memory")))
 
     def test_tied_model_has_no_bottleneck_and_backpropagates(self):
         rung = LadderRung(
