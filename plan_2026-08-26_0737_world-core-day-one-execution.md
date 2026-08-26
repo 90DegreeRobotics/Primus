@@ -9,9 +9,9 @@
 - [x] Verify live parent checkpoint SHA-256 equals `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`.
 - [x] Verify frozen archive exists and has the same hash.
 - [x] Verify starting tree is clean and `main == origin/main`.
-- [ ] Never run training until Workstream A is committed and pushed.
-- [ ] Never overwrite or promote the parent as a training side effect.
-- [ ] Use explicit pathspec staging only.
+- [x] Never run training until Workstream A is committed and pushed.
+- [x] Never overwrite or promote the parent as a training side effect.
+- [x] Use explicit pathspec staging only.
 
 ## Workstream A — candidate isolation
 
@@ -21,7 +21,7 @@
 - [x] Make promotion a separate explicit atomic command.
 - [x] Add a regression test proving training cannot write the parent path.
 - [x] Run compile gate, `python test_mvp.py`, and the new regression test.
-- [ ] Commit and push before any training.
+- [x] Commit and push before any training.
 
 ## Workstream D — scaling ladder
 
