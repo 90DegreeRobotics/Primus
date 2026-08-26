@@ -1,6 +1,7 @@
 # Plan: Primus world-core day-one execution
 
-**Status:** IN PROGRESS
+**Status:** COMPLETE
+
 **Branch:** `main`
 **Authority:** `handoff_manus_2026-08-26_world-core-day-one.md`, `AGENTS.md`, and the Charter of Cognitive Sovereignty.
 
@@ -44,7 +45,7 @@
 - [x] Preserve recurrent equivalence and hidden-state semantics.
 - [x] Add forward differential, backward gradient, and boundary-state tests.
 - [x] Benchmark memory and throughput against the existing scan.
-- [ ] Commit only if numerical and gradient gates pass.
+- [x] Commit only after numerical and gradient gates pass; landed in `e2378fe`.
 
 ## Measured day-one results
 
@@ -55,7 +56,7 @@
 
 ## Final gates and handoff
 
-- [ ] Run all touched-surface tests and repository diff checks.
-- [ ] Update truth/status documents in the same commit as capability changes.
-- [ ] Push verified commits to `origin/main`.
-- [ ] Report what ran, real measurements, failures, remaining blockers, and exact git state.
+- [x] Run all touched-surface tests and repository diff checks.
+- [x] Update truth/status documents in the same commit as capability changes.
+- [x] Push verified commits to `origin/main`.
+- [x] Record what ran, real measurements, failures, remaining blockers, and exact git state in the committed evidence summary and user handoff.
