@@ -1,0 +1,94 @@
+# Plan — re-run the scaling ladder on the chunked scan
+
+**Created:** 2026-08-26 10:45
+**Status:** ACTIVE
+**Operator instruction:** "Proceed with the next run."
+**Authority:** `handoff_manus_2026-08-26_world-core-day-one.md`, `AGENTS.md`,
+and the Charter. Continues
+`C:\chronos2\plan_2026-08-26_0531_primus-world-core.md`.
+
+## Goal
+
+Produce the **one measurement day one did not**: real end-to-end model
+throughput on the chunked selective scan, and a direct answer to whether the
+155.35M rung now fits inside 12 GB.
+
+Two open questions:
+
+1. **Does 150m still OOM?** It died at batch 1 / seq 256 under the old
+   full-state scan. The chunked path reduced stress-shape reserved demand
+   16.23 GB → 8.50 GB. If 150m now completes, the ceiling is gone in practice,
+   not just in a micro-benchmark.
+2. **What is real model throughput?** The 9,507 tok/s figure is the *scan
+   operation*, not a model. Across ~11–30 layers plus the rest of each block,
+   end-to-end will be far lower. The plan's schedule still rests on an estimate
+   that has already been proven wrong once.
+
+## Why this is not a capability run
+
+Same corpus (845 turns, 1,012,661 tokens), same non-claim: at 0.019 tokens per
+parameter for the 50m rung, nothing here supports a capability, quality, or
+scaling-law claim. **This measures the harness and the hardware.** The loss
+column must not be read as a knee — the apparent 15m→50m flattening on day one
+is data starvation, not a scaling law.
+
+## Configuration and why
+
+| Setting | Value | Reason |
+|---|---|---|
+| `--batch-size` | 2 | Day one ran batch 1, which starves the GPU. Modest step up; the card must also hold 150m. |
+| `--sequence-length` | 512 | 1,024 tokens/step vs day one's 256 — 4x better utilisation without a memory cliff. |
+| `--max-steps` | 300 | ~307k tokens/rung. Enough for stable tok/s; avoids a multi-hour epoch. |
+| `--rungs` | 5m,15m,50m,150m | All four, so the comparison against day one is like-for-like on everything but shape and scan. |
+| `--run-prefix` | `ladder-chunked-20260826` | Unique; `mkdir(exist_ok=False)` rejects collisions with day-one dirs. |
+
+Vocab, tied head, equal-width backbone and seed are left at their committed
+defaults so only shape and scan differ.
+
+## Safety
+
+- Candidate isolation (`2113851`) is on `origin/main`; training cannot write the
+  parent. Verified again immediately before launch.
+- Parent SHA-256 must remain
+  `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`
+  before and after. Frozen archive at `checkpoints/frozen/` is never written.
+- **No promotion.** `promote_candidate.py` is not invoked by this plan.
+- Candidate output lands under ignored per-run paths; nothing large is committed.
+- If Manus resumes work mid-run, stop and surface rather than racing it — two
+  agents driving one GPU is how results get corrupted.
+
+## Ordered steps
+
+1. Confirm clean tree, `main == origin/main`, parent hash matches.
+2. `--describe` on CPU: confirm parameter counts before spending GPU time.
+3. Launch the ladder in background with the configuration above.
+4. Watch peak VRAM per rung; specifically whether 150m completes or OOMs.
+5. Re-verify parent hash and tree state after.
+6. Report measured tok/s per rung, peak VRAM, and the 150m outcome, **against
+   the day-one numbers**.
+7. Do not commit results unless the operator asks — raw artifacts are ignored
+   paths by design, and the day-one evidence doc is already the record.
+
+## Test gate
+
+Not a code change, so no code gate applies. The integrity gate is the parent
+hash before and after, plus a clean tree. If the harness itself is touched for
+any reason, the five suites must be re-run first.
+
+## Rollback path
+
+Nothing is rewritten or deleted. Candidate output is additive under ignored
+paths. Aborting is safe at any point: kill the process; the reconciliation Manus
+added marks an interrupted run `failed` rather than leaving a stale
+`training` status.
+
+## Next-agent pickup notes
+
+- Day one landed at `b2b138f`; implementation commit `e2378fe`.
+- Day-one ladder: 5m 1,194.65 tok/s / 2.28 GB · 15m 623.40 / 4.09 · 50m 308.84 /
+  8.73 · **150m CUDA OOM** — all at batch 1, seq 256, old full-state scan.
+- The purpose here is a like-for-like delta, so do not change vocab, seed, tying,
+  or width. Only shape and scan differ.
+- If 150m completes, the next real question is the Stage 2 data generator, not a
+  bigger model. Size should be re-derived from a ladder on **grounded
+  trajectories**, never from this text corpus.
