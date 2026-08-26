@@ -1,7 +1,9 @@
 # Plan — audit and land the dirty worktree on main
 
 **Created:** 2026-08-26 05:46
-**Status:** ACTIVE
+**Status:** COMPLETE — landed as `2e30f04`, pushed to `origin/main` 2026-08-26.
+Tree clean, `main` up to date with origin, all 936 KB of run output preserved
+on disk and untracked. Gates green: `compileall` clean, `test_mvp.py` 6 tests OK.
 **Operator instruction (2026-08-26):** "that work must be committed. audit and
 finish the dirty worktree and push to main before begin anything."
 
