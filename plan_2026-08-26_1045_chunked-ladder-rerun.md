@@ -1,7 +1,29 @@
 # Plan — re-run the scaling ladder on the chunked scan
 
 **Created:** 2026-08-26 10:45
-**Status:** ACTIVE
+**Status:** IN FLIGHT - primary question ANSWERED, run still executing.
+
+**Answered:** 155,347,584 params have trained 4.5+ hours at ~12.08 GB at the
+exact configuration that OOMed after one step under the old full-state scan.
+The 12 GB memory ceiling is gone.
+
+**Still executing:** the run has no progress signal (prints only at step 1 and
+every 50 steps, ~210 bytes total, far below Python block-buffer size, so the
+log stays empty until exit). Average is under 4.7 tok/s. Remaining time cannot
+be estimated from available signals; py-spy is not installed and installing it
+needs per-act operator approval.
+
+**Diagnosed:** dispatch-bound on a single CPU core. GPU at 100% utilization but
+53 W of 170 W and 44 C. The card is starved, not saturated - an efficiency
+problem in software, not a hardware limit.
+
+**Discard:** the earlier ladder-chunked-20260826b run (batch 2, seq 512) was
+confounded - it changed scan AND shape together - and was force-killed. Its 5m
+figure (869.5 tok/s / 5.93 GB) and stale 15m manifest are not evidence.
+
+**Next agent:** if this was killed rather than completed, the manifest will sit
+stale at status=training; a SIGKILL cannot run the OOM reconciliation. Record
+the bounded result rather than leaving the stale status to be misread.
 **Operator instruction:** "Proceed with the next run."
 **Authority:** `handoff_manus_2026-08-26_world-core-day-one.md`, `AGENTS.md`,
 and the Charter. Continues
