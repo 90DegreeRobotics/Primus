@@ -1,6 +1,6 @@
 # Primus Thesis, Value, and Novelty Report Plan
 
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
 ## Goal
 
@@ -34,8 +34,8 @@ Create a source-grounded Markdown report assessing the thesis for creating Primu
 - [x] Build a claim-by-claim novelty matrix separating scientific, engineering, product, and patent novelty.
 - [x] Write the report with explicit current-evidence and non-claim boundaries.
 - [x] Audit citations, dates, factual claims, concurrent Claude work, and protected parent integrity.
-- [ ] Run the documentation gate, stage only this lane, commit on `main`, and push `origin/main`.
-- [ ] Mark this plan complete and write the handoff.
+- [x] Run the documentation gate, stage only this lane, commit on `main`, and push `origin/main`.
+- [x] Mark this plan complete and write the handoff.
 
 ## Test gate
 
