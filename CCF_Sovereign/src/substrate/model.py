@@ -78,13 +78,18 @@ class CCFSubstrate(nn.Module):
         # Project to vocabulary
         logits = self.lm_head(output)
 
-        # Calculate surprise (Free Energy = -log P(token))
+        # Surprise = -log P(token_{t+1} | context_≤t). logits[t] predicts token[t+1].
         surprise = None
-        if compute_surprise:
+        if compute_surprise and seq_len >= 2:
             with torch.no_grad():
-                probs = F.softmax(logits, dim=-1)
-                next_token_probs = probs.gather(-1, input_ids.unsqueeze(-1)).squeeze(-1)
-                surprise = -torch.log(next_token_probs + 1e-10)
+                log_probs = F.log_softmax(logits[:, :-1, :], dim=-1)
+                target = input_ids[:, 1:].unsqueeze(-1)
+                token_log_probs = log_probs.gather(-1, target).squeeze(-1)
+                # Align to sequence length: position 0 has no predecessor prediction.
+                pad = torch.zeros(batch_size, 1, device=token_log_probs.device, dtype=token_log_probs.dtype)
+                surprise = torch.cat([pad, -token_log_probs], dim=1)
+        elif compute_surprise:
+            surprise = torch.zeros(batch_size, seq_len, device=logits.device)
 
         return logits, field_state, surprise
 

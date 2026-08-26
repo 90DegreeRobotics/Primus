@@ -1,139 +1,129 @@
+"""
+Circadian controller — drives NeuroCognica Sleep Architecture v0.1.
+
+Sleep is entered on measurable saturation (and/or idle), then executed as:
+seal T0 → NREM → REM → VALIDATE → seal T1
+"""
+from __future__ import annotations
+
 import time
-import psutil
-import torch
-import torch.nn.functional as F
+from typing import Optional
+
 from core.config import SovereignConfig, SystemState
+from lifecycles.sleep_architecture import SleepArchitecture, SleepCycleReport
+from memory.saturation import SaturationReport
+
 
 class CircadianController:
-    """
-    Manages the Day/Night cycle of the Sovereign Mind.
-    Decides when to Acquire (Inference) and when to Consolidate (Train).
-    """
-    def __init__(self, config: SovereignConfig):
+    """Day/night metabolism for the Sovereign Mind."""
+
+    def __init__(self, config: SovereignConfig, architecture: Optional[SleepArchitecture] = None):
         self.config = config
         self.current_state = SystemState.AWAKE
         self.last_activity_time = time.time()
-        self.mind = None  # Attached externally
-        self.steb = None  # Attached externally
+        self.architecture = architecture
+        self.mind = None
+        self.steb = None
+        self.last_saturation: Optional[SaturationReport] = None
+        self.last_cycle: Optional[SleepCycleReport] = None
+        self.cycles_completed = 0
 
-    def heartbeat(self):
+    def attach(self, architecture: SleepArchitecture) -> None:
+        self.architecture = architecture
+        self.mind = architecture.mind
+        self.steb = architecture.steb
+
+    def heartbeat(self) -> Optional[SleepCycleReport]:
         """
-        Called periodically to check system status and transition states.
+        Periodic homeostatic check.
+        Returns a SleepCycleReport when a cycle runs, else None.
         """
-        gpu_load = self._get_gpu_load()
+        if self.current_state != SystemState.AWAKE:
+            return None
+
+        sat = None
+        if self.architecture is not None:
+            sat = self.architecture.measure_saturation()
+            self.last_saturation = sat
+
         user_active = self._check_user_activity()
+        idle_timeout_s = float(self.config.IDLE_TIMEOUT_MINUTES) * 60.0
+        idle_ready = (time.time() - self.last_activity_time) >= idle_timeout_s
 
-        if self.current_state == SystemState.AWAKE:
-            if not user_active and gpu_load < 0.1:
-                time_since_active = time.time() - self.last_activity_time
-                if time_since_active > (self.config.IDLE_TIMEOUT_MINUTES * 60):
-                    self.transition_to(SystemState.DEEP_SLEEP)
+        should_sleep = False
+        reason = ""
+        if sat is not None and sat.should_sleep_hard and self.config.FORCE_SLEEP_ON_HARD_SATURATION:
+            should_sleep = True
+            reason = f"hard_saturation:{','.join(sat.reasons) or 'composite'}"
+        elif sat is not None and sat.should_sleep_soft and (idle_ready or not user_active):
+            should_sleep = True
+            reason = f"soft_saturation_idle:{','.join(sat.reasons) or 'composite'}"
+        elif idle_ready and self.steb is not None and len(self.steb) > 0:
+            should_sleep = True
+            reason = "idle_with_episodic_pressure"
 
-        elif self.current_state == SystemState.DEEP_SLEEP:
-            if user_active:
-                self.transition_to(SystemState.AWAKE)
+        if should_sleep:
+            print(f"[Circadian] Sleep trigger: {reason}")
+            return self.run_sleep_cycle(force=False, reason=reason)
+        return None
 
-    def transition_to(self, new_state: SystemState):
-        print(f"[Circadian] Transitioning from {self.current_state.value} to {new_state.value}")
+    def run_sleep_cycle(self, force: bool = False, reason: str = "") -> SleepCycleReport:
+        if self.architecture is None:
+            raise RuntimeError("SleepArchitecture not attached to CircadianController")
 
-        if new_state == SystemState.DEEP_SLEEP:
-            self._initiate_sleep_protocol()
-        elif new_state == SystemState.AWAKE:
+        print(f"[Circadian] Entering sleep cycle (force={force}, reason={reason or 'manual'})")
+        self.current_state = SystemState.NREM
+        try:
+            report = self.architecture.run_cycle(force=force or len(self.architecture.steb) == 0)
+            self.last_cycle = report
+            self.cycles_completed += 1
+            print(
+                "[Circadian] Sleep cycle complete: "
+                f"nrem={report.nrem.success} rem={report.rem.success} "
+                f"validate={report.validate.success} integrity={report.integrity_valid} "
+                f"T0={report.t0['merkle_root'][:12] if report.t0 else '?'}… "
+                f"T1={report.t1['merkle_root'][:12] if report.t1 else '?'}…"
+            )
+            if not report.integrity_valid:
+                print("[Circadian] WARNING: Forever Law integrity check FAILED after sleep")
+            if report.nrem.error:
+                print(f"[Circadian] NREM error: {report.nrem.error}")
+            if report.rem.error:
+                print(f"[Circadian] REM error: {report.rem.error}")
+            if report.validate.error:
+                print(f"[Circadian] VALIDATE error: {report.validate.error}")
+            return report
+        finally:
+            self.current_state = SystemState.AWAKE
             self._initiate_wake_protocol()
 
-        self.current_state = new_state
+    def transition_to(self, new_state: SystemState):
+        """Legacy transition helper used by older tests."""
+        print(f"[Circadian] Transitioning from {self.current_state.value} to {new_state.value}")
+        if new_state in (SystemState.NREM, SystemState.DEEP_SLEEP):
+            self.run_sleep_cycle(force=False, reason="legacy_transition")
+        elif new_state == SystemState.AWAKE:
+            self._initiate_wake_protocol()
+            self.current_state = SystemState.AWAKE
+        else:
+            self.current_state = new_state
 
-    def _get_gpu_load(self):
-        return 0.05
-
-    def _check_user_activity(self):
-        """Check if user was recently active (within idle timeout)"""
-        time_since_active = time.time() - self.last_activity_time
-        return time_since_active < (self.config.IDLE_TIMEOUT_MINUTES * 60)
+    def _check_user_activity(self) -> bool:
+        idle_timeout_s = float(self.config.IDLE_TIMEOUT_MINUTES) * 60.0
+        return (time.time() - self.last_activity_time) < idle_timeout_s
 
     def register_activity(self):
-        """Called externally when user provides input"""
         self.last_activity_time = time.time()
 
-    def _initiate_sleep_protocol(self):
-        """Enter Deep Sleep: Consolidate STEB via GaLore"""
-        print("[Circadian] Entering DEEP SLEEP...")
-
-        if self.mind is None:
-            print("[Circadian] No mind attached, skipping consolidation")
-            return False
-
-        if not hasattr(self, 'steb') or self.steb is None:
-            print("[Circadian] No STEB buffer, skipping consolidation")
-            return False
-
-        if len(self.steb) == 0:
-            print("[Circadian] STEB empty, skipping consolidation")
-            return False
-
-        print(f"[Circadian] Consolidating {len(self.steb)} episodes...")
-
+    def _initiate_sleep_protocol(self) -> bool:
+        """Backward-compatible sleep entry used by older tests."""
         try:
-            optimizer, optimizer_name = self._build_sleep_optimizer()
-            print(f"[Circadian] Sleep optimizer: {optimizer_name}")
-            device = next(self.mind.parameters()).device
-
-            num_sleep_epochs = 3
-            optimized_steps = 0
-            for epoch in range(num_sleep_epochs):
-                episodes = self.steb.sample_batch(batch_size=8)
-
-                for ep in episodes:
-                    token_ids = ep.token_ids.to(device=device, dtype=torch.long)
-                    if token_ids.numel() < 2:
-                        continue
-
-                    optimizer.zero_grad()
-                    logits, _, _ = self.mind(token_ids.unsqueeze(0), compute_surprise=False)
-                    loss = F.cross_entropy(
-                        logits[:, :-1, :].reshape(-1, logits.size(-1)),
-                        token_ids[1:].reshape(-1)
-                    )
-                    loss.backward()
-                    optimizer.step()
-                    optimized_steps += 1
-
-                print(f"[Circadian] Sleep epoch {epoch+1}/{num_sleep_epochs} complete")
-
-            if optimized_steps == 0:
-                print("[Circadian] No valid sleep episodes, skipping buffer clear")
-                return False
-
-            self.steb.clear()
-            print("[Circadian] Consolidation complete")
-            return True
-        except Exception as e:
-            print(f"[Circadian] Error during consolidation: {e}")
+            report = self.run_sleep_cycle(force=False, reason="legacy_sleep_protocol")
+            return bool(report.nrem.success)
+        except Exception as exc:
+            print(f"[Circadian] Error during consolidation: {exc}")
             return False
-
-    def _build_sleep_optimizer(self):
-        """Build the sleep optimizer with a real AdamW fallback."""
-        try:
-            from galore_torch import GaLoreAdamW
-            return (
-                GaLoreAdamW(
-                    self.mind.backbone.parameters(),
-                    lr=self.config.SLEEP_LEARNING_RATE,
-                    rank=self.config.GALORE_RANK
-                ),
-                "GaLoreAdamW",
-            )
-        except ImportError:
-            return (
-                torch.optim.AdamW(
-                    self.mind.backbone.parameters(),
-                    lr=self.config.SLEEP_LEARNING_RATE,
-                    weight_decay=0.0,
-                ),
-                "AdamW fallback",
-            )
 
     def _initiate_wake_protocol(self):
-        """Wake up and resume inference"""
         print("[Circadian] System Waking Up...")
         self.last_activity_time = time.time()

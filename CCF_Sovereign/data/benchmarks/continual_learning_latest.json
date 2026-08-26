@@ -1,0 +1,43 @@
+{
+  "created_at": "2026-08-04T11:37:08Z",
+  "device": "cuda",
+  "baseline": {
+    "learner": "baseline_continual_overwrite",
+    "nll_a_after_a": 4.354898810386658,
+    "nll_a_after_b": 4.391230344772339,
+    "nll_b_after_b": 4.407028526067734,
+    "forgetting_a": 0.03633153438568115,
+    "retention_a": 0.012385481430016904,
+    "adaptation_b": 0.01219135084168632,
+    "contradiction_rate": 1.0,
+    "forever_law_events": 0,
+    "integrity_valid": null,
+    "cycles": 0,
+    "elapsed_sec": 3.983055353164673
+  },
+  "lifecycle": {
+    "learner": "neurocognica_sleep_architecture_v0_1",
+    "nll_a_after_a": 4.267345994710922,
+    "nll_a_after_b": 4.298278570175171,
+    "nll_b_after_b": 4.322275161743164,
+    "forgetting_a": 0.030932575464248657,
+    "retention_a": 0.013591936449900827,
+    "adaptation_b": 0.013269658552627678,
+    "contradiction_rate": 1.0,
+    "forever_law_events": 88,
+    "canonical_beliefs": 8,
+    "integrity_valid": true,
+    "merkle_root": "5ca82bf210b409fffc3f15144676d5b161f70e2950f274edb4623acb6d9d3954",
+    "cycles": 4,
+    "elapsed_sec": 4.674997329711914
+  },
+  "comparison": {
+    "forgetting_delta": 0.005398958921432495,
+    "retention_delta": 0.001206455019883923,
+    "adaptation_delta": 0.0010783077109413584,
+    "contradiction_delta": 0.0,
+    "lifecycle_wins_forgetting": true,
+    "lifecycle_integrity_valid": true,
+    "lifecycle_has_audit_trail": true
+  }
+}

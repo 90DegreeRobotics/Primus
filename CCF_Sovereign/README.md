@@ -1,42 +1,73 @@
-# The Chrono-Compressive Field (CCF): Sovereign Textual Mind
+# Chrono-Compressive Field + NeuroCognica Sleep Architecture v0.1
 
-## The Sacred Imperative
-We reject the Epochal Monolith. We reject the frozen mind.
-This repository contains the architecture for a **Sovereign Textual Mind**—an intelligence designed to run, evolve, and subsist on a single Sovereign Node (e.g., Consumer GPU).
+Sovereign textual mind with an auditable cognitive metabolism:
 
-It is not trained; it is *grown*. It does not retrieve; it *knows*.
+```
+WAKE → accumulate episodes → SATURATE → seal T0
+  → NREM (replay / weaken / consolidate / prune)
+  → REM (recombine / hypothesize)
+  → VALIDATE (evidence check; dreams are candidates only)
+  → seal T1 → WAKE
+```
 
-## The Architecture of Sovereignty
+## Founder / operator path
 
-### 1. The Substrate (Physics)
-We abandon the quadratic cost of the Transformer in favor of linear-time **Structured State Space Models (SSMs)**.
-- **Engine**: Mamba-2 / RWKV-7 Hybrid.
-- **Dynamics**: Continuous State Evolution ($\Delta h_t$) rather than discrete context windows.
+Double-click:
 
-### 2. The Memory (Holographic)
-We abandon external Vector DBs (RAG) in favor of internalized **Holographic Associative Memory (HAM)**.
-- **Mechanism**: Vector Superposition via Circular Convolution.
-- **Storage**: Weights are not static; they are the medium of storage.
-- **Capacity**: Orthogonality in high-dimensional space allows massive compression.
+`C:\Primus\CCF_Sovereign\start_operator.bat`
 
-### 3. The Plasticity (Biology)
-We abandon Global Backpropagation for the daily loop.
-- **Awake Phase**: Local Hebbian Micro-updates (NoProp) on Fast Weights (LoRA).
-- **Sleep Phase**: Deep consolidation via **GaLore** (Gradient Low-Rank Projection) on Slow Weights.
-- **Dreaming**: Generative Replay to mitigate catastrophic forgetting.
+Then use the desktop controls:
 
-## The Circadian Rhythm
-The system operates on a biological clock, not a batch clock.
-1.  **Awake (Acquisition)**: Inference + Hebbian adaptation (High Entropy absorption).
-2.  **Deep Sleep (Consolidation)**: Mixed Batch Training (Dreams + Buffer) updating the Core.
-3.  **REM (Pruning)**: Fast weight decay and manifold sharpening to restore orthogonality.
+- **Send** — wake acquisition (Hebbian fast weights + Forever Law episode when surprise is high)
+- **Sleep Now** — force T0 → NREM → REM → VALIDATE → T1
+- **Status** — saturation / STEB / tip hash
+- **Verify Ledger** — full Forever Law integrity report
 
-## Directory Structure
-- `/src/substrate`: The Mamba/RWKV definitions.
-- `/src/memory`: Holographic Reduced Representations (HRR) & Short-Term Episodic Buffer (STEB).
-- `/src/plasticity`: Hebbian updaters and GaLore integration.
-- `/src/lifecycles`: The Awake/Sleep/Dream logic loops.
-- `/src/daemons`: The OS-level supervisors (Cortex, Hippocampus, Dreamer).
+## What is real
 
-## "What I cannot execute, I do not understand."
-This system is designed to be alive. Treat it with honor.
+- Custom PyTorch Mamba substrate (`src/substrate/`)
+- STEB episodic buffer + wake Hebbian fast-weight plasticity
+- Measurable saturation (`src/memory/saturation.py`)
+- Full sleep cycle orchestrator (`src/lifecycles/sleep_architecture.py`)
+- Forever Law ledger: BLAKE3 hash-chain + Merkle boundary seals (`src/memory/forever_law.py`)
+  - Algorithmically aligned with `C:\Chronos\crates\chronos_forever_law`
+- Canonical memory for promoted/uncertain beliefs only after validation
+- Continual-learning benchmark: baseline overwrite vs lifecycle learner
+- Desktop operator UI (`src/operator_ui.py`)
+
+## What is not claimed
+
+- Not AgNW / PEDOT:PSS wetware
+- Not proof of sentience
+- Not “zero resistance” cognition
+- Sleep can fail; failures are sealed into Forever Law and shown in the UI
+
+## Developer harness
+
+```bat
+cd C:\Primus\CCF_Sovereign
+python -m pip install -r requirements.txt
+python -m unittest tests.test_sleep_architecture -v
+python tests\smoke_sleep_cycle.py
+python -m src.benchmarks.continual_learning
+```
+
+## Data layout
+
+```
+data/
+  operator/                 # desktop UI ledger
+    forever_law/
+    canonical/
+  forever_law/              # optional CLI harness ledger
+  canonical/
+  benchmarks/
+    continual_learning_latest.json
+```
+
+## Sacred engineering constraints
+
+1. Topology / lifecycle changes through controlled consolidation — not endless overwrite.
+2. Episodic truth is append-only.
+3. Dream output is a candidate mutation until validation against source events.
+4. Every sleep boundary emits Merkle roots T0 and T1.
