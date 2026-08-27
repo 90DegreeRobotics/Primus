@@ -44,6 +44,23 @@ fixtures have not yet been compiled and rendered as a dataset, ingested by the
 learner, scored as model predictions, or used to authorize a checkpoint
 promotion.
 
+## Bounded real state-transition evidence
+
+On August 27, 2026, Primus completed one bounded, manifest-bound experiment on
+observed BridgeData V2 LeRobot state/action rows. A compact 19,591-parameter MLP
+trained from scratch on 11,999 one-step transitions achieved exact coverage and
+lower aggregate RMSE than the strongest explicit baseline on two protected
+partitions: `0.0249904402` versus `0.0399958638` on 1,998 held-out episodes and
+`0.1087545187` versus `0.1124550702` on 1,996 transitions from 48 strict
+held-out task identities. The frozen intake manifest is SHA-256
+`a3e4a457c497fa6d36ac38725829ea7492c6e479e2868ea2e7ba43b66f75bd2a`.
+
+This is narrow **real-data one-step prediction evidence**, not proof of robot
+policy learning, robot control/safety, multi-step rollout, visual world models,
+native Chronos integration, or product readiness. The candidate was explicitly
+rejected from promotion despite passing its predeclared baseline comparison.
+The committed handoff names the local ignored evidence paths and hashes.
+
 ## Operator Rules
 
 Read `AGENTS.md` before changing anything. The short version:

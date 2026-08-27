@@ -167,6 +167,14 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   Token sequences ranged from 7,391 to 7,494 IDs, which is a measured workload
   shape for later batching and throughput work rather than a training result.
 
+## Bounded BridgeData real transition result — 2026-08-27
+
+A separate manifest-bound real-data one-step transition experiment completed after the historical entries above. The Git-excluded frozen intake was a bounded BridgeData V2 LeRobot state/action Parquet shard, manifest SHA-256 `a3e4a457c497fa6d36ac38725829ea7492c6e479e2868ea2e7ba43b66f75bd2a`. The task was **7D state[t] plus 7D action[t] to 7D state[t+1]**, and emitted records only after same-episode, consecutive frame/global-index, finite-vector, and expected timestamp checks.
+
+The one isolated, from-scratch 19,591-parameter candidate trained on 11,999 transitions and was scored separately on 1,998 held-out-episode and 1,996 strict held-out-task transitions. With exact prediction coverage, it reduced aggregate RMSE from the strongest declared nearest-neighbor baseline's `0.039995863776179044` to `0.024990440151625777` on held-out episodes and from `0.11245507024109873` to `0.10875451870665652` on held-out task identities. The candidate's checkpoint restore smoke passed. Both protected Council parent copies retained SHA-256 `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`; no candidate process remained active after inspection.
+
+This is **not** a policy, control, safety, actuation, manufacturing, visual prediction, multi-step, renderer, native Chronos, or product-readiness result. The candidate is terminally `rejected` from promotion; no promotion occurred. Local ignored raw predictions, checkpoint, metrics, split receipt, and lifecycle manifest are enumerated in `handoff_manus_2026-08-27_bridgedata-real-transition.md`.
+
 ## Not Yet Verified
 
 - No product capability is marked live from this root status file.
