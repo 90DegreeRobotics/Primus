@@ -94,6 +94,28 @@ Regression gate:
 python test_candidate_training.py
 ```
 
+## Stage 2 world trajectories
+
+The repository now includes a deterministic generator for synthetic, typed, multi-frame `WorldProgram` trajectories. It labels generated and inferred evidence explicitly, reserves whole object-class, operation-family, and composition holdouts, measures structural-program coverage, and writes canonical JSONL plus a SHA-256-bound manifest to a new explicit destination.
+
+```bat
+python generate_world_trajectories.py ^
+  --output tmp\stage2_candidate_001 ^
+  --seed 20260826 ^
+  --train-count 12 ^
+  --held-out-object-count 3 ^
+  --held-out-operation-count 3 ^
+  --held-out-composition-count 3
+```
+
+The command refuses an existing destination. Output under `tmp/` is ignored and remains local. This generator is data infrastructure only: it does not start training, modify a checkpoint, promote a candidate, prove learned dynamics, or certify physical or visual correctness.
+
+Regression gate:
+
+```bat
+python test_world_trajectory_generator.py
+```
+
 ## GPU scaling ladder
 
 The candidate-only ladder measures the current scan on identical local data with

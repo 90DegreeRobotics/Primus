@@ -93,12 +93,29 @@ capability status. A generated fixture was independently parsed and validated by
 ChronoSophia's real Rust `chronos_s3v` v1 crate as three entities, four actions,
 and one frame.
 
+## Stage 2 trajectory infrastructure
+
+A deterministic synthetic trajectory generator now emits canonical JSONL and a
+SHA-256-bound manifest for validated three-frame `WorldProgram` records. It
+reserves whole object-class, operation-family, and composition holdouts, records
+structural-program coverage, and retains generated-versus-inferred evidence,
+uncertainty, cameras, and capability status. Seven fail-hard generator tests cover
+byte-identical regeneration, holdout isolation, schema/codec/S³V round trips,
+canonical records, file hashes, coverage, and refusal to overwrite an existing
+destination.
+
+The first ignored smoke dataset contained 21 programs and 21 unique structural
+signatures. This is dataset infrastructure, not learned or visually verified
+world grounding. The fixtures have not been compiled and rendered as a dataset,
+used to train a candidate, or evaluated as predictions.
+
 ## Reproduction surfaces
 
 ```pwsh
 cd C:\Primus\CCF_Sovereign
 python test_scaling_ladder.py
 python test_world_schema.py
+python test_world_trajectory_generator.py
 python test_chunked_scan.py
 python test_candidate_training.py
 python test_mvp.py
@@ -110,8 +127,10 @@ committed because they include runtime artifacts or checkpoint-bearing paths.
 
 ## Remaining gates
 
-A useful world-core claim still requires grounded world trajectories, unique
-structural-program coverage, whole-family holdouts, compiler execution, render
-witnesses, retained uncertainty/provenance, parent/candidate quality comparison,
-retention/forgetting measurement, and an explicit promotion decision. None of
-those claims is implied by this day-one substrate evidence.
+A useful world-core claim still requires compiler-executed and render-witnessed
+trajectories, model ingestion, held-out prediction evaluation, parent/candidate
+quality comparison, retention/forgetting measurement, and an explicit promotion
+decision. Deterministic synthetic trajectories, structural-program coverage,
+whole-family partitions, and retained uncertainty/provenance now exist as tested
+data infrastructure; they do not establish learned world dynamics or visual
+correctness. None of those capability claims is implied by this substrate evidence.

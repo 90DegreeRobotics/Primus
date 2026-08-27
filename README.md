@@ -30,6 +30,20 @@ The schema contract is documented in
 recorded in the status and CCF audit ledgers; raw run manifests, checkpoints,
 and local benchmark JSON remain ignored.
 
+## Stage 2 trajectory data
+
+`CCF_Sovereign` now includes a deterministic generator for synthetic, typed,
+multi-frame world trajectories. It produces canonical JSONL and a hash-bound
+manifest, preserves generated-versus-inferred evidence labels, reserves whole
+object-class, operation-family, and composition holdouts, and measures
+structural-program coverage. The first ignored local smoke dataset produced 21
+validated programs with 21 unique structural signatures.
+
+This is **data-generation infrastructure**, not learned capability. The generated
+fixtures have not yet been compiled and rendered as a dataset, ingested by the
+learner, scored as model predictions, or used to authorize a checkpoint
+promotion.
+
 ## Operator Rules
 
 Read `AGENTS.md` before changing anything. The short version:

@@ -17,3 +17,16 @@ from .tokens import (  # noqa: F401
     unique_program_coverage,
     vocabulary_manifest,
 )
+from .trajectory_generator import (  # noqa: F401
+    DATASET_FILENAME,
+    GENERATOR_VERSION,
+    MANIFEST_FILENAME,
+    DatasetWriteReceipt,
+    GeneratedTrajectoryDataset,
+    TrajectoryDatasetError,
+    TrajectoryGeneratorConfig,
+    generate_dataset,
+    validate_dataset,
+    validate_holdout_integrity,
+    write_dataset,
+)

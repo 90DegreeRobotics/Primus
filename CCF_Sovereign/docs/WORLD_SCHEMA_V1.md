@@ -73,11 +73,19 @@ Token count is not accepted as dataset diversity. `structural_program_signature`
 
 A dataset partition must label its object class, operation family, and generator family. Evaluation splits are whole-family contracts: `held_out_object_class`, `held_out_operation_family`, or `held_out_composition`. A random example split is deliberately absent. Two prompts that rename the same generator template collapse to the same structural signature; a changed operation order does not.
 
+## Stage 2 deterministic trajectory generator
+
+`src/world_schema/trajectory_generator.py` now emits deterministic, validated, multi-frame `WorldProgram` trajectories. Each program contains three ordered frames, compiler-owned geometry and state-transition operations, explicit cameras, generated and inferred evidence bindings, quantified uncertainty, capability status, and a `DatasetPartition`. The generator reserves a whole object class, a whole operation family, and a composition of otherwise-seen families; it deliberately does not offer a random-example split.
+
+The writer refuses an existing destination, publishes canonical JSONL plus a deterministic manifest through a temporary sibling directory, and records file hashes, record counts, split counts, structural-program coverage, token-sequence lengths, evidence kinds, capability states, and explicit non-claims. The manifest contains no wall-clock field, so the same configuration and seed produce byte-identical artifacts. This is synthetic, typed trajectory infrastructure: its evidence is labeled `generated` or `inferred`, not `observed` or `measured`.
+
+The first ignored local smoke dataset used seed `20260826` with 12 training trajectories and three trajectories in each holdout split. It produced 21 validated programs, 21 unique structural signatures, zero duplicates, and token sequences ranging from 7,391 to 7,494 IDs. The JSONL SHA-256 is `3a0b5e79bd592dffb2731131f83ce1d1db93a583dd7aed0bdbe6718e4beb3a28`; the manifest SHA-256 is `6af0b09145aa680e527db98e33b6bf10bcd5752bef7e523e1180301b00d7f607`. Raw smoke output remains ignored under `CCF_Sovereign/tmp/`.
+
 ## What this implementation proves
 
-The current implementation proves that a domain-general world program can be validated, serialized canonically, tokenized within a 4K vocabulary, decoded exactly, lowered to S³V-compatible JSON, and recovered losslessly. It proves that explicit camera pose, evidence provenance, uncertainty, and capability status survive the boundary. It also provides an executable measure of unique-program coverage. A fixture emitted by the Python bridge was independently parsed and validated by ChronoSophia’s real Rust `chronos_s3v` crate, which reported S³V version 1 with three entities, four actions, and one frame.
+The current implementation proves that a domain-general world program can be validated, serialized canonically, tokenized within a 4K vocabulary, decoded exactly, lowered to S³V-compatible JSON, and recovered losslessly. It proves that explicit camera pose, evidence provenance, uncertainty, and capability status survive the boundary. It also provides an executable measure of unique-program coverage and a deterministic generator for partitioned temporal fixtures. A fixture emitted by the Python bridge was independently parsed and validated by ChronoSophia’s real Rust `chronos_s3v` crate, which reported S³V version 1 with three entities, four actions, and one frame.
 
-It does **not** prove that Primus has learned world dynamics, that the schema covers every future compiler operation, that unavailable capability-ledger routes work, or that a generated world is visually correct. Those claims require grounded trajectories, held-out family evaluations, compiled artifacts, render witnesses, and operator review.
+It does **not** prove that Primus has learned world dynamics, that the generated trajectories are physically or visually correct, that the schema covers every future compiler operation, or that unavailable capability-ledger routes work. The synthetic Stage 2 fixtures have not been compiled and rendered as a dataset, ingested by the learner, or evaluated as model predictions. Those claims require compiler execution, render witnesses, model training, protected whole-family evaluations, and operator review.
 
 ## Files and gates
 
@@ -86,11 +94,15 @@ It does **not** prove that Primus has learned world dynamics, that the schema co
 | `src/world_schema/model.py` | Typed records, enums, canonical validation, references, hashes |
 | `src/world_schema/tokens.py` | 4K semantic/byte codec and structural coverage metrics |
 | `src/world_schema/s3v_bridge.py` | Native S³V lowering and lossless bridge envelope |
-| `test_world_schema.py` | Eight fail-hard regression tests |
+| `src/world_schema/trajectory_generator.py` | Deterministic temporal fixtures, holdout contracts, coverage evidence, and atomic dataset writing |
+| `generate_world_trajectories.py` | Explicit-destination Stage 2 command-line entry point |
+| `test_world_schema.py` | Eight fail-hard schema, codec, bridge, and structural-signature regression tests |
+| `test_world_trajectory_generator.py` | Seven fail-hard generator, holdout, determinism, hash, and destination-safety tests |
 
 The focused gate is:
 
 ```bat
-python -m compileall -q src\world_schema test_world_schema.py
+python -m compileall -q src\world_schema generate_world_trajectories.py test_world_schema.py test_world_trajectory_generator.py
 python test_world_schema.py
+python test_world_trajectory_generator.py
 ```

@@ -152,15 +152,34 @@ seed. Import them only through an explicit audit plan with path-by-path staging.
   focused tests pass across output, final state, nonzero initial state, complete
   gradients, long sequence, multiple `d_state`/`d_conv` values, and full Mamba
   blocks.
+- Stage 2 now has a deterministic synthetic world-trajectory generator. Seven
+  fail-hard generator tests pass for byte-identical regeneration, schema and 4K
+  codec validation, lossless S³V round trips, whole object-class and operation-
+  family holdouts, held-out compositions, structural coverage, output hashes,
+  canonical JSONL, and refusal to overwrite an existing destination.
+- The first ignored local Stage 2 smoke dataset used seed `20260826` and produced
+  21 validated three-frame programs: 12 train, three held-out-object, three
+  held-out-operation, and three held-out-composition trajectories. Structural
+  coverage was 21/21 unique with zero duplicates. The JSONL SHA-256 is
+  `3a0b5e79bd592dffb2731131f83ce1d1db93a583dd7aed0bdbe6718e4beb3a28`;
+  the manifest SHA-256 is
+  `6af0b09145aa680e527db98e33b6bf10bcd5752bef7e523e1180301b00d7f607`.
+  Token sequences ranged from 7,391 to 7,494 IDs, which is a measured workload
+  shape for later batching and throughput work rather than a training result.
 
 ## Not Yet Verified
 
 - No product capability is marked live from this root status file.
-- `CCF_Sovereign` runtime behavior is not product-verified. Its current
-  evidence boundary is local prototype plus smoke/inference witness.
+- `CCF_Sovereign` runtime behavior is not product-verified. The current evidence boundary is local prototype plus smoke/inference witness.
 - `CCF_Sovereign` does not currently prove autonomous continual learning,
   reliable sleep consolidation, a learned Council persona, or neuromorphic
   hardware behavior.
+- The Stage 2 trajectories are deterministic synthetic fixtures labeled as
+  `generated` and `inferred`. They have not been compiled and rendered as a
+  dataset, visually reviewed, ingested by the model trainer, evaluated as model
+  predictions, or used for parent/candidate comparison. No training was started,
+  no checkpoint was modified, and no candidate was promoted by this work.
+
 - `mamba-ssm` and `galore-torch` were missing from the workstation environment
   during the July 27, 2026 audit, despite being listed in
   `CCF_Sovereign\requirements.txt`.
