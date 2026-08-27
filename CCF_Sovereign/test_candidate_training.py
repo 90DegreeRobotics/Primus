@@ -174,6 +174,41 @@ class CandidateTrainingSafetyTests(unittest.TestCase):
             with self.assertRaises(CandidateSafetyError):
                 self.create_run(project_root, parent_hash, manifest_hash)
 
+    def test_additional_frozen_input_is_manifest_bound_and_rejects_drift(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            project_root, parent_hash, manifest_hash = build_fixture(
+                Path(temporary)
+            )
+            world_manifest = project_root / "world" / "generated.manifest.json"
+            world_manifest.parent.mkdir(parents=True)
+            world_manifest.write_bytes(b'{"generated":true}\n')
+            expected_world_hash = sha256_file(world_manifest)
+            with patch(
+                "training.candidate_run.git_commit",
+                return_value="0123456789abcdef",
+            ):
+                run = CandidateRun.create(
+                    project_root=project_root,
+                    candidate_id="candidate-world-input",
+                    seed=7,
+                    expected_parent_sha256=parent_hash,
+                    expected_corpus_manifest_sha256=manifest_hash,
+                    additional_frozen_inputs={
+                        "world_dataset_manifest": (
+                            world_manifest,
+                            expected_world_hash,
+                        ),
+                    },
+                    require_clean_repo=False,
+                )
+            evidence = run.manifest["additional_frozen_inputs"]
+            self.assertEqual(
+                evidence["world_dataset_manifest"]["sha256"], expected_world_hash
+            )
+            world_manifest.write_bytes(b'{"generated":false}\n')
+            with self.assertRaisesRegex(CandidateSafetyError, "hash changed"):
+                run.verify_frozen_inputs()
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

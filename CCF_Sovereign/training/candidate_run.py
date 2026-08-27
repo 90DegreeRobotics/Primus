@@ -15,7 +15,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Mapping
 
 
 EXPECTED_PARENT_SHA256 = (
@@ -37,6 +37,7 @@ TRAINING_DATA_RELATIVE_PATH = (
 CANDIDATE_ROOT_RELATIVE_PATH = Path("checkpoints") / "candidates"
 RUN_MANIFEST_NAME = "run.manifest.json"
 CANDIDATE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
+FROZEN_INPUT_LABEL_RE = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 
 
 class CandidateSafetyError(RuntimeError):
@@ -139,6 +140,7 @@ class CandidateRun:
     frozen_parent_path: Path
     corpus_manifest_path: Path
     training_data_path: Path
+    additional_frozen_inputs: dict[str, tuple[Path, str]]
     repo_root: Path
     manifest: dict[str, Any]
 
@@ -151,6 +153,7 @@ class CandidateRun:
         *,
         expected_parent_sha256: str = EXPECTED_PARENT_SHA256,
         expected_corpus_manifest_sha256: str = EXPECTED_CORPUS_MANIFEST_SHA256,
+        additional_frozen_inputs: Mapping[str, tuple[str | Path, str]] | None = None,
         require_clean_repo: bool = True,
     ) -> "CandidateRun":
         project_root = project_root.resolve()
@@ -183,6 +186,31 @@ class CandidateRun:
         training_data_path = (
             project_root / TRAINING_DATA_RELATIVE_PATH
         ).resolve()
+        resolved_additional_inputs: dict[str, tuple[Path, str]] = {}
+        for label, binding in sorted((additional_frozen_inputs or {}).items()):
+            if not FROZEN_INPUT_LABEL_RE.fullmatch(label):
+                raise CandidateSafetyError(
+                    "additional frozen input label must match "
+                    "^[a-z][a-z0-9_]{0,63}$"
+                )
+            if not isinstance(binding, tuple) or len(binding) != 2:
+                raise CandidateSafetyError(
+                    "additional frozen input must be a (path, sha256) tuple"
+                )
+            raw_path, expected_hash = binding
+            source_path = Path(raw_path).expanduser().resolve()
+            normalized_hash = str(expected_hash).lower()
+            if not source_path.is_file():
+                raise CandidateSafetyError(
+                    f"additional frozen input is missing: {source_path}"
+                )
+            if len(normalized_hash) != 64 or any(
+                char not in "0123456789abcdef" for char in normalized_hash
+            ):
+                raise CandidateSafetyError(
+                    f"additional frozen input has invalid SHA-256: {label}"
+                )
+            resolved_additional_inputs[label] = (source_path, normalized_hash)
 
         run = cls(
             project_root=project_root,
@@ -198,6 +226,7 @@ class CandidateRun:
             frozen_parent_path=frozen_parent_path,
             corpus_manifest_path=corpus_manifest_path,
             training_data_path=training_data_path,
+            additional_frozen_inputs=resolved_additional_inputs,
             repo_root=repo_root,
             manifest={},
         )
@@ -231,6 +260,10 @@ class CandidateRun:
                 self.corpus_manifest_path
             ),
             "training_data": self._file_evidence(self.training_data_path),
+            "additional_frozen_inputs": {
+                label: self._file_evidence(path)
+                for label, (path, _) in sorted(self.additional_frozen_inputs.items())
+            },
             "config": None,
             "training": None,
             "metrics": [],
@@ -280,6 +313,19 @@ class CandidateRun:
                 f"expected {self.expected_corpus_manifest_sha256}, "
                 f"got {manifest_hash}"
             )
+        for label, (path, expected_hash) in sorted(
+            self.additional_frozen_inputs.items()
+        ):
+            if not path.is_file():
+                raise CandidateSafetyError(
+                    f"additional frozen input disappeared: {label} at {path}"
+                )
+            actual_hash = sha256_file(path)
+            if actual_hash != expected_hash:
+                raise CandidateSafetyError(
+                    f"additional frozen input hash changed for {label}: "
+                    f"expected {expected_hash}, got {actual_hash}"
+                )
 
     def assert_candidate_output(self, path: Path) -> Path:
         resolved = path.resolve()
