@@ -7,6 +7,7 @@
 ## Executive judgment
 
 **The thesis for creating Primus is valuable. The current trained model has not yet demonstrated that value. The individual architectural ingredients are largely not novel. The exact NeuroCognica integration is plausibly distinctive engineering, but it is not yet a demonstrated scientific contribution.**
+**Authorship and chronology.** The name and core architecture assessed here are Michael Holt and NeuroCognica's independently conceived **Primus**. A Google Docs server-side “Modified” date of **2025-06-11** is preserved in the repository through a SHA-256-sealed PDF and provenance ledger. That evidence predates the unrelated OpenCog/SingularityNET PRIMUS world-model publication dated **2025-12-27** by approximately six months. The later publication is relevant prior art and creates a naming issue; it is **not** evidence that NeuroCognica derived Primus from that work or that the idea originated there.[27] [28] [18]
 
 Primus addresses a real and strategically important problem: how to build an intelligence substrate that is **locally owned, continuously adaptable, inspectable, evidence-bound, and able to represent and act on worlds without outsourcing its core cognition to a remote foundation model**. This is a stronger thesis than “make a smaller language model.” It is also stronger than “combine biologically inspired modules.” The durable version of the thesis is that learning, memory, world representation, execution, and self-modification should form one governed local system.
 
@@ -30,7 +31,7 @@ No exact implemented duplicate of that full contract was found in this review. H
 | **Are the component ideas novel?** | **Mostly no.** Each major component has substantial prior art. |
 | **Is the exact approach novel?** | **Plausibly as system engineering; unproven as science.** The evidence-native coupling is distinctive, but no end-to-end learned result exists. |
 | **Is it patent-novel?** | **Unknown.** The field is dense, and a professional claim search is required. |
-| **Is there a naming risk?** | **Yes.** An unrelated OpenCog/SingularityNET cognitive architecture already uses the name PRIMUS and published a closely related world-model paper in December 2025.[17] [18] |
+| **Is there a naming risk?** | **Yes.** A later, unrelated OpenCog/SingularityNET cognitive architecture uses the name PRIMUS and published a closely related world-model paper on 2025-12-27, approximately six months after the preserved NeuroCognica Primus evidence dated 2025-06-11. This is a naming and prior-art issue, not evidence of origin or derivation.[27] [28][17] [18] |
 
 ## 1. Scope and method
 
@@ -237,7 +238,7 @@ If System F does not outperform the strongest partial system, the extra architec
 
 ## 11. Commercial implications
 
-Primus should not be marketed as a novel foundation model today. It can accurately be described as an **original NeuroCognica research architecture and local prototype integrating established methods under an evidence-first world-learning contract**. That language claims ownership of the implementation and research direction without claiming ownership of Mamba, replay, HRR, MDL, scene graphs, or sleep-inspired learning.
+Primus should not be marketed as a novel foundation model today. It can accurately be described as an **original NeuroCognica research architecture and local prototype integrating established methods under an evidence-first world-learning contract**. That language claims ownership of the implementation and research direction without claiming ownership of Mamba, replay, HRR, MDL, scene graphs, or sleep-inspired learning. It can also accurately state that the documented Primus conception by Michael Holt and NeuroCognica predates the later external PRIMUS publication, while avoiding any unreviewed patent or trademark claim.[27] [28]
 
 The initial commercial value should come from an evidence-rich artifact workflow rather than an assertion of autonomous intelligence. A viable product can expose a coarse editable world state, its source evidence, uncertainty, and operations while generative refinements remain plainly labeled. This aligns product value with what can be inspected and corrected.
 
@@ -256,7 +257,7 @@ This report is not legal advice. From a technical prior-art perspective, broad c
 
 A patent professional should search issued patents, published applications, papers, repositories, product documentation, and earlier public disclosures. The search must include Mamba/SSM implementations, test-time memory, continual-learning replay, model registry and shadow-deployment systems, software artifact provenance, neuro-symbolic world models, scene graphs, typed program synthesis, OpenCog/Hyperon, and the unrelated PRIMUS architecture.[4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25]
 
-The public name collision deserves separate counsel. The unrelated OpenCog/SingularityNET use is not obscure: an official project page identifies PRIMUS as a cognitive architecture, and the December 2025 paper uses the name in a world-model context closely adjacent to NeuroCognica’s ambitions.[17] [18] Even if the implementations and businesses differ, external audiences may assume affiliation or derivation. The naming decision should be resolved before major publication, fundraising, patent positioning, or storefront branding.
+The public name overlap deserves separate counsel, even though the dated evidence supports the earlier independent conception by Michael Holt and NeuroCognica. The unrelated OpenCog/SingularityNET use is not obscure: an official project page identifies PRIMUS as a cognitive architecture, and the December 2025 paper uses the name in a world-model context closely adjacent to NeuroCognica’s ambitions.[17] [18] Even if the implementations and businesses differ, external audiences may assume affiliation or derivation. The naming decision should be resolved before major publication, fundraising, patent positioning, or storefront branding.
 
 ## 13. Final conclusion
 
@@ -296,3 +297,5 @@ If that experiment succeeds, Primus could have **high engineering and product va
 [24]: https://slsa.dev/spec/v1.0/provenance "SLSA Provenance specification v1.0"
 [25]: https://slsa.dev/spec/v1.0/requirements "SLSA artifact production and isolation requirements v1.0"
 [26]: ../../Sovereign%20Textual%20Mind%20Paradigm.md "Origin of a Sovereign Textual Mind: The Chrono-Compressive Field Paradigm"
+[27]: ../provenance/PRIMUS_NAME_PROVENANCE_2026-08-26.md "NeuroCognica, Provenance record — the name Primus at NeuroCognica, sealed 2026-08-26"
+[28]: ../provenance/evidence/2025-06-11_Full_Report_The_First_Emergence_NeuroCognica_Primus.pdf "Michael Holt / NeuroCognica, Full Report: The First Emergence — NeuroCognica Primus, Google Docs modified 2025-06-11; SHA-256 sealed repository export"
