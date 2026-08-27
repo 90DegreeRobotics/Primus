@@ -31,7 +31,7 @@ Push the already-committed verified Wave 1–2 units ahead of `origin/main`, the
 - [x] `CCF_Sovereign/checkpoints/candidates/wave3-50m-20260827-0641-50m/` — unique isolated candidate destination
 - [x] `CCF_Sovereign/tmp/manus_wave3_50m_20260827_0641.log` — ignored runtime log
 - [x] `docs/defense_evidence/local_runs/wave3-50m-20260827-0641/` — ignored hardware/throughput evidence
-- [ ] `handoff_manus_2026-08-27_wave3-50m-candidate.md` — final exact evidence handoff
+- [x] `handoff_manus_2026-08-27_wave3-50m-candidate.md` — final exact evidence handoff
 
 No parent or frozen checkpoint, training corpus, sibling repository, foreign builder file, or director-only truth surface was edited by this plan.
 
@@ -49,7 +49,7 @@ No parent or frozen checkpoint, training corpus, sibling repository, foreign bui
 - [x] Rehashed the live parent and frozen parent after checkpoint creation and post-run restore; both remain `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`.
 - [x] Restored the candidate checkpoint on CUDA and completed one finite forward pass with output shape `[1, 256, 2048]`.
 - [x] Applied the non-mutating promotion policy against actual candidate artifacts. It returned `eligibility=false`, `performs_mutation=false`, and `automatic_promotion=false` because no behavioral comparison/evaluation manifest exists, the comparison gate did not pass, pass delta was not positive, and no separate promotion authorization exists.
-- [ ] Write, audit, commit, and push the exact final handoff and plan closure as a separate documentation unit; do not modify ignored candidate artifacts.
+- [x] Write, audit, commit, and push the exact final handoff and plan closure as a separate documentation unit; do not modify ignored candidate artifacts.
 
 ## Actual candidate configuration and measured result
 
@@ -72,13 +72,22 @@ No parent or frozen checkpoint, training corpus, sibling repository, foreign bui
 | Candidate checkpoint SHA-256 | `4842588e50731b6c0ba2cc883f160c624c72a86bf0dca55b2a8f84be47f0919c` |
 | Candidate manifest SHA-256 at policy evaluation | `8c0478dcdabb78689727d375479d782336b84dbd78eadccaff26a71de8de6636` |
 
-The recorded step losses were 574.5605 at step 1, 26.3873 at step 50, and 17.1370 at step 100. The exact uniform 2,048-token cross-entropy reference is `ln(2048) = 7.624618986159`. Loss therefore declined sharply but remained above that simple baseline after the 100-step diagnostic. This run demonstrates allocation, execution, 100-step memory feasibility, observed throughput, checkpoint writing, restoration, and partial optimization trajectory only. It does not demonstrate optimization beyond the uniform reference, learned-world behavior, held-out generalization, renderer correctness, visual grounding, or capability.
+The recorded step losses were 574.5605 at step 1, 26.3873 at step 50, and 17.1370 at step 100. The exact uniform 2,048-token cross-entropy reference is `ln(2048) = 7.624618986159`. Loss therefore declined sharply but remained above that simple baseline after the 100-step diagnostic.
+
+This 100-step value does not supersede or contradict the August 26 full 50M ladder result. The configurations match on actual parameters, model shape, corpus hash, tokenizer, batch size, and sequence length, but the August 26 50M ladder ran 3,940 steps and reached mean loss 6.84 at 308.84 tokens/s. Wave 3 ran the same 53,932,160-parameter rung for 100 steps, reached step-100 loss 17.1370, and measured 233.0136586 tokens/s. The shorter run is an earlier point on the same harness shape, not evidence that the 50M rung regressed or failed to train stably.
+
+This run demonstrates allocation, execution, 100-step memory feasibility, observed throughput, checkpoint writing, restoration, and partial optimization trajectory only. It does not demonstrate optimization beyond the uniform reference, learned-world behavior, held-out generalization, renderer correctness, visual grounding, or capability.
 
 ## Candidate and promotion boundaries
 
 The frozen Council corpus was used exactly as the existing scaling-ladder harness defines it: 845 turns, 1,012,661 tokens, 3,940 blocks, JSONL SHA-256 `8e07223c24ab9234a4b823905d73352eebcb681c04663a592ee7067b0309c556`, corpus manifest SHA-256 `8bfe4837c1c65e801396a21ddf133d8eddcd424b71a6feadfb5419b0712874fa`. The Stage 2 world-data loader is not integrated into `train.py` or `scaling_ladder.py`. Accordingly, the run is not world-model training and it cannot furnish Phase 3 held-out world-transition scores.
 
-A prior local candidate, `ladder-ab-150m-20260826-150m`, remains labelled `training` in its historic manifest while no matching live process exists. It was preserved untouched as evidence of a stale lifecycle record and did not enter this candidate’s path, inputs, or result.
+Two prior local candidates remain labelled `training` in historic manifests while no matching live process for either candidate was identified:
+
+- `ladder-ab-150m-20260826-150m` - 150M, batch 1, sequence 256.
+- `ladder-chunked-20260826b-15m` - 15M, batch 2, sequence 512; the known confounded chunked-ladder run.
+
+Both were preserved untouched as stale lifecycle evidence and neither entered this candidate's path, inputs, or result.
 
 No promotion command was run. The candidate remains isolated. There is no automatic promotion path in the run or in the applied policy decision.
 
@@ -98,4 +107,4 @@ Never reset, clean, force-push, amend a pushed commit, delete a checkpoint, reus
 
 ## Next-agent pickup notes
 
-The first unfinished action is the documentation-only handoff closure. It should preserve all hashes above, report the `nvidia-smi` NVML telemetry limitation separately from the successful CUDA allocation and training evidence, and state that the 100-step loss did not reach the uniform 2,048-token reference. Any future learned-world claim requires a separate training integration using manifest-bound Stage 2 input, actual model predictions, held-out object/operation/composition evaluation, and a new evidence protocol. Any future promotion needs a completed behavioral comparison artifact, a passed policy decision, clean repository state, expected hashes, and a separate explicit operator authorization.
+The documentation-only handoff closure has been pushed, then corrected by Codex to preserve the 100-step versus 3,940-step loss context and the plural stale-manifest finding. Any future learned-world claim requires a separate training integration using manifest-bound Stage 2 input, actual model predictions, held-out object/operation/composition evaluation, and a new evidence protocol. Any future promotion needs a completed behavioral comparison artifact, a passed policy decision, clean repository state, expected hashes, and a separate explicit operator authorization.

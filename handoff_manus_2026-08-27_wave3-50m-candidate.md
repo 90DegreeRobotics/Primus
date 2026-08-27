@@ -13,7 +13,7 @@
 
 Wave 1–2’s three local commits were independently re-tested and pushed to `origin/main` before the candidate preflight. The governed Wave 3 run then completed exactly one 50M-class, 100-step CUDA diagnostic in an isolated candidate directory. It demonstrated allocation, execution, memory feasibility for the bounded workload, measured throughput, checkpoint writing, checkpoint restoration, and finite inference output.
 
-It is **not a world-model** run and did **not** demonstrate a learned world model, world-data ingestion into training, next-state prediction, held-out world generalization, render correctness, visual grounding, promotion eligibility, or a product-capability result. The run used the existing Council conversation corpus through the scaling-ladder harness. The 100-step final observed loss remained above the exact uniform 2,048-token reference, so even optimization beyond that reference is not established.
+It is **not a world-model** run and did **not** demonstrate a learned world model, world-data ingestion into training, next-state prediction, held-out world generalization, render correctness, visual grounding, promotion eligibility, or a product-capability result. The run used the existing Council conversation corpus through the scaling-ladder harness. The 100-step final observed loss remained above the exact uniform 2,048-token reference, so even optimization beyond that reference is not established. This 100-step diagnostic does not supersede the August 26 full 50M ladder result that ran the same rung for 3,940 steps.
 
 ## What changed
 
@@ -48,6 +48,15 @@ It is **not a world-model** run and did **not** demonstrate a learned world mode
 
 The observed loss checkpoints are 574.5605 at step 1, 26.3873 at step 50, and 17.1370 at step 100. The computed uniform loss reference is `ln(2048) = 7.624618986159`. The decline is real but the final value remains 9.512381013841 above the reference. It would be false to call this optimization success, generalization, or capability.
 
+The loss and throughput must be read with step count beside them:
+
+| Run | Matching configuration | Steps | Loss / throughput |
+|---|---|---:|---|
+| August 26 full 50M ladder | 53,932,160 params, `D=640`, `L=20`, same Council corpus hash, same tokenizer, batch 1, sequence 256 | 3,940 | mean loss 6.84; 308.84 tokens/s |
+| Wave 3 50M diagnostic | 53,932,160 params, `D=640`, `L=20`, same Council corpus hash, same tokenizer, batch 1, sequence 256 | 100 | step-100 loss 17.1370; 233.0136586 tokens/s |
+
+Wave 3 is therefore an earlier bounded point on the same harness shape, not evidence that the established 50M rung regressed, failed to beat random at full duration, or ceased to be the practical starting size. The lower throughput is likewise not a proven regression because startup and fixed overhead are amortized over only 100 steps rather than 3,940.
+
 ## Inputs, integrity, and artifacts
 
 | Artifact | SHA-256 | Status |
@@ -77,7 +86,12 @@ The run verified `torch.cuda.is_available() == true`, one CUDA device, and a rea
 
 The non-mutating policy rejected promotion for the right reasons: there is no behavioral comparison/evaluation manifest, the comparison gate did not pass, the verdict is not `CANDIDATE_IMPROVES`, the comparison pass delta is not positive, and no separate promotion authorization was presented. Its only generated `required_command` is conditional guidance and was **not** executed.
 
-No parent checkpoint was replaced, no frozen archive was changed, no candidate was copied to a parent path, no render was attempted, no S3V fixture was relabelled, and no truth surface was edited directly. A historic `ladder-ab-150m-20260826-150m` candidate remains marked `training` while no matching process exists; it was preserved untouched as a stale lifecycle artifact and did not affect this run.
+No parent checkpoint was replaced, no frozen archive was changed, no candidate was copied to a parent path, no render was attempted, no S3V fixture was relabelled, and no truth surface was edited directly. Two historic candidates remain marked `training` while no matching live candidate process was identified:
+
+- `ladder-ab-150m-20260826-150m` - 150M, batch 1, sequence 256.
+- `ladder-chunked-20260826b-15m` - 15M, batch 2, sequence 512; the known confounded chunked-ladder run.
+
+Both were preserved untouched as stale lifecycle artifacts and did not affect this run.
 
 ## TRUTH-SURFACE REQUEST
 
@@ -86,7 +100,7 @@ No parent checkpoint was replaced, no frozen archive was changed, no candidate w
 
 **Proposed wording:**
 
-> **Wave 3 completed as a bounded hardware and harness diagnostic, not a learned-world result.** A 53,932,160-parameter 50M-class candidate completed 100 CUDA training steps on the frozen Council corpus at 233.0137 tokens/s, with 7.2331 GB peak reserved VRAM, an isolated checkpoint, and unchanged live/frozen parent hashes. The candidate checkpoint restored and produced finite logits. The final observed loss declined but remained above the uniform 2,048-token reference after the 100-step diagnostic. The Stage 2 world-data loader is not wired into this run, no world-transition or held-out behavior was evaluated, no render was run, and the non-mutating promotion policy is ineligible. No candidate was promoted.
+> **Wave 3 completed as a bounded hardware and harness diagnostic, not a learned-world result.** A 53,932,160-parameter 50M-class candidate completed 100 CUDA training steps on the frozen Council corpus at 233.0137 tokens/s, with 7.2331 GB peak reserved VRAM, an isolated checkpoint, and unchanged live/frozen parent hashes. The candidate checkpoint restored and produced finite logits. The final observed loss declined but remained above the uniform 2,048-token reference after the 100-step diagnostic; because the prior identical 50M ladder ran 3,940 steps and reached mean loss 6.84, this 100-step result does not supersede the August 26 full-ladder finding. The Stage 2 world-data loader is not wired into this run, no world-transition or held-out behavior was evaluated, no render was run, and the non-mutating promotion policy is ineligible. No candidate was promoted.
 
 ## Working-tree and remote status before documentation closure
 
