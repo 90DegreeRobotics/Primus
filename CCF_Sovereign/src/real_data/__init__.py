@@ -17,6 +17,7 @@ from .bridgedata_evaluation import (  # noqa: F401
     BridgeDataSplitConfig,
     CopyStateBaseline,
     NearestTrainStateActionBaseline,
+    allocate_bridgedata_replication_split,
     allocate_bridgedata_split,
     baseline_predictions,
     bound_split_by_complete_episodes,

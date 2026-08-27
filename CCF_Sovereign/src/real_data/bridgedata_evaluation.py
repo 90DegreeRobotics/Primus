@@ -271,6 +271,55 @@ def allocate_bridgedata_split(
     return split
 
 
+def allocate_bridgedata_replication_split(
+    episodes: Mapping[int, EpisodeTask],
+    config: BridgeDataSplitConfig,
+    *,
+    reserved_episode_indices: Iterable[int],
+) -> BridgeDataSplit:
+    """Allocate a fresh split after reserving complete prior-candidate episodes.
+
+    Reserved episode identifiers must be mapped, eligible source episodes. They
+    are removed *before* fresh strict task and unseen-episode allocation, then
+    recorded in the returned split as explicit pre-existing budget exclusions.
+    This prevents a replication candidate from seeing any transition selected
+    by the prior candidate while retaining full-source coverage validation.
+    """
+
+    config.validate()
+    eligible, unmapped = _eligible_episodes(episodes)
+    reserved_values = tuple(sorted(reserved_episode_indices))
+    if not reserved_values:
+        raise BridgeDataEvaluationError("replication requires at least one reserved prior episode")
+    if len(reserved_values) != len(set(reserved_values)):
+        raise BridgeDataEvaluationError("reserved prior episode IDs must be unique")
+    if any(isinstance(item, bool) or not isinstance(item, int) for item in reserved_values):
+        raise BridgeDataEvaluationError("reserved prior episode IDs must be integers")
+    unknown = set(reserved_values) - set(eligible)
+    if unknown:
+        raise BridgeDataEvaluationError(
+            "reserved prior episode is not an eligible mapped source episode: "
+            + ", ".join(str(item) for item in sorted(unknown)[:10])
+        )
+    available = {
+        episode_index: item
+        for episode_index, item in episodes.items()
+        if episode_index not in set(reserved_values)
+    }
+    allocated = allocate_bridgedata_split(available, config)
+    replication_split = replace(
+        allocated,
+        config={
+            **allocated.config,
+            "replication_reserved_episode_indices": list(reserved_values),
+        },
+        excluded_unmapped_episode_indices=unmapped,
+        excluded_by_budget_episode_indices=reserved_values,
+    )
+    validate_bridgedata_split(replication_split, episodes)
+    return replication_split
+
+
 def validate_bridgedata_split(
     split: BridgeDataSplit,
     episodes: Mapping[int, EpisodeTask],

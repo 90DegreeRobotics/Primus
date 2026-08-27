@@ -17,6 +17,7 @@ from real_data.bridgedata_evaluation import (  # noqa: E402
     BridgeDataSplitConfig,
     CopyStateBaseline,
     NearestTrainStateActionBaseline,
+    allocate_bridgedata_replication_split,
     allocate_bridgedata_split,
     baseline_predictions,
     bound_split_by_complete_episodes,
@@ -132,6 +133,55 @@ class BridgeDataEvaluationTests(unittest.TestCase):
                 for name, count in bounded.expected_transition_counts.items())
         )
         self.assertFalse(set(bounded.train_task_indices) & set(bounded.held_out_task_indices))
+
+    def test_replication_allocation_excludes_all_prior_selected_episodes(self):
+        expanded = {
+            index: episode(index, index // 2)
+            for index in range(18)
+        }
+        prior_full = allocate_bridgedata_split(
+            expanded,
+            BridgeDataSplitConfig(seed=71, held_out_task_fraction=0.15, held_out_episode_fraction=0.15),
+        )
+        prior_bounded = bound_split_by_complete_episodes(
+            prior_full,
+            expanded,
+            max_transitions_by_split={
+                TRAIN_SPLIT: 9,
+                HELD_OUT_EPISODE_SPLIT: 3,
+                HELD_OUT_TASK_SPLIT: 3,
+            },
+        )
+        reserved = set().union(
+            prior_bounded.train_episode_indices,
+            prior_bounded.held_out_episode_indices,
+            prior_bounded.held_out_task_episode_indices,
+        )
+        replication = allocate_bridgedata_replication_split(
+            expanded,
+            BridgeDataSplitConfig(seed=87, held_out_task_fraction=0.15, held_out_episode_fraction=0.15),
+            reserved_episode_indices=reserved,
+        )
+
+        validate_bridgedata_split(replication, expanded)
+        replication_selected = set().union(
+            replication.train_episode_indices,
+            replication.held_out_episode_indices,
+            replication.held_out_task_episode_indices,
+        )
+        self.assertFalse(reserved & replication_selected)
+        self.assertTrue(reserved <= set(replication.excluded_by_budget_episode_indices))
+        self.assertFalse(set(replication.train_task_indices) & set(replication.held_out_task_indices))
+        self.assertFalse(
+            set(replication.held_out_episode_task_indices)
+            & set(replication.held_out_task_indices)
+        )
+
+    def test_replication_allocation_rejects_unknown_or_empty_reservation(self):
+        with self.assertRaisesRegex(BridgeDataEvaluationError, "requires at least one"):
+            allocate_bridgedata_replication_split(self.episodes, self.config, reserved_episode_indices=())
+        with self.assertRaisesRegex(BridgeDataEvaluationError, "not an eligible mapped"):
+            allocate_bridgedata_replication_split(self.episodes, self.config, reserved_episode_indices=(999,))
 
     def test_transition_partition_requires_exact_predeclared_coverage(self):
         split = allocate_bridgedata_split(self.episodes, self.config)

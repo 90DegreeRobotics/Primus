@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import torch
 
@@ -18,6 +21,7 @@ from train_bridgedata_real_transition import (  # noqa: E402
     fit_train_only_normalization,
     model_predictions,
     train_residual_mlp,
+    _load_prior_candidate_selection,
 )
 
 
@@ -45,6 +49,33 @@ def transition(index: int) -> BridgeDataTransition:
 class BridgeDataRealTransitionTrainerTests(unittest.TestCase):
     def setUp(self) -> None:
         self.transitions = tuple(transition(index) for index in range(12))
+
+    def test_prior_candidate_selection_requires_rejected_manifest_and_unique_partitions(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            prior = root / "checkpoints" / "candidates" / "prior-001"
+            (prior / "evidence").mkdir(parents=True)
+            (prior / "real_data.run.manifest.json").write_text(
+                json.dumps({"candidate_id": "prior-001", "status": "rejected"}),
+                encoding="utf-8",
+            )
+            (prior / "evidence" / "split.json").write_text(
+                json.dumps({
+                    "bounded_group_split": {
+                        "train_episode_indices": [1, 2],
+                        "held_out_episode_indices": [3],
+                        "held_out_task_episode_indices": [4, 5],
+                    }
+                }),
+                encoding="utf-8",
+            )
+            with patch("train_bridgedata_real_transition.ROOT", root):
+                selection = _load_prior_candidate_selection("prior-001")
+
+            self.assertEqual(selection["candidate_id"], "prior-001")
+            self.assertEqual(selection["selected_episode_indices"], (1, 2, 3, 4, 5))
+            self.assertEqual(len(selection["manifest_sha256"]), 64)
+            self.assertEqual(len(selection["split_sha256"]), 64)
 
     def test_train_only_normalization_and_bounded_mlp_prediction(self):
         normalizer = fit_train_only_normalization(self.transitions)

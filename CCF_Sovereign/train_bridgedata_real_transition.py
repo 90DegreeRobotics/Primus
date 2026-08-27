@@ -40,6 +40,7 @@ from real_data.bridgedata_evaluation import (  # noqa: E402
     BridgeDataSplitConfig,
     CopyStateBaseline,
     NearestTrainStateActionBaseline,
+    allocate_bridgedata_replication_split,
     allocate_bridgedata_split,
     baseline_predictions,
     bound_split_by_complete_episodes,
@@ -63,6 +64,7 @@ from training.real_data_candidate import (  # noqa: E402
 
 EXPERIMENT_VERSION = 1
 DEFAULT_SEED = 20_260_827
+DEFAULT_REPLICATION_SEED = 20_260_828
 DEFAULT_EPOCHS = 40
 DEFAULT_BATCH_SIZE = 256
 DEFAULT_LEARNING_RATE = 1e-3
@@ -351,10 +353,60 @@ def _pinned_inherited_untracked(repo_root: Path) -> dict[str, tuple[Path, str]]:
     return result
 
 
-def run_once(candidate_id: str, *, device_name: str = "auto") -> dict[str, Any]:
-    """Execute exactly one predeclared bounded candidate and reject promotion."""
+def _load_prior_candidate_selection(prior_candidate_id: str) -> dict[str, Any]:
+    """Read and hash-bind a terminal prior candidate without modifying it."""
 
-    configure_seed(DEFAULT_SEED)
+    if not prior_candidate_id or Path(prior_candidate_id).name != prior_candidate_id:
+        raise RealDataCandidateSafetyError("prior candidate ID must be a simple candidate directory name")
+    prior_dir = ROOT / "checkpoints" / "candidates" / prior_candidate_id
+    manifest_path = prior_dir / "real_data.run.manifest.json"
+    split_path = prior_dir / "evidence" / "split.json"
+    if not manifest_path.is_file() or not split_path.is_file():
+        raise RealDataCandidateSafetyError("prior candidate manifest or split evidence is missing")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("candidate_id") != prior_candidate_id or manifest.get("status") != "rejected":
+        raise RealDataCandidateSafetyError("prior candidate must be a terminal rejected evidence record")
+    split_evidence = json.loads(split_path.read_text(encoding="utf-8"))
+    bounded = split_evidence.get("bounded_group_split")
+    if not isinstance(bounded, dict):
+        raise RealDataCandidateSafetyError("prior candidate lacks bounded split evidence")
+    selected: list[int] = []
+    for key in (
+        "train_episode_indices",
+        "held_out_episode_indices",
+        "held_out_task_episode_indices",
+    ):
+        values = bounded.get(key)
+        if not isinstance(values, list) or not values:
+            raise RealDataCandidateSafetyError(f"prior candidate split has no {key}")
+        if any(isinstance(item, bool) or not isinstance(item, int) for item in values):
+            raise RealDataCandidateSafetyError("prior candidate split has a non-integer episode ID")
+        selected.extend(values)
+    if len(selected) != len(set(selected)):
+        raise RealDataCandidateSafetyError("prior candidate split overlaps its own episode partitions")
+    return {
+        "candidate_id": prior_candidate_id,
+        "manifest_path": manifest_path,
+        "manifest_sha256": sha256_file(manifest_path),
+        "split_path": split_path,
+        "split_sha256": sha256_file(split_path),
+        "selected_episode_indices": tuple(sorted(selected)),
+    }
+
+
+def run_once(
+    candidate_id: str,
+    *,
+    prior_candidate_id: str,
+    split_seed: int,
+    device_name: str = "auto",
+) -> dict[str, Any]:
+    """Execute one fresh episode-disjoint replication candidate and reject promotion."""
+
+    if isinstance(split_seed, bool) or not isinstance(split_seed, int):
+        raise ValueError("split_seed must be an integer")
+    prior = _load_prior_candidate_selection(prior_candidate_id)
+    configure_seed(split_seed)
     device = resolve_device(device_name)
     manifest_path = (
         ROOT
@@ -364,7 +416,16 @@ def run_once(candidate_id: str, *, device_name: str = "auto") -> dict[str, Any]:
         / "intake_manifest.json"
     )
     intake = load_bridgedata_intake(manifest_path)
-    full_split = allocate_bridgedata_split(intake.episodes, SPLIT_CONFIG)
+    replication_split_config = BridgeDataSplitConfig(
+        seed=split_seed,
+        held_out_task_fraction=SPLIT_CONFIG.held_out_task_fraction,
+        held_out_episode_fraction=SPLIT_CONFIG.held_out_episode_fraction,
+    )
+    full_split = allocate_bridgedata_replication_split(
+        intake.episodes,
+        replication_split_config,
+        reserved_episode_indices=prior["selected_episode_indices"],
+    )
     split = bound_split_by_complete_episodes(
         full_split,
         intake.episodes,
@@ -398,19 +459,28 @@ def run_once(candidate_id: str, *, device_name: str = "auto") -> dict[str, Any]:
     candidate = RealDataCandidateRun.create(
         ROOT,
         candidate_id,
-        DEFAULT_SEED,
+        split_seed,
         expected_parent_sha256=EXPECTED_PARENT_SHA256,
         additional_frozen_inputs={
             "intake_manifest": (manifest_path, intake.manifest_sha256),
             "data_parquet": (intake.data_path, intake.source_files["data_chunk-000_file-000.parquet"]["sha256"]),
             "episodes_parquet": (intake.episode_path, intake.source_files["meta_episodes_chunk-000_file-000.parquet"]["sha256"]),
             "tasks_parquet": (intake.task_path, intake.source_files["meta_tasks.parquet"]["sha256"]),
+            "prior_candidate_manifest": (prior["manifest_path"], prior["manifest_sha256"]),
+            "prior_candidate_split": (prior["split_path"], prior["split_sha256"]),
         },
         permitted_preexisting_untracked=_pinned_inherited_untracked(ROOT.parent),
     )
     split_path = candidate.write_evidence_json(
         "split.json",
         {
+            "prior_candidate": {
+                "candidate_id": prior["candidate_id"],
+                "manifest_sha256": prior["manifest_sha256"],
+                "split_evidence_sha256": prior["split_sha256"],
+                "reserved_selected_episode_count": len(prior["selected_episode_indices"]),
+                "reserved_selected_episode_indices": list(prior["selected_episode_indices"]),
+            },
             "full_group_split": full_split.to_dict(),
             "bounded_group_split": split.to_dict(),
             "extraction_receipt": extracted.receipt.to_dict(),
@@ -420,7 +490,13 @@ def run_once(candidate_id: str, *, device_name: str = "auto") -> dict[str, Any]:
     model = BridgeDataResidualMLP()
     model_parameter_count = sum(parameter.numel() for parameter in model.parameters())
     training_config = {
-        "experiment_version": EXPERIMENT_VERSION,
+                    "experiment_version": EXPERIMENT_VERSION,
+            "replication_of_candidate_id": prior["candidate_id"],
+            "prior_candidate_manifest_sha256": prior["manifest_sha256"],
+            "prior_candidate_split_evidence_sha256": prior["split_sha256"],
+            "reserved_prior_episode_count": len(prior["selected_episode_indices"]),
+            "split_seed": split_seed,
+
         "architecture": "from_scratch_residual_mlp",
         "input_dimensions": STATE_DIMENSIONS * 2,
         "output_dimensions": STATE_DIMENSIONS,
@@ -446,7 +522,7 @@ def run_once(candidate_id: str, *, device_name: str = "auto") -> dict[str, Any]:
             model,
             partitions[TRAIN_SPLIT],
             normalizer,
-            seed=DEFAULT_SEED,
+            seed=split_seed,
             device=device,
             epochs=DEFAULT_EPOCHS,
             batch_size=DEFAULT_BATCH_SIZE,
@@ -499,6 +575,10 @@ def run_once(candidate_id: str, *, device_name: str = "auto") -> dict[str, Any]:
         )
         return {
             "candidate_id": candidate_id,
+            "replication_of_candidate_id": prior["candidate_id"],
+            "prior_candidate_manifest_sha256": prior["manifest_sha256"],
+            "prior_candidate_split_evidence_sha256": prior["split_sha256"],
+            "reserved_prior_episode_count": len(prior["selected_episode_indices"]),
             "candidate_dir": str(candidate.candidate_dir),
             "split_sha256": split.sha256(),
             "extraction_receipt_sha256": extracted.receipt.sha256(),
@@ -517,9 +597,16 @@ def run_once(candidate_id: str, *, device_name: str = "auto") -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run one bounded real BridgeData transition candidate.")
     parser.add_argument("--candidate-id", required=True)
+    parser.add_argument("--prior-candidate-id", required=True)
+    parser.add_argument("--split-seed", type=int, required=True)
     parser.add_argument("--device", default="auto", choices=("auto", "cpu", "cuda"))
     arguments = parser.parse_args()
-    result = run_once(arguments.candidate_id, device_name=arguments.device)
+    result = run_once(
+        arguments.candidate_id,
+        prior_candidate_id=arguments.prior_candidate_id,
+        split_seed=arguments.split_seed,
+        device_name=arguments.device,
+    )
     print(json.dumps(result, ensure_ascii=True, indent=2, sort_keys=True))
 
 
