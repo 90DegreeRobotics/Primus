@@ -48,7 +48,7 @@ from .s3v_bridge import assert_lossless_round_trip
 from .tokens import encode_program, unique_program_coverage
 
 
-GENERATOR_VERSION = "1.0.0"
+GENERATOR_VERSION = "1.1.0"
 DATASET_FILENAME = "world_trajectories.jsonl"
 MANIFEST_FILENAME = "world_trajectories.manifest.json"
 
@@ -259,13 +259,29 @@ def _make_program(
     base_x = rng.randint(-900, 900)
     base_y = rng.randint(-900, 900)
     base_z = rng.randint(120, 720)
-    delta_x = rng.randint(180, 620)
-    delta_y = rng.randint(-240, 240)
-    delta_z = rng.randint(40, 260)
     geometry_extent = rng.randint(120, 680)
     bevel_q = rng.randint(8, 72)
+    variant = index % 5
+    material_color = (
+        rng.randint(24, 220),
+        rng.randint(24, 220),
+        rng.randint(24, 220),
+        255,
+    )
+    metallic_q8 = rng.randint(0, 220)
+    roughness_q8 = rng.randint(24, 224)
     start_yaw = rng.randint(-18_000, 18_000)
-    end_yaw = start_yaw + rng.choice((-4500, -3000, 3000, 4500))
+
+    # The declared effect is deliberately a deterministic function of only
+    # pre-action context and action intent. A future temporal-witness learner
+    # may receive those context values but never this resulting delta.
+    direction = -1 if variant in (1, 4) else 1
+    delta_x = direction * (160 + geometry_extent // 3 + bevel_q)
+    delta_y = (metallic_q8 - roughness_q8) // 2
+    delta_z = 60 + ((geometry_extent + bevel_q + metallic_q8 + variant * 73) % 220)
+    support_present_after = variant not in (1, 4)
+    near_present_after = metallic_q8 + bevel_q >= roughness_q8
+    end_yaw = start_yaw + (4500 if direction > 0 else -4500)
 
     generated_descriptor = {
         "generator_version": GENERATOR_VERSION,
@@ -279,7 +295,20 @@ def _make_program(
     inferred_descriptor = {
         **generated_descriptor,
         "transition_delta_mm": [delta_x, delta_y, delta_z],
-        "relation_after": "near",
+        "target_translation_mm": [
+            base_x + delta_x,
+            base_y + delta_y,
+            base_z + delta_z,
+        ],
+        "support_present_after": support_present_after,
+        "near_present_after": near_present_after,
+        "action_context": {
+            "geometry_extent_mm": geometry_extent,
+            "bevel_q": bevel_q,
+            "variant": variant,
+            "metallic_q8": metallic_q8,
+            "roughness_q8": roughness_q8,
+        },
     }
     generated_evidence = EvidenceBinding(
         evidence_id="evidence_generated_start",
@@ -307,14 +336,9 @@ def _make_program(
     material = MaterialState(
         material_id=material_id,
         role="surface",
-        base_color_rgba8=(
-            rng.randint(24, 220),
-            rng.randint(24, 220),
-            rng.randint(24, 220),
-            255,
-        ),
-        metallic_q8=rng.randint(0, 220),
-        roughness_q8=rng.randint(24, 224),
+        base_color_rgba8=material_color,
+        metallic_q8=metallic_q8,
+        roughness_q8=roughness_q8,
         compiler_hint="generated_material",
     )
     cameras = (
@@ -417,7 +441,7 @@ def _make_program(
         ),
     )
 
-    operations = (
+    operations = [
         WorldOperation(
             operation_id="operation_geometry",
             kind=OperationKind.GEOMETRY_MACRO,
@@ -429,7 +453,7 @@ def _make_program(
                 parameters={
                     "extent_mm": geometry_extent,
                     "bevel_q": bevel_q,
-                    "variant": index % 5,
+                    "variant": variant,
                 },
             ),
             evidence_ids=(generated_evidence.evidence_id,),
@@ -479,30 +503,43 @@ def _make_program(
             parameters={"distance_mm": rng.randint(300, 900)},
             evidence_ids=(inferred_evidence.evidence_id,),
         ),
-        WorldOperation(
-            operation_id="operation_remove_support",
-            kind=OperationKind.REMOVE_RELATION,
-            subject_id=support_id,
-            object_id=subject_id,
-            relation_id="relation_support",
-            evidence_ids=(inferred_evidence.evidence_id,),
-        ),
-        WorldOperation(
-            operation_id="operation_add_near",
-            kind=OperationKind.ADD_RELATION,
-            subject_id=actor_id,
-            object_id=subject_id,
-            relation_id="relation_near",
-            evidence_ids=(inferred_evidence.evidence_id,),
-        ),
+    ]
+    end_operation_ids: list[str] = []
+    if not support_present_after:
+        operations.append(
+            WorldOperation(
+                operation_id="operation_remove_support",
+                kind=OperationKind.REMOVE_RELATION,
+                subject_id=support_id,
+                object_id=subject_id,
+                relation_id="relation_support",
+                evidence_ids=(inferred_evidence.evidence_id,),
+            )
+        )
+        end_operation_ids.append("operation_remove_support")
+    if near_present_after:
+        operations.append(
+            WorldOperation(
+                operation_id="operation_add_near",
+                kind=OperationKind.ADD_RELATION,
+                subject_id=actor_id,
+                object_id=subject_id,
+                relation_id="relation_near",
+                evidence_ids=(inferred_evidence.evidence_id,),
+            )
+        )
+        end_operation_ids.append("operation_add_near")
+    operations.append(
         WorldOperation(
             operation_id="operation_observe_end",
             kind=OperationKind.OBSERVE,
             subject_id=subject_id,
             camera_id=camera_end_id,
             evidence_ids=(inferred_evidence.evidence_id,),
-        ),
+        )
     )
+    end_operation_ids.append("operation_observe_end")
+    operations = tuple(operations)
     frames = (
         WorldFrame(
             frame_id=frame_start_id,
@@ -530,11 +567,7 @@ def _make_program(
             frame_id=frame_end_id,
             tick=2,
             camera_id=camera_end_id,
-            operation_ids=(
-                "operation_remove_support",
-                "operation_add_near",
-                "operation_observe_end",
-            ),
+            operation_ids=tuple(end_operation_ids),
             observed_entity_ids=(subject_id, actor_id, room_id),
         ),
     )

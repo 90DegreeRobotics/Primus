@@ -80,8 +80,10 @@ class StateTransitionMetricsTests(unittest.TestCase):
         )
         for metrics in report.by_split.values():
             self.assertGreater(metrics.position_rmse_mm, 0.0)
-            self.assertEqual(metrics.support_relation_accuracy, 0.0)
-            self.assertEqual(metrics.near_relation_accuracy, 0.0)
+            self.assertGreaterEqual(metrics.support_relation_accuracy, 0.0)
+            self.assertLessEqual(metrics.support_relation_accuracy, 1.0)
+            self.assertGreaterEqual(metrics.near_relation_accuracy, 0.0)
+            self.assertLessEqual(metrics.near_relation_accuracy, 1.0)
             self.assertEqual(metrics.all_transition_accuracy, 0.0)
 
     def test_missing_prediction_fails_closed(self):

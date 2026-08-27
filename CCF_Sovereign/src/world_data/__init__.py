@@ -22,3 +22,13 @@ from .transitions import (  # noqa: F401
     example_set_sha256,
     train_partition_examples,
 )
+from .temporal_witness import (  # noqa: F401
+    CONTEXT_INPUT_FEATURE_NAMES,
+    TEMPORAL_TARGET_FEATURE_NAMES,
+    TemporalStateWitness,
+    TemporalWitnessError,
+    assert_context_feature_boundary,
+    derive_temporal_witness,
+    derive_temporal_witnesses,
+    temporal_witness_set_sha256,
+)

@@ -129,20 +129,31 @@ def _integer_parameter(operation: Any, name: str) -> int:
 def _relation_effect(
     record: WorldProgramRecord,
     *,
-    kind: OperationKind,
     relation_kind: str,
+    require_add: bool = False,
 ) -> bool:
-    matching = []
+    """Replay declared relation edits for one relation kind from an absent state."""
+
     relations = {relation.relation_id: relation for relation in record.program.relations}
+    effects = []
     for operation in record.program.operations:
-        if operation.kind is not kind:
+        if operation.kind not in (
+            OperationKind.ADD_RELATION,
+            OperationKind.REMOVE_RELATION,
+        ):
             continue
         if not operation.relation_id or operation.relation_id not in relations:
             raise WorldTransitionError("relation operation must reference a declared relation")
         if relations[operation.relation_id].kind.value == relation_kind:
-            matching.append(operation)
-    _single(matching, f"{kind.value} {relation_kind} relation operation")
-    return kind is OperationKind.ADD_RELATION
+            effects.append(operation)
+    if require_add and not any(
+        operation.kind is OperationKind.ADD_RELATION for operation in effects
+    ):
+        raise WorldTransitionError(f"missing add_relation {relation_kind} operation")
+    state = False
+    for operation in effects:
+        state = operation.kind is OperationKind.ADD_RELATION
+    return state
 
 
 def derive_transition_example(record: WorldProgramRecord) -> WorldTransitionExample:
@@ -166,12 +177,11 @@ def derive_transition_example(record: WorldProgramRecord) -> WorldTransitionExam
     target = tuple(source + change for source, change in zip(subject.transform.translation_mm, delta))
     support_present_after = _relation_effect(
         record,
-        kind=OperationKind.REMOVE_RELATION,
         relation_kind="supports",
+        require_add=True,
     )
     near_present_after = _relation_effect(
         record,
-        kind=OperationKind.ADD_RELATION,
         relation_kind="near",
     )
     target_kinds = tuple(sorted({binding.kind.value for binding in record.program.evidence}))

@@ -75,9 +75,15 @@ A dataset partition must label its object class, operation family, and generator
 
 ## Stage 2 deterministic trajectory generator
 
-`src/world_schema/trajectory_generator.py` now emits deterministic, validated, multi-frame `WorldProgram` trajectories. Each program contains three ordered frames, compiler-owned geometry and state-transition operations, explicit cameras, generated and inferred evidence bindings, quantified uncertainty, capability status, and a `DatasetPartition`. The generator reserves a whole object class, a whole operation family, and a composition of otherwise-seen families; it deliberately does not offer a random-example split.
+`src/world_schema/trajectory_generator.py` now emits deterministic, validated, multi-frame `WorldProgram` trajectories. Each program contains three ordered frames, compiler-owned geometry and state-transition operations, explicit cameras, generated and inferred evidence bindings, quantified uncertainty, capability status, and a `DatasetPartition`. The generator reserves a whole object class, a whole operation family, and a composition of otherwise-seen families; it deliberately does not offer a random-example split. Generator v1.1 derives the declared transform effect and optional support/near relation effects from generated pre-action geometry, material, and action-intent context rather than sampling an independent target delta.
 
 The writer refuses an existing destination, publishes canonical JSONL plus a deterministic manifest through a temporary sibling directory, and records file hashes, record counts, split counts, structural-program coverage, token-sequence lengths, evidence kinds, capability states, and explicit non-claims. The manifest contains no wall-clock field, so the same configuration and seed produce byte-identical artifacts. This is synthetic, typed trajectory infrastructure: its evidence is labeled `generated` or `inferred`, not `observed` or `measured`.
+
+### Generated temporal state witness
+
+`src/world_data/temporal_witness.py` is a backward-compatible sidecar contract. It accepts only a validated manifest-bound ingestion result, then rederives one witness per canonical `WorldProgram`: pre-state at tick 0, safe action context, and target state at tick 2. Its context feature contract includes only initial translation, geometry extent/bevel/variant, and material metallic/roughness values. It explicitly excludes the declared transform delta, target translation, target relation booleans, program ID, source hash, evidence URI, object class, operation family, and partition label. The target is rederived from the declared `SET_TRANSFORM` and relation-edit operation history and retains only `generated`/`inferred` evidence labels.
+
+This makes a more demanding **generated** benchmark possible: a model can be asked to infer the outcome from pre-state and context rather than being handed the generated delta. It is still not an observed or physical-world witness, does not execute compiler/render validation, and does not prove general learned dynamics.
 
 The first ignored local smoke dataset used seed `20260826` with 12 training trajectories and three trajectories in each holdout split. It produced 21 validated programs, 21 unique structural signatures, zero duplicates, and token sequences ranging from 7,391 to 7,494 IDs. The JSONL SHA-256 is `3a0b5e79bd592dffb2731131f83ce1d1db93a583dd7aed0bdbe6718e4beb3a28`; the manifest SHA-256 is `6af0b09145aa680e527db98e33b6bf10bcd5752bef7e523e1180301b00d7f607`. Raw smoke output remains ignored under `CCF_Sovereign/tmp/`.
 
@@ -94,7 +100,8 @@ It does **not** prove that Primus has learned world dynamics, that the generated
 | `src/world_schema/model.py` | Typed records, enums, canonical validation, references, hashes |
 | `src/world_schema/tokens.py` | 4K semantic/byte codec and structural coverage metrics |
 | `src/world_schema/s3v_bridge.py` | Native S³V lowering and lossless bridge envelope |
-| `src/world_schema/trajectory_generator.py` | Deterministic temporal fixtures, holdout contracts, coverage evidence, and atomic dataset writing |
+| `src/world_schema/trajectory_generator.py` | Deterministic temporal fixtures, context-derived generated action effects, holdout contracts, coverage evidence, and atomic dataset writing |
+| `src/world_data/temporal_witness.py` | Manifest-bound generated pre-state/context/post-state sidecar and strict target-feature boundary |
 | `generate_world_trajectories.py` | Explicit-destination Stage 2 command-line entry point |
 | `test_world_schema.py` | Eight fail-hard schema, codec, bridge, and structural-signature regression tests |
 | `test_world_trajectory_generator.py` | Seven fail-hard generator, holdout, determinism, hash, and destination-safety tests |

@@ -20,7 +20,7 @@ from world_data.transitions import (
     example_set_sha256,
     train_partition_examples,
 )
-from world_schema.model import HoldoutSplit
+from world_schema.model import HoldoutSplit, OperationKind
 from world_schema.trajectory_generator import TrajectoryGeneratorConfig, write_dataset
 
 
@@ -58,8 +58,24 @@ class WorldTransitionExampleTests(unittest.TestCase):
                 )
             ),
         )
-        self.assertFalse(example.support_present_after)
-        self.assertTrue(example.near_present_after)
+        support_effects = [
+            operation.kind
+            for operation in record.program.operations
+            if operation.relation_id == "relation_support"
+        ]
+        near_effects = [
+            operation.kind
+            for operation in record.program.operations
+            if operation.relation_id == "relation_near"
+        ]
+        self.assertEqual(
+            example.support_present_after,
+            support_effects[-1] is OperationKind.ADD_RELATION,
+        )
+        self.assertEqual(
+            example.near_present_after,
+            bool(near_effects) and near_effects[-1] is OperationKind.ADD_RELATION,
+        )
         self.assertEqual(example.target_evidence_kinds, ("generated", "inferred"))
         self.assertEqual(len(example.input_vector), len(INPUT_FEATURE_NAMES))
         self.assertEqual(len(example.target_vector), len(TARGET_FEATURE_NAMES))

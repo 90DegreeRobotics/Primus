@@ -3,7 +3,7 @@
 **Created:** 2026-08-27 07:32 CDT
 **Owner:** Manus, under Michael Holt’s autonomous-progress directive
 **Repository:** `C:\Primus` / `main`
-**Status:** ACTIVE — documentation correction is ready for commit; temporal witness design and implementation remain
+**Status:** ACTIVE — documentation correction is pushed and the temporal witness implementation passed the complete 54-test matrix; code commit and contextual dataset generation remain
 
 ## Goal
 
@@ -27,17 +27,17 @@ The existing `WorldProgram` encodes typed frames and operations, but not complet
 - [x] `CCF_Sovereign/src/world_compile/witness.py`
 - [x] `CCF_Sovereign/src/world_data/ingestion.py`
 - [x] `CCF_Sovereign/src/world_data/transitions.py`
-- [ ] Existing generator and schema test fixtures that assert operation/frame structure
+- [x] Existing generator and schema test fixtures that assert operation/frame structure
 
 ## Files to edit or add
 
-- [ ] `CCF_Sovereign/docs/WORLD_SCHEMA_V1.md` — correct the now-stale ingestion/prediction statement and retain the narrow positive-control boundary
-- [ ] `CCF_Sovereign/src/world_schema/trajectory_generator.py` — bump generator version and make declared generated action outcomes context/action-intent dependent without embedding a target delta in the future model feature contract
-- [ ] `CCF_Sovereign/src/world_data/temporal_witness.py` — derive and validate generated temporal pre-state/action/post-state witnesses from manifest-bound records
-- [ ] `CCF_Sovereign/src/world_data/__init__.py` — narrow exports only
-- [ ] `CCF_Sovereign/test_world_trajectory_generator.py` — update/add assertions for deterministic contextual action effects
-- [ ] `CCF_Sovereign/test_temporal_state_witness.py` — fail-hard tests for target rederivation, no direct-target feature leakage, whole-family split preservation, and malformed operation rejection
-- [ ] `plan_2026-08-27_0732_temporal-state-witness.md` and `handoff_manus_2026-08-27_temporal-state-witness.md`
+- [x] `CCF_Sovereign/docs/WORLD_SCHEMA_V1.md` — corrected stale ingestion/prediction statement and retained the narrow positive-control boundary in pushed commit `69982abe9e8f51edaf4bff4259b03e834bc913a3`
+- [x] `CCF_Sovereign/src/world_schema/trajectory_generator.py` — generator v1.1 derives declared generated action outcomes from safe context/action intent
+- [x] `CCF_Sovereign/src/world_data/temporal_witness.py` — derives and validates generated temporal pre-state/context/post-state witnesses from manifest-bound records
+- [x] `CCF_Sovereign/src/world_data/__init__.py` — narrow temporal witness exports only
+- [x] `CCF_Sovereign/test_world_trajectory_generator.py` and compatibility tests — validated deterministic contextual action effects
+- [x] `CCF_Sovereign/test_temporal_state_witness.py` — fail-hard target rederivation, direct-target feature exclusion, whole-family split, and relation-history tests
+- [ ] `plan_2026-08-27_0732_temporal-state-witness.md` and final `handoff_manus_2026-08-27_temporal-state-witness.md`
 
 No changes to parent/frozen checkpoints, candidate artifacts, raw Council corpus, `chronos2`, external compiler state, renderer output, or foreign-agent files are allowed. All generated datasets and candidates stay ignored and local.
 
@@ -49,11 +49,11 @@ The temporal-witness feature contract will include only pre-state values and act
 
 ## Ordered work
 
-- [ ] Replace only the stale sentence in `WORLD_SCHEMA_V1.md` with a truthful summary of the completed positive control and its explicit limits. Audit, commit, and push this documentation correction as an independent unit.
-- [ ] Implement context-dependent generated action deltas and optional relation transitions in the deterministic trajectory generator. Keep all outputs canonical, valid, round-trippable, and partitioned.
-- [ ] Implement a sidecar temporal witness that proves its target exactly matches the source program’s pre-state plus declared action/result operations, and that all required whole-family splits are present.
-- [ ] Add fail-hard tests for derivation, integrity, target leakage exclusions, and changed relation operations. Run the existing generator/schema/ingestion/transition tests plus the new witness gate.
-- [ ] Update this plan with measured verification; audit it for whitespace and prohibited unresolved markers; commit and push only the owned code/tests/docs/plan.
+- [x] Replace only the stale sentence in `WORLD_SCHEMA_V1.md` with a truthful summary of the completed positive control and its explicit limits. The audited documentation correction is pushed in `69982abe9e8f51edaf4bff4259b03e834bc913a3`.
+- [x] Implement context-dependent generated action deltas and optional relation transitions in the deterministic trajectory generator. Outputs remain canonical, valid, round-trippable, deterministic, and partitioned.
+- [x] Implement a sidecar temporal witness that proves its target exactly matches the source program’s pre-state plus declared action/result operations, and that all required whole-family splits are present.
+- [x] Add fail-hard tests for derivation, integrity, target leakage exclusions, and changed relation operations. The complete gate passed: compile plus 54 tests across schema, generator, ingestion, existing/new metrics, candidate safety, the original positive-control runner, and temporal witness.
+- [ ] Update this plan with final commit evidence; audit it for whitespace and prohibited unresolved markers; commit and push only the owned code/tests/docs/plan.
 - [ ] Generate a fresh ignored contextual dataset under a unique path. Inspect its manifest, holdout distribution, action-outcome distribution, structural diversity, witness hashes, and source integrity.
 - [ ] Only after the prior code is clean and pushed, write a separate bounded candidate plan. It must use a nonlinear model, never direct target-delta features, score every split separately against an explicit baseline, preserve no-promotion, and terminate safely on any integrity or numerical failure.
 
