@@ -32,3 +32,9 @@ from .temporal_witness import (  # noqa: F401
     derive_temporal_witnesses,
     temporal_witness_set_sha256,
 )
+from .normalization import (  # noqa: F401
+    NORMALIZATION_VERSION,
+    NormalizationError,
+    TemporalContextNormalization,
+    fit_train_only_normalization,
+)
