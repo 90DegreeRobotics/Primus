@@ -3,7 +3,7 @@
 **Created:** 2026-08-27 07:10 CDT
 **Owner:** Manus, under Michael Holt’s autonomous-progress directive
 **Repository:** `C:\Primus` / `main`
-**Status:** ACTIVE — code is pushed; first candidate attempt preserved as failed after checkpoint creation because final JSON receipt import was missing; corrected code requires focused re-gate and a fresh-ID retry
+**Status:** EXECUTION COMPLETE — successful fresh-ID positive-control candidate verified; documentation closure and final delivery remain
 
 ## Goal
 
@@ -44,7 +44,7 @@ The baseline is the static no-motion/no-relation-change predictor. It is expecte
 - [x] `CCF_Sovereign/training/candidate_run.py` — hash-bound additional frozen inputs without weakening current parent/corpus safeguards
 - [x] `CCF_Sovereign/train_world_transition.py` — explicit isolated candidate CLI; generated-data label; deterministic small regressor; baseline and model prediction artifacts
 - [x] Focused tests for data derivation, leakage, metrics, candidate evidence binding, and train-only fitting
-- [ ] `plan_2026-08-27_0710_manifest-bound-world-transition.md` and final `handoff_manus_2026-08-27_manifest-bound-world-transition.md`
+- [x] `plan_2026-08-27_0710_manifest-bound-world-transition.md` and final `handoff_manus_2026-08-27_generated-world-transition-positive-control.md`
 
 No `README.md`, `STATUS.md`, CCF root documentation, `chronos2`, parent/frozen checkpoints, raw Council corpus, or foreign agent path is edited by this unit. Any truth-surface change will be a `TRUTH-SURFACE REQUEST` in the handoff.
 
@@ -55,13 +55,13 @@ No `README.md`, `STATUS.md`, CCF root documentation, `chronos2`, parent/frozen c
 - [x] Implement split-separated metrics with position RMSE, tolerance-bounded position accuracy, support/near relation accuracy, and complete-prediction coverage. No pooled held-out figure is calculated.
 - [x] Implement an explicit isolated candidate CLI with a fixed low-capacity linear transition regressor and a static baseline. It binds code commit, frozen Stage 2 manifest, source dataset hashes, model configuration, output directory, input feature contract, and no-promotion policy into atomic local evidence.
 - [x] Add fail-hard focused unit tests and run the preserved final test gate: compile passed and 41 tests passed across candidate safety (5), ingestion (11), existing world metrics (8), generator (7), generated examples (4), generated metrics (4), and runner (2).
-- [ ] Generate a new ignored dataset using seed `20260827` and 256 train / 64 each held-out object, operation, and composition programs. Record its two source hashes and emitted split counts.
-- [ ] Commit the verified code and plan using explicit pathspecs, push `main`, and verify exact remote synchronization before candidate creation.
-- [ ] Recheck parent/frozen hashes, clean Git state, unique candidate/output paths, CUDA availability, candidate policy, and active process absence.
+- [x] Generate a new ignored dataset using seed `20260827` and 256 train / 64 each held-out object, operation, and composition programs. The JSONL SHA-256 is `f30ba907c71d2c736aeb5e13c0e8a9a79e28d5e649c697dfceee1b5c79febbeb`; the manifest SHA-256 is `5da51ab06158cb655aef920e744e214875e369d1aa6346f402bdec10cac5fd43`.
+- [x] Commit the verified code and plan using explicit pathspecs, push `main`, and verify exact remote synchronization before candidate creation. Code is bound at `6ec00293f69c227330faa51d97d80c3421768654`.
+- [x] Recheck parent/frozen hashes, clean Git state, unique candidate/output paths, CUDA availability, candidate policy, and active process absence. The RTX 3060 CUDA preflight passed; the fresh destination was absent and no matching process existed.
 - [x] Generated the isolated Stage 2 source dataset at `CCF_Sovereign/tmp/world_transition_dataset_20260827_0710/`: 448 programs (256 train / 64 each protected split), JSONL SHA-256 `f30ba907c71d2c736aeb5e13c0e8a9a79e28d5e649c697dfceee1b5c79febbeb`, manifest SHA-256 `5da51ab06158cb655aef920e744e214875e369d1aa6346f402bdec10cac5fd43`, and 448/448 unique structural programs.
 - [x] Pushed implementation commit `9daca8320c70ef88bbb18d58e82a0f993b1ec64d`; the repository was clean and synchronized before the candidate attempt.
-- [ ] Train one bounded generated-transition candidate on the train partition only; run static-baseline and candidate predictions over every partition; write per-split metrics and no-promotion evidence. Attempt `world-transition-20260827-0710-linear` created its isolated checkpoint/report artifacts but then failed in final receipt printing due to missing `json` import; it is preserved as `failed` and must never be reused. The import correction requires re-gating, a code commit/push, and retrying once under fresh ID `world-transition-20260827-0725-linear`.
-- [ ] Rehash parent/frozen artifacts, candidate checkpoint, prediction records, and metrics. Run the non-mutating promotion policy with no fabricated behavioral-comparison evidence, record its expected ineligible result, and write an audited handoff.
+- [x] Train one bounded generated-transition candidate on the train partition only; run static-baseline and candidate predictions over every partition; write per-split metrics and no-promotion evidence. The fresh candidate `world-transition-20260827-0725-linear` completed 1,920 updates in 7.048898100008955 seconds. It scored 1.0 complete-transition accuracy in train and in every 64-case protected split, versus 0.0 for the static baseline. Its result is a generated coordinate-addition/relation positive control, not a learned-world claim. The first ID `world-transition-20260827-0710-linear` remains preserved as failed after its post-checkpoint receipt-printing error and is never reused.
+- [x] Rehash parent/frozen artifacts, candidate checkpoint, prediction records, and metrics. The completed candidate checkpoint is `96493837f7ec892e803110bc11c1222f63761f39b97f23479448c7dd41654907`; parent/frozen remain `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`. The non-mutating policy decision is ineligible because no behavioral comparison or promotion authorization exists. The handoff is written and requires a documentation-only commit/push.
 
 ## Candidate and resource boundary
 
