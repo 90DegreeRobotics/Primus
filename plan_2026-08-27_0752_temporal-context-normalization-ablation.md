@@ -3,7 +3,7 @@
 **Created:** 2026-08-27 07:52 CDT
 **Owner:** Manus, under Michael Holt’s autonomous-progress directive
 **Repository:** `C:\Primus` / `main`
-**Status:** ACTIVE — train-only normalization and comparable runner passed the complete 61-test matrix; audit, code commit, and fresh isolated ablation candidate remain
+**Status:** EXECUTION COMPLETE — fixed-data normalized candidate and non-mutating ineligibility decision are recorded; documentation closure and final diagnosis remain
 
 ## Goal
 
@@ -37,7 +37,7 @@ The ablation changes numerical representation only. It must not alter the source
 - [x] `CCF_Sovereign/train_temporal_context_normalized.py` — explicit equal-budget isolated candidate runner; no raw target/inference leakage
 - [x] `CCF_Sovereign/test_temporal_context_normalization.py` — train-only statistic, normalization/inversion, leakage, and finite checks
 - [x] `CCF_Sovereign/test_temporal_context_normalized_candidate.py` — exact feature contract, train-only fitting, prediction coverage, and split reports
-- [ ] `plan_2026-08-27_0752_temporal-context-normalization-ablation.md` and final `handoff_manus_2026-08-27_temporal-context-normalization-ablation.md`
+- [x] `plan_2026-08-27_0752_temporal-context-normalization-ablation.md` and final `handoff_manus_2026-08-27_temporal-context-normalization-ablation.md`
 
 No code path may read held-out witnesses when fitting normalization statistics. No target delta, final target, relation target, partition, class, family, program ID, source hash, or evidence URI enters the model input tensor. No checkpoint promotion, parent/frozen mutation, candidate reuse, source artifact mutation, compiler/render invocation, raw corpus mutation, `chronos2` change, or foreign worktree edit is allowed.
 
@@ -46,10 +46,10 @@ No code path may read held-out witnesses when fitting normalization statistics. 
 - [x] Implement immutable normalization statistics from a nonempty all-train witness collection. It requires finite means/scales and a stable positive floor for constant dimensions and emits exact forward/inverse transforms with a canonical SHA-256 receipt.
 - [x] Implement an equal-budget candidate runner using the exact 8→32→32→5 MLP and hyperparameters of the underfit baseline. It normalizes inputs and position targets using the train-only receipt, passes relation targets unchanged, and persists normalization/fixed-data evidence in the manifest and run summary.
 - [x] Add fail-hard tests and run the preserved complete gate: compile plus 61 tests across current schema/generator/ingestion/witness/metric/candidate contracts and the two new normalization suites.
-- [ ] Audit, commit, and push only the runner, normalization module, tests, and plan. Confirm clean parity and unchanged parent/frozen hashes.
-- [ ] Recheck the fixed source dataset and manifest hashes, candidate destination absence, GPU availability, policy/no-promotion, and no matching active process.
-- [ ] Execute one fresh candidate ID `temporal-context-20260827-0752-normalized-mlp` with identical 300 epochs, batch 16, learning rate 0.01, hidden width 32, and 25-mm metric tolerance. Run baseline/candidate prediction artifacts, strict restore smoke, non-mutating promotion decision, and post-run hashes.
-- [ ] Report train and protected-split results separately. Diagnose only whether train-only normalization changes the baseline candidate’s underfit behavior; do not pool holdouts or claim world dynamics.
+- [x] Audit, commit, and push only the runner, normalization module, tests, and plan. Clean parity and unchanged parent/frozen hashes were verified in pushed commit `28f0e5b473661ed9ae519b362e8718c4e5e1edf5`.
+- [x] Recheck the fixed source dataset and manifest hashes, candidate destination absence, GPU availability, policy/no-promotion, and no matching active process.
+- [x] Execute fresh candidate `temporal-context-20260827-0752-normalized-mlp` with identical 300 epochs, batch 16, learning rate 0.01, hidden width 32, and 25-mm metric tolerance. It completed 4,800 updates in 20.921008399978746 seconds; baseline/model artifacts, restore smoke, and non-mutating promotion decision all completed.
+- [x] Report train and protected-split results separately. Train-only normalization improved train strict accuracy from 0.0390625 to 0.0703125 and train RMSE from 72.1068 to 50.3891 mm, but worsened protected position RMSE in each split; it is insufficient for the generated contextual rule. The final handoff is written and needs documentation-only commit/push.
 
 ## Test gate
 
