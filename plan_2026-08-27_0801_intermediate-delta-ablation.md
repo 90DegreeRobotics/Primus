@@ -3,7 +3,7 @@
 **Created:** 2026-08-27 08:01 CDT
 **Owner:** Manus, under Michael Holt’s autonomous-progress directive
 **Repository:** `C:\Primus` / `main`
-**Status:** ACTIVE — intermediate-delta representation and equal-budget runner passed the complete 65-test matrix; audit, code commit, and isolated candidate execution remain
+**Status:** EXECUTION COMPLETE — intermediate-delta candidate, strict restore, and non-mutating ineligibility decision are recorded; documentation closure remains
 
 ## Goal
 
@@ -29,7 +29,7 @@ The transform delta is an **output target**, never an input. The candidate recei
 - [x] `CCF_Sovereign/train_temporal_delta.py` — equal-budget isolated output-delta candidate runner with fixed pre-state composition and separate split metrics
 - [x] `CCF_Sovereign/test_delta_witness.py` — no-delta-input, exact rederivation, and split-preservation tests
 - [x] `CCF_Sovereign/test_temporal_delta_candidate.py` — exact coverage, output composition, train-only fit, and candidate metric tests
-- [ ] `plan_2026-08-27_0801_intermediate-delta-ablation.md` and final handoff
+- [x] `plan_2026-08-27_0801_intermediate-delta-ablation.md` and final `handoff_manus_2026-08-27_intermediate-delta-ablation.md`
 
 No parent/frozen checkpoint, source dataset, existing candidate, corpus, compiler/render surface, `chronos2`, or foreign worktree file may be changed. Candidates, helpers, logs, and outputs remain ignored and local.
 
@@ -38,8 +38,8 @@ No parent/frozen checkpoint, source dataset, existing candidate, corpus, compile
 - [x] Implement a typed delta witness that accepts a manifest-bound temporal witness result and rederives each declared `SET_TRANSFORM` delta. Feature names remain the current eight-feature context contract; target names identify the three delta outputs plus final relations.
 - [x] Implement a runner with the exact MLP and resource budget. It trains on train-only delta targets, composes predicted delta plus known pre-state through fixed addition, and scores final state and relations per split without pooled holdouts.
 - [x] Add fail-hard tests and run all relevant prior gates. The preserved complete gate passed: compile plus 65 tests across current schema/generator/ingestion/witness/metric/candidate contracts and the two new delta suites. Audit, commit, and push remain.
-- [ ] Execute one fresh-ID candidate against the fixed dataset after clean parity, source hashes, parent hashes, destination absence, CUDA, and process checks. Preserve baseline/model predictions, manifests, checkpoint, restore smoke, non-mutating promotion decision, and source/artifact hashes.
-- [ ] Publish only the factual outcome. A high score demonstrates a generated, typed context-to-delta mapping under held-out families; it does not prove observed or physical world dynamics, rendering, general intelligence, or promotion eligibility.
+- [x] Execute fresh candidate `temporal-delta-20260827-0801-mlp` against the fixed dataset after clean parity, source hashes, parent hashes, destination absence, CUDA, and process checks. It completed 4,800 updates, wrote isolated baseline/model predictions and metrics, and passed strict restore. Candidate checkpoint SHA-256 is `d405bace1d1448c96261e0a38384f029bbb632aa8dcb7a6c254491dd5c4e70f7`.
+- [x] Publish only the factual outcome. This output representation improves position RMSE versus the raw-context arm in all splits and improves strict operation/composition holdouts, but train strict accuracy remains 0.04296875. It is a generated typed context-to-delta result, not observed/physical dynamics, rendering, general intelligence, or promotion eligibility. The non-mutating policy decision is ineligible; the final handoff is written and needs documentation-only commit/push.
 
 ## Rollback and next-agent notes
 
