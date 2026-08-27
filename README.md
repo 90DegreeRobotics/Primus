@@ -55,11 +55,18 @@ partitions: `0.0249904402` versus `0.0399958638` on 1,998 held-out episodes and
 held-out task identities. The frozen intake manifest is SHA-256
 `a3e4a457c497fa6d36ac38725829ea7492c6e479e2868ea2e7ba43b66f75bd2a`.
 
-This is narrow **real-data one-step prediction evidence**, not proof of robot
-policy learning, robot control/safety, multi-step rollout, visual world models,
-native Chronos integration, or product readiness. The candidate was explicitly
-rejected from promotion despite passing its predeclared baseline comparison.
-The committed handoff names the local ignored evidence paths and hashes.
+An independent episode-disjoint replication then reserved all 453 episodes
+selected by the first candidate, selected 476 different complete episodes with
+zero overlap, and again passed the exact-coverage protected comparison. Its
+aggregate RMSE was `0.0264679426` versus `0.0402912793` on 1,999 held-out
+episode transitions and `0.0273437551` versus `0.0404739780` on 1,997 strict
+held-out-task transitions. Both candidates remain separate local evidence and
+were explicitly rejected from promotion.
+
+This is narrow **replicated real-data one-step prediction evidence**, not proof
+of robot policy learning, robot control/safety, multi-step rollout, visual world
+models, native Chronos integration, or product readiness. The committed handoffs
+name the local ignored evidence paths and hashes.
 
 ## Operator Rules
 

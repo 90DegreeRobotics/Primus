@@ -1,6 +1,6 @@
 # Plan — Independent BridgeData State-Transition Replication
 
-**Status:** ACTIVE
+**Status:** COMPLETE — independent replication passed; no promotion performed
 
 **Date:** 2026-08-27 15:40 CDT
 
@@ -25,10 +25,10 @@
 - [x] Implement a deterministic replication allocation that excludes all episodes selected by the first candidate before task and episode holdout allocation, then proves complete episode/task non-overlap against the full source metadata.
 - [x] Test alternate allocation determinism, prior-candidate episode exclusion, retained task leakage protections, exact coverage, and failure on invalid reserved episode identifiers.
 - [x] Extend the runner so a supplied prior candidate ID and fixed fresh split seed are bound into its own manifest/config and evidence receipt; no tuning or change to the first candidate is permitted.
-- [ ] Run compile and focused tests, audit this plan, explicitly stage only replication code/tests/plan, commit and push `origin/main`.
-- [ ] Preflight a fresh candidate directory, clean tracked code, exact inherited untracked-plan hashes, parent/frozen input hashes, no active training, and output scale.
-- [ ] Run exactly one candidate, `bridge-real-20260827-002`, with replication seed `20260828`, CPU unless CUDA availability is positively verified.
-- [ ] Verify terminal lifecycle, checkpoint restore, exact coverage, no promotion, and post-run parent/input hashes. Commit and push an evidence-first result handoff.
+- [x] Run compile and focused tests, audit this plan, explicitly stage only replication code/tests/plan, commit and push `origin/main` (`c92c0f9438956b41f4f3266c30cff3b210884627`).
+- [x] Preflight a fresh candidate directory, clean tracked code, exact inherited untracked-plan hashes, parent/frozen input hashes, no active training, and output scale.
+- [x] Run exactly one candidate, `bridge-real-20260827-002`, with replication seed `20260828`, CPU because CUDA telemetry could not initialize.
+- [x] Verify terminal lifecycle, checkpoint restore, exact coverage, no promotion, and post-run parent/input hashes. Commit and push an evidence-first result handoff.
 
 ## Predeclared Replication Criteria
 
@@ -48,6 +48,10 @@ No new raw data or video download is authorized. The existing frozen intake rema
 
 Do not delete or reset any path. If a safety, split, candidate, or result gate fails, preserve the fresh candidate's local terminal failure/rejection evidence and stop. Do not reuse the candidate directory, relax the acceptance criterion, or train a replacement configuration.
 
+## Result Boundary
+
+The fresh candidate reserved all 453 complete episode identifiers selected by `bridge-real-20260827-001` before allocation. It then selected 476 different complete episodes; measured overlap was zero. On exact-coverage protected evaluation, its 19,591-parameter from-scratch residual MLP achieved aggregate RMSE `0.026467942605055767` versus the strongest held-out-episode baseline's `0.040291279340085966`, and `0.027343755051333143` versus the strongest strict held-out-task baseline's `0.04047397797087077`. The predeclared replication rule passed. This remains narrow real-data one-step state prediction evidence only, not evidence of robot control, safety, multi-step rollout, visual modeling, native Chronos integration, product readiness, or promotion.
+
 ## Next-Agent Pickup
 
-The objective is an **episode-disjoint replication**, not merely a different seed. The first candidate used 336 train, 61 held-out-episode, and 56 held-out-task episodes from the frozen intake. A valid replication must reserve those 453 selected episode indices before allocating its own whole-group partitions. The parent SHA-256 is `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`; the intake manifest SHA-256 is `a3e4a457c497fa6d36ac38725829ea7492c6e479e2868ea2e7ba43b66f75bd2a`.
+Do not tune, resume, overwrite, or promote either completed candidate. The objective after this successful replication is a separately planned multi-step rollout/stability evaluation over the frozen one-step predictor outputs, using no controller/actuation and predeclared error-accumulation and coverage metrics. The parent SHA-256 is `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b`; the intake manifest SHA-256 is `a3e4a457c497fa6d36ac38725829ea7492c6e479e2868ea2e7ba43b66f75bd2a`.
