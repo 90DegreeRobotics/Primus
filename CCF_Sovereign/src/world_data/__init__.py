@@ -38,3 +38,11 @@ from .normalization import (  # noqa: F401
     TemporalContextNormalization,
     fit_train_only_normalization,
 )
+from .delta_witness import (  # noqa: F401
+    DELTA_TARGET_FEATURE_NAMES,
+    DeltaWitness,
+    DeltaWitnessError,
+    delta_witness_set_sha256,
+    derive_delta_witness,
+    derive_delta_witnesses,
+)
