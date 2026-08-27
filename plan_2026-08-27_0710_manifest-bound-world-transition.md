@@ -3,7 +3,7 @@
 **Created:** 2026-08-27 07:10 CDT
 **Owner:** Manus, under Michael Holt’s autonomous-progress directive
 **Repository:** `C:\Primus` / `main`
-**Status:** ACTIVE — complete 41-test gate passed; code commit, push, and candidate preflight remain before execution
+**Status:** ACTIVE — code is pushed; first candidate attempt preserved as failed after checkpoint creation because final JSON receipt import was missing; corrected code requires focused re-gate and a fresh-ID retry
 
 ## Goal
 
@@ -58,7 +58,9 @@ No `README.md`, `STATUS.md`, CCF root documentation, `chronos2`, parent/frozen c
 - [ ] Generate a new ignored dataset using seed `20260827` and 256 train / 64 each held-out object, operation, and composition programs. Record its two source hashes and emitted split counts.
 - [ ] Commit the verified code and plan using explicit pathspecs, push `main`, and verify exact remote synchronization before candidate creation.
 - [ ] Recheck parent/frozen hashes, clean Git state, unique candidate/output paths, CUDA availability, candidate policy, and active process absence.
-- [ ] Train one bounded generated-transition candidate on the train partition only; run static-baseline and candidate predictions over every partition; write per-split metrics and no-promotion evidence.
+- [x] Generated the isolated Stage 2 source dataset at `CCF_Sovereign/tmp/world_transition_dataset_20260827_0710/`: 448 programs (256 train / 64 each protected split), JSONL SHA-256 `f30ba907c71d2c736aeb5e13c0e8a9a79e28d5e649c697dfceee1b5c79febbeb`, manifest SHA-256 `5da51ab06158cb655aef920e744e214875e369d1aa6346f402bdec10cac5fd43`, and 448/448 unique structural programs.
+- [x] Pushed implementation commit `9daca8320c70ef88bbb18d58e82a0f993b1ec64d`; the repository was clean and synchronized before the candidate attempt.
+- [ ] Train one bounded generated-transition candidate on the train partition only; run static-baseline and candidate predictions over every partition; write per-split metrics and no-promotion evidence. Attempt `world-transition-20260827-0710-linear` created its isolated checkpoint/report artifacts but then failed in final receipt printing due to missing `json` import; it is preserved as `failed` and must never be reused. The import correction requires re-gating, a code commit/push, and retrying once under fresh ID `world-transition-20260827-0725-linear`.
 - [ ] Rehash parent/frozen artifacts, candidate checkpoint, prediction records, and metrics. Run the non-mutating promotion policy with no fabricated behavioral-comparison evidence, record its expected ineligible result, and write an audited handoff.
 
 ## Candidate and resource boundary
