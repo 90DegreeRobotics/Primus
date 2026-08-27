@@ -28,6 +28,8 @@ checkpoints/
 
 # Local corpus exports and derived training payloads
 NeuroCognica_Primus/convos/
+# Approved external observational intakes are immutable local evidence, never source.
+CCF_Sovereign/data/external/
 **/training/training_data/*.jsonl
 **/training/training_data/*.manifest.json
 
