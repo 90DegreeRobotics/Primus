@@ -110,13 +110,16 @@ def extract_strict_evidence_rows(payload: Mapping[str, Any]) -> tuple[StrictEvid
             baseline_rmse = _number(baselines[strongest].get("aggregate_rmse"), "strongest baseline RMSE")
             if candidate_rmse >= baseline_rmse:
                 raise BuyerEvidencePacketError("strict source row does not improve on declared strongest baseline")
-            coverage = candidate.get("coverage")
-            if not isinstance(coverage, Mapping) or int(coverage.get("expected_prediction_count", -1)) != int(coverage.get("prediction_count", -2)) or int(coverage.get("unknown_prediction_count", -1)) != 0 or int(coverage.get("excluded_prediction_count", -1)) != 0:
+            expected_cases = int(candidate.get("cases", -1))
+            prediction_count = int(candidate.get("predictions", -2))
+            coverage = _number(candidate.get("coverage"), "candidate coverage")
+            if expected_cases < 1 or prediction_count != expected_cases or coverage != 1.0 or int(candidate.get("unknown_prediction_count", -1)) != 0 or int(candidate.get("excluded_case_count", -1)) != 0 or _number(candidate.get("finite_prediction_rate"), "finite prediction rate") != 1.0:
                 raise BuyerEvidencePacketError("strict source row does not have exact finite coverage")
             results.append(StrictEvidenceRow(
                 source_candidate_id=source_id, horizon=horizon, candidate_rmse=candidate_rmse,
                 strongest_baseline_name=str(strongest), strongest_baseline_rmse=baseline_rmse,
-                margin=baseline_rmse - candidate_rmse, case_count=int(coverage["prediction_count"]),
+                margin=baseline_rmse - candidate_rmse, case_count=prediction_count,
+
                 source_train_task_overlap=int(row["source_train_task_overlap_count"]),
                 selected_episode_overlap=int(row["source_selected_episode_overlap_count"]),
             ))

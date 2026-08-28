@@ -20,7 +20,7 @@ def row(source: str, horizon: int, *, task_overlap: int = 0, candidate: float = 
     return {
         "source_candidate_id": source, "horizon": horizon, "source_train_task_overlap_count": task_overlap,
         "source_selected_episode_overlap_count": 0, "strongest_baseline": "linear_state_action_delta",
-        "candidate_metrics": {"aggregate_rmse": candidate, "coverage": {"expected_prediction_count": 256, "prediction_count": 256, "unknown_prediction_count": 0, "excluded_prediction_count": 0}},
+        "candidate_metrics": {"aggregate_rmse": candidate, "cases": 256, "predictions": 256, "coverage": 1.0, "unknown_prediction_count": 0, "excluded_case_count": 0, "finite_prediction_rate": 1.0},
         "baseline_metrics": {"linear_state_action_delta": {"aggregate_rmse": baseline}},
     }
 
