@@ -31,6 +31,7 @@ from real_data.bridgedata_evaluation import (  # noqa: E402
     TRAIN_SPLIT,
     ActionOnlyMeanDeltaBaseline,
     BridgeDataSplit,
+    LinearStateActionDeltaBaseline,
     NearestTrainStateActionBaseline,
     transitions_by_split,
     validate_bridgedata_split,
@@ -43,6 +44,7 @@ from real_data.bridgedata_rollouts import (  # noqa: E402
     action_only_mean_delta_predictor,
     copy_state_predictor,
     evaluate_rollout_predictor,
+    linear_state_action_delta_predictor,
     nearest_train_state_action_predictor,
     predeclared_rollout_acceptance,
 )
@@ -339,6 +341,7 @@ def evaluate_frozen_candidates(
         frozen = load_frozen_rollout_candidate(candidate_id, device=device)
         partitioned = frozen["partitioned_transitions"]
         action_baseline = ActionOnlyMeanDeltaBaseline.fit(partitioned[TRAIN_SPLIT])
+        linear_baseline = LinearStateActionDeltaBaseline.fit(partitioned[TRAIN_SPLIT])
         nearest_baseline = NearestTrainStateActionBaseline.fit(partitioned[TRAIN_SPLIT])
         candidate_report = evaluate_rollout_predictor(
             partitioned,
@@ -355,6 +358,11 @@ def evaluate_frozen_candidates(
                 partitioned,
                 prediction_label="action_only_mean_delta",
                 predict_next_state=action_only_mean_delta_predictor(action_baseline),
+            ),
+            "linear_state_action_delta": evaluate_rollout_predictor(
+                partitioned,
+                prediction_label="linear_state_action_delta",
+                predict_next_state=linear_state_action_delta_predictor(linear_baseline),
             ),
             "nearest_train_state_action": evaluate_rollout_predictor(
                 partitioned,

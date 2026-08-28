@@ -20,6 +20,7 @@ from .bridgedata_evaluation import (
     REQUIRED_SPLITS,
     ActionOnlyMeanDeltaBaseline,
     BridgeDataEvaluationError,
+    LinearStateActionDeltaBaseline,
     NearestTrainStateActionBaseline,
 )
 from .bridgedata_transitions import BridgeDataTransition, STATE_DIMENSIONS
@@ -333,6 +334,28 @@ def action_only_mean_delta_predictor(
     def predict(state: tuple[float, ...], _action: tuple[float, ...]) -> tuple[float, ...]:
         current = _finite_vector(state, "mean-delta rollout state")
         return tuple(value + delta for value, delta in zip(current, baseline.mean_delta))
+
+    return predict
+
+
+def linear_state_action_delta_predictor(
+    baseline: LinearStateActionDeltaBaseline,
+) -> Callable[[tuple[float, ...], tuple[float, ...]], tuple[float, ...]]:
+    """Return a recursive train-only linear state/action delta predictor."""
+
+    if not isinstance(baseline, LinearStateActionDeltaBaseline):
+        raise BridgeDataRolloutError("expected a LinearStateActionDeltaBaseline")
+    coefficients = np.asarray(baseline.coefficients, dtype=np.float64)
+    if coefficients.shape != (STATE_DIMENSIONS * 2 + 1, STATE_DIMENSIONS):
+        raise BridgeDataRolloutError("linear rollout baseline has invalid coefficients")
+
+    def predict(state: tuple[float, ...], action: tuple[float, ...]) -> tuple[float, ...]:
+        current = _finite_vector(state, "linear rollout state")
+        observed_action = _finite_vector(action, "linear rollout action")
+        feature = np.asarray((1.0,) + current + observed_action, dtype=np.float64)
+        delta = feature @ coefficients
+        values = tuple(float(value + offset) for value, offset in zip(current, delta))
+        return _finite_vector(values, "linear rollout predictor output")
 
     return predict
 

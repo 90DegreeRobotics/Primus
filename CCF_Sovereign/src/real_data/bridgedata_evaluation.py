@@ -17,6 +17,8 @@ from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass, replace
 from typing import Any, Iterable, Mapping, Sequence
 
+import numpy as np
+
 from .bridgedata_transitions import (
     STATE_DIMENSIONS,
     BridgeDataError,
@@ -674,6 +676,67 @@ class ActionOnlyMeanDeltaBaseline:
 
 
 @dataclass(frozen=True)
+class LinearStateActionDeltaBaseline:
+    """Train-only ordinary least-squares delta predictor over state and action."""
+
+    coefficients: tuple[tuple[float, ...], ...]
+    train_transition_ids: tuple[str, ...]
+    label: str = "linear_state_action_delta"
+
+    @classmethod
+    def fit(cls, train_transitions: Iterable[BridgeDataTransition]) -> "LinearStateActionDeltaBaseline":
+        examples = tuple(train_transitions)
+        if len(examples) < 2:
+            raise BridgeDataEvaluationError("linear baseline requires at least two train transitions")
+        identifiers = [item.transition_id for item in examples]
+        if len(identifiers) != len(set(identifiers)):
+            raise BridgeDataEvaluationError("linear baseline training has duplicate transition IDs")
+        features = []
+        deltas = []
+        for item in examples:
+            item.validate()
+            features.append((1.0,) + item.state_t + item.action_t)
+            deltas.append(tuple(target - source for target, source in zip(item.state_t_plus_1, item.state_t)))
+        coefficients, *_ = np.linalg.lstsq(
+            np.asarray(features, dtype=np.float64),
+            np.asarray(deltas, dtype=np.float64),
+            rcond=None,
+        )
+        if coefficients.shape != (STATE_DIMENSIONS * 2 + 1, STATE_DIMENSIONS):
+            raise BridgeDataEvaluationError("linear baseline fit produced invalid coefficients")
+        if not np.all(np.isfinite(coefficients)):
+            raise BridgeDataEvaluationError("linear baseline fit produced non-finite coefficients")
+        return cls(
+            coefficients=tuple(tuple(float(value) for value in row) for row in coefficients),
+            train_transition_ids=tuple(identifiers),
+        )
+
+    def predict(self, transitions: Iterable[BridgeDataTransition]) -> dict[str, BridgeDataPrediction]:
+        examples = tuple(transitions)
+        identifiers = [item.transition_id for item in examples]
+        if len(identifiers) != len(set(identifiers)):
+            raise BridgeDataEvaluationError("duplicate transition in linear prediction input")
+        coefficients = np.asarray(self.coefficients, dtype=np.float64)
+        if coefficients.shape != (STATE_DIMENSIONS * 2 + 1, STATE_DIMENSIONS):
+            raise BridgeDataEvaluationError("linear baseline coefficients have invalid shape")
+        result: dict[str, BridgeDataPrediction] = {}
+        for transition in examples:
+            transition.validate()
+            feature = np.asarray((1.0,) + transition.state_t + transition.action_t, dtype=np.float64)
+            delta = feature @ coefficients
+            if not np.all(np.isfinite(delta)):
+                raise BridgeDataEvaluationError("linear baseline emitted non-finite prediction")
+            result[transition.transition_id] = BridgeDataPrediction(
+                transition_id=transition.transition_id,
+                state_t_plus_1=tuple(
+                    float(value + offset)
+                    for value, offset in zip(transition.state_t, delta)
+                ),
+            )
+        return result
+
+
+@dataclass(frozen=True)
 class NearestTrainStateActionBaseline:
     """Train-only nearest-neighbor delta predictor in train-standardized 14D input space."""
 
@@ -782,7 +845,12 @@ class NearestTrainStateActionBaseline:
 
 
 def baseline_predictions(
-    baseline: CopyStateBaseline | ActionOnlyMeanDeltaBaseline | NearestTrainStateActionBaseline,
+    baseline: (
+        CopyStateBaseline
+        | ActionOnlyMeanDeltaBaseline
+        | LinearStateActionDeltaBaseline
+        | NearestTrainStateActionBaseline
+    ),
     partitioned_transitions: Mapping[str, Sequence[BridgeDataTransition]],
 ) -> dict[str, BridgeDataPrediction]:
     """Predict every required partition with a train-fitted baseline exactly once."""

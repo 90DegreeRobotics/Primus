@@ -66,13 +66,25 @@ were explicitly rejected from promotion.
 A subsequent evaluation-only open-loop measurement froze both rejected
 checkpoints, started from observed held-out states, and recursively fed only each
 predictor's own state output plus recorded observed actions. On deterministic
-256-case protected samples, both candidates remained below their strongest stated
-baseline through horizons one, two, and five. Candidate `001` was materially
-less stable on strict held-out tasks: its RMSE rose from `0.0256026919` at one
-step to `0.2579618763` at five steps; candidate `002` rose from `0.0281386466`
-to `0.0745211324` on its strict task selection. Horizon-ten measurements were
-descriptive only. The details and frozen artifact hashes are in the rollout
-handoff.
+256-case protected samples, both candidates remained below their strongest
+stated baseline through horizons one, two, and five. A later amendment added a
+train-only ordinary least-squares state/action delta baseline and reran the
+gate. Both candidates still passed, but with narrower margins: candidate `001`
+strict-task h5 was `0.2579618763` versus linear baseline `0.2638808140`, and
+candidate `002` strict-task h5 was `0.0745211324` versus linear baseline
+`0.0887700524`. Horizon-ten measurements were descriptive only. The details and
+frozen artifact hashes are in the rollout handoffs.
+
+The same linear-amended audit scored each frozen model against the other
+candidate's protected episode selections, using only the source candidate's
+train partition for baselines. It found zero protected episode overlap and exact
+finite 256-case coverage. Candidate `001` on candidate `002` passed the
+predeclared h1/h2/h5 rule on both target protected partitions. Candidate `002`
+on candidate `001` passed target held-out episodes but failed target
+held-out-task h5 by `0.00068158` RMSE (`0.26076429` versus nearest-neighbor
+baseline `0.26008270`). Every cross-target split had source-train task overlap,
+so the cross audit is episode-disjoint robustness evidence, not a strict
+unseen-task claim relative to the source model.
 
 This is narrow **replicated real-data short-horizon open-loop prediction
 evidence**, not proof of robot policy learning, robot control/safety, reliable

@@ -39,6 +39,7 @@ CCF_Sovereign/data/external/
 CCF_Sovereign/data/benchmarks/run_*/
 CCF_Sovereign/data/operator_bootcheck/
 CCF_Sovereign/evaluation/bridgedata_rollouts/
+CCF_Sovereign/evaluation/bridgedata_cross_rollouts/
 
 # Generated maps, reports, logs, and process state
 /primus-map.txt

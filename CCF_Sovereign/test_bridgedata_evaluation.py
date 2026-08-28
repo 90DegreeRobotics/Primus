@@ -16,6 +16,7 @@ from real_data.bridgedata_evaluation import (  # noqa: E402
     BridgeDataEvaluationError,
     BridgeDataSplitConfig,
     CopyStateBaseline,
+    LinearStateActionDeltaBaseline,
     NearestTrainStateActionBaseline,
     allocate_bridgedata_replication_split,
     allocate_bridgedata_split,
@@ -201,6 +202,7 @@ class BridgeDataEvaluationTests(unittest.TestCase):
         baselines = (
             CopyStateBaseline(),
             ActionOnlyMeanDeltaBaseline.fit(train),
+            LinearStateActionDeltaBaseline.fit(train),
             NearestTrainStateActionBaseline.fit(train),
         )
         expected_ids = {item.transition_id for values in partitions.values() for item in values}
@@ -232,6 +234,37 @@ class BridgeDataEvaluationTests(unittest.TestCase):
 
         self.assertEqual(baseline.mean_delta, expected)
         self.assertEqual(baseline.train_transition_ids, frozenset({left.transition_id, right.transition_id}))
+
+    def test_linear_delta_baseline_learns_train_only_state_action_map(self):
+        train = tuple(
+            replace(
+                transition_for(episode(index, index % 4, length=5), step),
+                state_t_plus_1=tuple(
+                    source
+                    + 0.5
+                    + source * 0.1
+                    + action * 0.2
+                    + dimension * 0.01
+                    for dimension, (source, action) in enumerate(
+                        zip(
+                            transition_for(episode(index, index % 4, length=5), step).state_t,
+                            transition_for(episode(index, index % 4, length=5), step).action_t,
+                        )
+                    )
+                ),
+            )
+            for index in range(6)
+            for step in range(3)
+        )
+        baseline = LinearStateActionDeltaBaseline.fit(train)
+        predictions = baseline.predict(train[:3])
+        for transition in train[:3]:
+            self.assertEqual(predictions[transition.transition_id].transition_id, transition.transition_id)
+            for predicted, expected in zip(
+                predictions[transition.transition_id].state_t_plus_1,
+                transition.state_t_plus_1,
+            ):
+                self.assertAlmostEqual(predicted, expected, places=10)
 
     def test_metric_coverage_is_fail_hard(self):
         split = allocate_bridgedata_split(self.episodes, self.config)

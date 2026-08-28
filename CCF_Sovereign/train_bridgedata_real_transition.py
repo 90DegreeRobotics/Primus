@@ -39,6 +39,7 @@ from real_data.bridgedata_evaluation import (  # noqa: E402
     BridgeDataSplit,
     BridgeDataSplitConfig,
     CopyStateBaseline,
+    LinearStateActionDeltaBaseline,
     NearestTrainStateActionBaseline,
     allocate_bridgedata_replication_split,
     allocate_bridgedata_split,
@@ -445,6 +446,7 @@ def run_once(
     baselines = (
         CopyStateBaseline(),
         ActionOnlyMeanDeltaBaseline.fit(partitions[TRAIN_SPLIT]),
+        LinearStateActionDeltaBaseline.fit(partitions[TRAIN_SPLIT]),
         NearestTrainStateActionBaseline.fit(partitions[TRAIN_SPLIT]),
     )
     baseline_reports = {

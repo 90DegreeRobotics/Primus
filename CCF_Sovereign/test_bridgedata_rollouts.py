@@ -12,6 +12,7 @@ from real_data.bridgedata_evaluation import (  # noqa: E402
     HELD_OUT_EPISODE_SPLIT,
     HELD_OUT_TASK_SPLIT,
     TRAIN_SPLIT,
+    LinearStateActionDeltaBaseline,
 )
 from real_data.bridgedata_rollouts import (  # noqa: E402
     BridgeDataRolloutError,
@@ -19,6 +20,7 @@ from real_data.bridgedata_rollouts import (  # noqa: E402
     build_rollout_cases,
     copy_state_predictor,
     evaluate_rollout_predictor,
+    linear_state_action_delta_predictor,
     predeclared_rollout_acceptance,
     rollout_predictions,
     score_rollout_predictions,
@@ -191,6 +193,18 @@ class BridgeDataRolloutTests(unittest.TestCase):
             self.assertEqual(candidate.by_split_and_horizon[split][5].coverage, 1.0)
             self.assertGreater(candidate.error_growth_ratio_to_horizon_one[split][5], 1.0)
             self.assertTrue(acceptance["by_protected_split_and_horizon"][split]["5"]["strict_improvement"])
+
+    def test_linear_rollout_predictor_uses_current_predicted_state(self):
+        linear_train = tuple(
+            transition(10, index, task_index=1, step_size=0.1)
+            for index in range(15)
+        )
+        baseline = LinearStateActionDeltaBaseline.fit(linear_train)
+        predictor = linear_state_action_delta_predictor(baseline)
+        first = predictor(vector(0.0), vector(0.1))
+        second = predictor(first, vector(0.1))
+        self.assertAlmostEqual(first[0], 0.1, places=10)
+        self.assertAlmostEqual(second[0], 0.2, places=10)
 
 
 if __name__ == "__main__":
