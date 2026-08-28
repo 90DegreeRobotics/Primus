@@ -1,6 +1,6 @@
 # Plan — BridgeData Temporal and Action-Context Robustness
 
-**Status:** ACTIVE
+**Status:** COMPLETE — all strict temporal/action context cells were evaluated once; evidence is mixed, with five indeterminate or failing cells retained without retuning
 
 **Date:** 2026-08-28 10:00 CDT
 
@@ -36,8 +36,8 @@ The strict source-train task-disjoint evidence receipt `218748de489ebc0b921566c2
 - [x] Capture repository/process/protected-hash baseline and preserve existing dirty/untracked paths.
 - [x] Implement and fail-hard test context classification, source-train threshold fitting, strict target selection, deterministic bounded cases, baseline fitting, metric parity, and bootstrap labels. A preserved no-model-scoring preflight exposed that rollout `source_frame_index` is episode-local while episode metadata `dataset_from_index` is global; the evaluator now uses the episode-local coordinate and its regression fixture has a nonzero global metadata offset. The corrected capacity probe found every h1/h2/h5 temporal/action cell had 647–1,497 cases and 103–128 episode clusters for both sources.
 - [x] Compile and run the focused BridgeData regression suite; audit and explicitly stage only owned evaluator/test/ignore/plan paths; commit and push before invocation. The focused suite passed 62 tests.
-- [ ] Run exactly one fresh ignored local evaluation; verify candidate/input/parent hashes, zero overlap, finite exact coverage, and no active process after completion.
-- [ ] Write exact evidence handoff and narrow truth surfaces; audit, explicit-path commit, and push.
+- [x] Run exactly one fresh ignored local evaluation; verify candidate/input/parent hashes, zero overlap, finite exact coverage, and no active process after completion. All 24 source/horizon/context rows had exact finite 128-case coverage and zero source-train task overlap. Nineteen paired-bootstrap rows passed; five are retained as indeterminate or one point-estimate failure, so neither source passes every declared context cell.
+- [x] Write exact evidence handoff and narrow truth surfaces; audit, explicit-path commit, and push.
 
 ## Safety and Rollback
 
@@ -46,4 +46,5 @@ No download, video work, model training/tuning, candidate/checkpoint/parent/inpu
 ## Next-Agent Pickup Notes
 
 This is an observational robustness measurement, not a product integration. It may establish or limit stability across declared temporal/action contexts only. It cannot prove compositional object reasoning, visual grounding, policy/control/safety, long-horizon world modeling, native Chronos integration, or product readiness.
+
 
