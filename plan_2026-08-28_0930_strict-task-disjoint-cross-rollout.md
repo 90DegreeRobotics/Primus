@@ -1,6 +1,6 @@
 # Plan — Strict Task-Disjoint Cross-Candidate Rollout Evaluation
 
-**Status:** ACTIVE
+**Status:** COMPLETE — one bounded strict source-train-task-disjoint frozen-checkpoint evaluation passed all predeclared h1/h2/h5 point and bootstrap gates
 
 **Date:** 2026-08-28 09:30 CDT
 
@@ -34,9 +34,9 @@ Use acceptance horizons 1, 2, and 5; select at most 256 deterministic cases per 
 - [x] Capture repository, process, candidate, input, and feasibility baseline; preserve inherited dirty/untracked paths.
 - [x] Inspect feasibility semantics and confirm it does not score models.
 - [x] Implement/test separate strict evaluator: task/episode overlap refusal, deterministic bounded selection, train-only baselines, exact coverage, and bootstrap labels. Two read-only preflight probe failures were preserved: an unsupported custom rollout split label, then an unsupported unbounded-case request. The evaluator was corrected to the existing held-out-task case label and its fixed 256-case bound; a third preflight verified 128 observed target episodes and 256 h1/h2/h5 cases for each source.
-- [ ] Compile/run focused tests/audit plan; explicitly stage only owned paths; commit and push before evaluation.
-- [ ] Run one fresh ignored local read-only evaluation; verify hashes, lifecycle, and process state.
-- [ ] Record results/non-claims in handoff, README, STATUS; audit, commit, and push.
+- [x] Compile/run focused tests/audit plan; explicitly stage only owned paths; commit and push before evaluation. The complete focused BridgeData suite completed with 57 tests passed.
+- [x] Run one fresh ignored local read-only evaluation; verify hashes, lifecycle, and process state. Both source candidates used 128 strict complete target episodes with zero source-selected episode and source-train task overlap, selected 256 exact finite rollout cases at every acceptance horizon, and passed all point and paired-bootstrap h1/h2/h5 labels.
+- [x] Record results/non-claims in handoff, README, STATUS; audit, commit, and push.
 
 ## Test Gate
 
@@ -49,4 +49,5 @@ New evidence must be fresh Git-ignored local output below 5 MiB. No download, tr
 ## Next-Agent Pickup Notes
 
 This asks whether frozen source predictors beat strongest source-train baselines on source-train-task-unseen target rollouts. Positive results are narrow predictive evidence only—not a policy, control, safety, world-model, Chronos-native, or product claim.
+
 
