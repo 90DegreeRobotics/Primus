@@ -27,7 +27,8 @@
 - [x] Define non-learned open-loop baselines: copy-state persistence, repeated train-only action-only mean delta, and a nearest-train state/action rollout that remains train-only at each predicted state/action query. Do not use observed intermediate states after rollout start.
 - [x] Report split-separated horizon RMSE/MAE, exact sequence/prediction coverage, finite-output rate, and error-growth ratio to horizon 1. Emit no pooled protected score.
 - [x] Implement and test fail-hard fixture cases: sequence never crosses an episode boundary; skipped frame/timestamp breaks a sequence; target/horizon coverage is exact; intermediate observed states cannot leak into recursive prediction; checkpoint/manifest/split hash drift refuses evaluation. The full focused suite completed with 34 tests passed.
-- [ ] Verify and commit the explicit ignore rule for `CCF_Sovereign/evaluation/bridgedata_rollouts/`, then re-audit this plan and push `origin/main` before any evaluation.
+- [x] Verify and commit the explicit ignore rule for `CCF_Sovereign/evaluation/bridgedata_rollouts/`, then re-audit this plan and push `origin/main` before any evaluation (`281db792a0dd23d3cca587f99173d203328de994`).
+- [x] Preserve the first evaluator attempt’s terminal error: both frozen candidates produced exact zero horizon-one error for at least one baseline, but the initial growth-ratio guard incorrectly rejected zero as invalid. No rollout output directory, checkpoint, candidate manifest, source data, or parent was written or mutated. Correct the evaluator so a zero denominator gives ratio `1.0` only for a zero-error later horizon and `null` otherwise; test the correction before one replacement evaluation.
 - [ ] Run exactly one evaluation-only invocation for both frozen candidates, writing ignored local evidence below a new `CCF_Sovereign/evaluation/bridgedata_rollouts/` directory. No checkpoint, candidate manifest, source data, or parent mutation is allowed.
 - [ ] Verify post-evaluation hashes and no process; interpret results by candidate, partition, and horizon. Update truth surfaces and commit a handoff whether the gate passes or fails.
 
@@ -46,6 +47,10 @@ Run `python -m compileall -q` for every touched Python module/test and `python -
 ## Storage and Safety
 
 No data download, video download, training, candidate creation, checkpoint write, renderer operation, Chronos recipe work, 6FR implementation, robot command, actuation, manufacturing, parent change, or promotion is authorized. All evaluation evidence and logs remain local and ignored under `CCF_Sovereign/evaluation/bridgedata_rollouts/`; expected scale is less than 20 MiB per evaluated candidate because the task stores numeric JSON only.
+
+## Corrected-Evaluator Boundary
+
+The first evaluation command exited with `BridgeDataRolloutError: horizon-one RMSE must be finite and positive for growth ratios`. This was an evaluator edge-case defect, not a model result: exact zero error is valid and cannot define a finite ratio for a nonzero later error. The attempted output directory was not created; its ignored stdout/stderr logs were preserved under `CCF_Sovereign/tmp/`. No measured rollout evidence exists from that failed attempt. The planned next invocation is the single corrected, same-parameter evaluation, not a new experiment or a candidate rerun.
 
 ## Rollback
 

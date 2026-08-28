@@ -141,6 +141,30 @@ class BridgeDataRolloutTests(unittest.TestCase):
         with self.assertRaisesRegex(BridgeDataRolloutError, "coverage mismatch"):
             score_rollout_predictions(cases, extra)
 
+    def test_zero_horizon_one_error_is_reported_without_abort(self):
+        def perfect_predictor(state: tuple[float, ...], action: tuple[float, ...]) -> tuple[float, ...]:
+            return tuple(value + delta for value, delta in zip(state, action))
+
+        zero_partitioned = {
+            split: tuple(
+                replace(item, state_t=vector(0.0), action_t=vector(0.0), state_t_plus_1=vector(0.0))
+                for item in transitions
+            )
+            for split, transitions in self.partitioned.items()
+        }
+        report = evaluate_rollout_predictor(
+            zero_partitioned,
+            prediction_label="perfect_fixture",
+            predict_next_state=perfect_predictor,
+            horizons=(1, 2, 5),
+            max_cases_per_horizon=3,
+            case_selection_seed=7,
+        )
+        for split in (TRAIN_SPLIT, HELD_OUT_EPISODE_SPLIT, HELD_OUT_TASK_SPLIT):
+            self.assertEqual(report.by_split_and_horizon[split][1].aggregate_rmse, 0.0)
+            self.assertEqual(report.error_growth_ratio_to_horizon_one[split][1], 1.0)
+            self.assertEqual(report.error_growth_ratio_to_horizon_one[split][5], 1.0)
+
     def test_temporal_evaluation_reports_growth_and_applies_protected_rule(self):
         def candidate_predictor(state: tuple[float, ...], action: tuple[float, ...]) -> tuple[float, ...]:
             return tuple(value + delta + 0.001 for value, delta in zip(state, action))

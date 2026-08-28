@@ -161,7 +161,7 @@ class BridgeDataRolloutReport:
     max_cases_per_horizon: int
     case_selection_seed: int
     by_split_and_horizon: dict[str, dict[int, RolloutHorizonMetrics]]
-    error_growth_ratio_to_horizon_one: dict[str, dict[int, float]]
+    error_growth_ratio_to_horizon_one: dict[str, dict[int, float | None]]
     notes: tuple[str, ...]
 
     def to_dict(self) -> dict[str, Any]:
@@ -473,13 +473,19 @@ def evaluate_rollout_predictor(
                 cases, rollout_predictions(cases, predict_next_state)
             )
         baseline_rmse = metrics_by_horizon[1].aggregate_rmse
-        if not math.isfinite(baseline_rmse) or baseline_rmse <= 0:
-            raise BridgeDataRolloutError("horizon-one RMSE must be finite and positive for growth ratios")
+        if not math.isfinite(baseline_rmse) or baseline_rmse < 0:
+            raise BridgeDataRolloutError("horizon-one RMSE must be finite and non-negative for growth ratios")
         by_split[split] = metrics_by_horizon
-        growth[split] = {
-            horizon: metrics.aggregate_rmse / baseline_rmse
-            for horizon, metrics in metrics_by_horizon.items()
-        }
+        if baseline_rmse == 0.0:
+            growth[split] = {
+                horizon: (1.0 if metrics.aggregate_rmse == 0.0 else None)
+                for horizon, metrics in metrics_by_horizon.items()
+            }
+        else:
+            growth[split] = {
+                horizon: metrics.aggregate_rmse / baseline_rmse
+                for horizon, metrics in metrics_by_horizon.items()
+            }
     return BridgeDataRolloutReport(
         rollout_version=BRIDGEDATA_ROLLOUT_VERSION,
         prediction_label=prediction_label,
@@ -492,6 +498,7 @@ def evaluate_rollout_predictor(
             "Each metric is a terminal open-loop error from one observed initial state and recorded observed actions only.",
             "Observed intermediate states are not inputs after rollout start; predicted state is recursively fed to the next step.",
             "Each split and horizon is separately reported with an exact, deterministic bounded case set; no pooled protected score is emitted.",
+            "When horizon-one terminal RMSE is exactly zero, its growth ratio is 1.0 only for a zero-error horizon and otherwise is null because a finite multiplicative ratio is undefined.",
             "This report is observational prediction evidence only, not policy, control, safety, renderer, or promotion evidence.",
         ),
     )
