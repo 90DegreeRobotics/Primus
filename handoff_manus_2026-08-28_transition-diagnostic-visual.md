@@ -18,7 +18,7 @@ The plotter verifies the witness's canonical schema and hash first, re-extracts 
 | PNG dimensions | 1600 × 1050 |
 | PNG SHA-256 | `7f1eaac33b74d6b463921159981dab81017d2b1cdd582101072047a06f2a4af8` |
 | Receipt SHA-256 | `685616efdc605d65b9bab322e6f4cde282253faa32f2c40a5f378cc890bf542f` |
-| Receipt payload SHA-256 | `dd2d7d42a47750eb19c75d4d3b959570dcd9c1419f5423fd9612768d9c9c5ce3` |
+| Receipt payload SHA-256 | `dd2d7d42a47750eb19c75d4d3b959570dcd9c1419f5423fd9612768d9c95794b` |
 | Witness SHA-256 | `1a431b8b957ea9082795b4a202d781afa528144c76232997e9a7ac00c55043aa` |
 | Witness payload SHA-256 | `e2195592ed0912cf76e21be011279b30df91a90857725c57b50d70b2a10b65e2` |
 | Candidate / lifecycle | `bridge-real-20260827-002`; terminal `rejected`, promotion false |
