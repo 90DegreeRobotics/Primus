@@ -45,6 +45,7 @@ CCF_Sovereign/evaluation/bridgedata_cross_rollout_uncertainty/
 CCF_Sovereign/evaluation/bridgedata_strict_task_cross_rollouts/
 CCF_Sovereign/evaluation/bridgedata_context_robustness/
 CCF_Sovereign/evidence/chronos_transition_contracts/
+CCF_Sovereign/evidence/transition_diagnostics/
 
 # Generated maps, reports, logs, and process state
 /primus-map.txt
@@ -78,6 +79,7 @@ Thumbs.db
 .claude/
 .claire/
 .aider*
+
 
 
 
