@@ -185,6 +185,8 @@ A follow-on, read-only uncertainty audit re-verified the signed cross-rollout ev
 
 This is **not** a policy, control, safety, actuation, manufacturing, visual prediction, reliable long-horizon rollout, renderer, native Chronos, or product-readiness result. Both candidates are terminally `rejected` from promotion; no promotion occurred. Local ignored raw predictions, checkpoints, metrics, split receipts, lifecycle manifests, and rollout receipts are enumerated in the dated handoffs.
 
+Codex then measured strict source-train-task-disjoint feasibility before any further model comparison. The metadata-only receipt is `CCF_Sovereign\evaluation\bridgedata_task_disjoint_feasibility\task-disjoint-feasibility-20260828-001\task_disjoint_feasibility.json`, 6,844 bytes, SHA-256 `c56fb16e1fa6a45691af1d95240721c949d0bdcf3641a951315538fad8bcff54`, payload SHA-256 `cef9aa4e3ce14dd8ea6883d8e373a332dc570537218a990727de6851f18bd62a`. After excluding all source-selected episodes and all source-train task IDs, candidate `001` had 23,124 strict target episode clusters, 14,480 target task IDs, and 715,495 h5 rollout-case capacity; candidate `002` had 23,973 clusters, 14,462 target task IDs, and 732,461 h5 capacity. Both source reports had zero selected-episode overlap and zero source-train task overlap. This proves only that the strict task-disjoint cross audit is feasible on the frozen intake; it has not yet evaluated candidate predictions.
+
 ## Not Yet Verified
 
 - No product capability is marked live from this root status file.

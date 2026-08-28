@@ -40,6 +40,7 @@ CCF_Sovereign/data/benchmarks/run_*/
 CCF_Sovereign/data/operator_bootcheck/
 CCF_Sovereign/evaluation/bridgedata_rollouts/
 CCF_Sovereign/evaluation/bridgedata_cross_rollouts/
+CCF_Sovereign/evaluation/bridgedata_task_disjoint_feasibility/
 CCF_Sovereign/evaluation/bridgedata_cross_rollout_uncertainty/
 
 # Generated maps, reports, logs, and process state

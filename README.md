@@ -92,6 +92,14 @@ the uncertainty-aware rule. Every cross-target split had source-train task
 overlap, so the cross audit remains episode-disjoint robustness evidence, not a
 strict unseen-task claim relative to the source model.
 
+The next feasibility check measured whether the same frozen BridgeData intake
+can support a strict source-train-task-disjoint cross audit. It can. After
+excluding source-selected episodes and every source-train task ID, candidate
+`001` still had 23,124 eligible target episode clusters with 715,495 h5 rollout
+case capacity; candidate `002` had 23,973 clusters with 732,461 h5 capacity.
+This is feasibility evidence only. The strict task-disjoint model comparison has
+not yet been run.
+
 This is narrow **replicated real-data short-horizon open-loop prediction
 evidence**, not proof of robot policy learning, robot control/safety, reliable
 long-horizon rollout, visual world models, native Chronos integration, or
