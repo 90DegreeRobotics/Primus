@@ -148,14 +148,15 @@ def render_diagnostic(*, output_dir: Path) -> dict:
     draw.line((40, 66, 1560, 66), fill=(31, 78, 121), width=3)
     draw.line((48, 83, 83, 83), fill=(31, 78, 121), width=3); draw.ellipse((62, 79, 68, 85), fill=(31, 78, 121)); draw.text((91, 75), "Observed state", fill=(31, 78, 121), font=fonts["body"])
     draw.line((252, 83, 287, 83), fill=(197, 90, 17), width=3); draw.rectangle((267, 79, 273, 85), fill=(197, 90, 17)); draw.text((295, 75), "Frozen predictor", fill=(197, 90, 17), font=fonts["body"])
-    margin_x, gap_x, panel_width = 40, 28, 746
-    top, panel_height, gap_y = 116, 190, 18
+    # Three columns preserve all seven panels above the error strip; no panel is obscured.
+    margin_x, gap_x, panel_width = 40, 22, 492
+    top, panel_height, gap_y = 116, 185, 18
     for coordinate in range(7):
-        column, row = coordinate % 2, coordinate // 2
+        column, row = coordinate % 3, coordinate // 3
         left = margin_x + column * (panel_width + gap_x)
         panel_top = top + row * (panel_height + gap_y)
         _draw_trace_panel(draw, (left, panel_top, left + panel_width, panel_top + panel_height), coordinate, observed.observed_state_sequence, evidence.predicted_state_sequence, fonts)
-    _draw_error_panel(draw, (40, 750, 1560, 952), errors, fonts)
+    _draw_error_panel(draw, (40, 742, 1560, 952), errors, fonts)
     required_label = "Opaque 7D BridgeData state coordinates — not a Chronos scene, render, policy, or control signal."
     draw.text((65, 1002), required_label, fill=(127, 0, 0), font=_font(16, bold=True))
     png_path = output_dir / "opaque_state_trajectory_diagnostic.png"
