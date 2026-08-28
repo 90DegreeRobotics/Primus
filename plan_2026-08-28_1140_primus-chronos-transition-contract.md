@@ -1,6 +1,6 @@
 # Plan — Primus-to-Chronos Transition Evidence Contract
 
-**Status:** ACTIVE
+**Status:** COMPLETE — schema-only non-recipe contract and one local witness validated; no Chronos2 runtime integration claimed
 
 **Date:** 2026-08-28 11:40 CDT
 
@@ -41,8 +41,8 @@ Define, implement, and test a schema-only contract for exporting bounded Primus 
 - [x] Read both repository laws and identify the Chronos2 dirty/in-flight boundary.
 - [x] Inspect existing frozen prediction/evidence payload shapes and write a fail-closed non-recipe contract plus focused tests. The strict evidence retains paired case errors but not predicted vectors, so the exporter reconstructs one frozen verified h5 prediction read-only from its source-bound rollout case; it carries no scene or executable payload.
 - [x] Compile/run focused regression tests; audit and explicitly commit/push only Primus contract code before exporting a single local witness. The focused BridgeData suite passed 67 tests.
-- [ ] Export and verify one bounded ignored contract witness derived read-only from frozen local evidence; no Chronos invocation.
-- [ ] Record contract limits and consumer acceptance gate in handoff/README/STATUS; audit, explicit-path commit, and push.
+- [x] Export and verify one bounded ignored contract witness derived read-only from frozen local evidence; no Chronos invocation. Candidate 002 strict h5 witness passed canonical schema validation with unknown scene-coordinate semantics, five 7D recorded actions/predictions, control false, and promotion false.
+- [x] Record contract limits and consumer acceptance gate in handoff/README/STATUS; audit, explicit-path commit, and push.
 
 ## Test Gate
 
@@ -55,4 +55,5 @@ No Chronos2 edits, build, runtime invocation, renderer, scene generation, video,
 ## Next-Agent Pickup Notes
 
 A valid Primus contract witness is not a native Chronos integration or a visual world model. It creates a checkable handoff boundary only. Chronos must later demonstrate independently that it can consume a schema-valid object without inventing 7D-to-scene semantics, and any visual bridge must be labelled clearly as offline diagnostic evidence.
+
 

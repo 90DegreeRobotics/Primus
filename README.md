@@ -104,6 +104,8 @@ A subsequent strict source-train task-disjoint cross-rollout gate used a source-
 
 A subsequent broader context audit kept the same frozen strict source-train task-ID separation and partitioned 24 bounded rollout rows by early/late episode position and low/high recorded action energy. All rows had exact finite coverage and zero source-train task overlap; 19 paired-bootstrap rows passed. Five rows remain visible as one point-estimate failure or four bootstrap-indistinguishable cells, so neither frozen candidate has universal context robustness. This is useful negative evidence as well as positive evidence: the local predictors are broadly competitive in this bounded audit, not established as reliable across every measured trajectory/action context.
 
+Primus now also has a schema-valid, hash-bound **offline transition-evidence contract** for a future Chronos2 consumer. It carries one frozen predictor's observed 7D initial state/action sequence and recursively predicted 7D state sequence with explicit unknown scene-coordinate semantics. It rejects renderer, scene, program, control, actuation, and promotion fields. This is a consumer handoff boundary only: no Chronos runtime was invoked, and it establishes no 7D-to-scene mapping, native integration, render, or product capability.
+
 This is narrow **replicated real-data short-horizon open-loop prediction
 evidence**, not proof of robot policy learning, robot control/safety, reliable
 long-horizon rollout, visual world models, native Chronos integration, or
@@ -143,5 +145,6 @@ python test_candidate_training.py
 python test_scaling_ladder.py
 python test_mvp.py
 ```
+
 
 
