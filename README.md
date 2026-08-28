@@ -97,8 +97,8 @@ can support a strict source-train-task-disjoint cross audit. It can. After
 excluding source-selected episodes and every source-train task ID, candidate
 `001` still had 23,124 eligible target episode clusters with 715,495 h5 rollout
 case capacity; candidate `002` had 23,973 clusters with 732,461 h5 capacity.
-This is feasibility evidence only. The strict task-disjoint model comparison has
-not yet been run.
+At that point, this was feasibility evidence only; the strict task-disjoint
+model comparison had not yet been run.
 
 A subsequent strict source-train task-disjoint cross-rollout gate used a source-specific stable selection of 128 complete target episodes per frozen candidate, with zero source-selected episode overlap and zero source-train task-ID overlap. Both sources had exact finite 256-case coverage and passed the h1/h2/h5 point-estimate and 10,000-resample episode-clustered bootstrap rules. At h5, candidate `001` scored `0.0681601396` versus source-train linear baseline `0.0853185955`, while candidate `002` scored `0.0679752241` versus `0.0802132039`. This is a distinct strict task-ID separation result on the bounded intake; it remains short-horizon observational prediction evidence only.
 

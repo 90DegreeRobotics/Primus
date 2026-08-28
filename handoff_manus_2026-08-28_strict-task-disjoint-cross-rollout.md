@@ -38,7 +38,7 @@ This is the first completed result in this workstream with zero **source-train t
 | Strict evaluation evidence path | `C:\Primus\CCF_Sovereign\evaluation\bridgedata_strict_task_cross_rollouts\strict-task-cross-rollout-20260828-001\strict_task_cross_rollout.json` |
 | Strict evaluation evidence bytes | 633,639 |
 | Strict evaluation evidence SHA-256 | `218748de489ebc0b921566c21fd8a712898ba77efd1e2251e764c86f90d2ba1f` |
-| Strict evaluation payload SHA-256 | `445caddf9fb884dae35499a59a856a175d90ff6fee2b03862da7f303c30c5b904c13fa661c27` |
+| Strict evaluation payload SHA-256 | `445caddf9fb884dae35499a59a856a175d90ff6fee2b03862da7f303c30d172c` |
 | Frozen intake manifest SHA-256 | `a3e4a457c497fa6d36ac38725829ea7492c6e479e2868ea2e7ba43b66f75bd2a` |
 | Protected Council parent SHA-256 | `5e36cc9a0804716944c92efa503428a1095894bce565ef0ff8bb9ae1ecd9550b` |
 | Candidate 001 checkpoint SHA-256 | `ed03de679a4ae7304fc7ce2179f35fce1cc8ee4b0fb5e15f1198ac6595e87099` |
