@@ -1,7 +1,7 @@
 # Plan — Typed S3V Geometry-Operation Emission
 
-**Date:** 2026-08-28 CDT  
-**Status:** ACTIVE  
+**Date:** 2026-08-28 CDT
+**Status:** ACTIVE
 **Scope:** Add a direct, versioned typed `action.operation` payload to the Primus S3V bridge for existing `WorldOperation.geometry` records. This plan is paired with `C:\chronos2\plan_2026-08-28_1453_typed-operation-payload-integration.md`.
 
 ## Goal
@@ -55,6 +55,10 @@ Actions with no geometry invocation must emit `operation: null`. The current act
 **Pass:** The generated S3V action contains direct typed geometry meaning that round-trips inside the pre-existing lossless envelope, is deterministic, and supports Chronos2 validation without opaque-note parsing.
 
 **Fail:** Any attempt requiring macro-specific default values, action templates, inferred selectors/axes/distances, `notes` parsing, loss of parameter values, or mutation of a frozen renderer/candidate path stops the plan and records the failure.
+
+## Gate Correction
+
+The factual source change was committed in `7057d459ae9af9af706470f25ccd45a2e6ade9cb` after the Python compile and focused test gates passed. The accompanying plan was incorrectly allowed through staging with Markdown trailing whitespace on its metadata lines. This is a documentation-gate failure, not a passing Markdown audit. The source code was not amended, reset, or hidden; this forward correction removes the whitespace before any Chronos2 source consumption claim is made.
 
 ## Rollback
 
