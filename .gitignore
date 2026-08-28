@@ -38,6 +38,7 @@ CCF_Sovereign/data/external/
 # it carries the Merkle root, so the claim survives without the raw ledgers.
 CCF_Sovereign/data/benchmarks/run_*/
 CCF_Sovereign/data/operator_bootcheck/
+CCF_Sovereign/evaluation/bridgedata_rollouts/
 
 # Generated maps, reports, logs, and process state
 /primus-map.txt

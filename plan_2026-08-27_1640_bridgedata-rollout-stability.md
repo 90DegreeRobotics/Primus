@@ -17,6 +17,7 @@
 
 - A separate `CCF_Sovereign/src/real_data/bridgedata_rollouts.py` evaluation module and focused temporary-fixture test.
 - A separate `CCF_Sovereign/evaluate_bridgedata_rollout_stability.py` read-only evaluator and focused test, if needed to prove frozen artifact binding.
+- `.gitignore` to exclude the declared local rollout-evidence directory before invocation.
 - This plan and a final root handoff. Update `README.md` and `STATUS.md` only after a measured result.
 
 ## Ordered Steps
@@ -26,7 +27,7 @@
 - [x] Define non-learned open-loop baselines: copy-state persistence, repeated train-only action-only mean delta, and a nearest-train state/action rollout that remains train-only at each predicted state/action query. Do not use observed intermediate states after rollout start.
 - [x] Report split-separated horizon RMSE/MAE, exact sequence/prediction coverage, finite-output rate, and error-growth ratio to horizon 1. Emit no pooled protected score.
 - [x] Implement and test fail-hard fixture cases: sequence never crosses an episode boundary; skipped frame/timestamp breaks a sequence; target/horizon coverage is exact; intermediate observed states cannot leak into recursive prediction; checkpoint/manifest/split hash drift refuses evaluation. The full focused suite completed with 34 tests passed.
-- [ ] Run compile and focused tests, audit this plan, explicitly stage only evaluator/test/plan paths, commit and push `origin/main` before any evaluation.
+- [ ] Verify and commit the explicit ignore rule for `CCF_Sovereign/evaluation/bridgedata_rollouts/`, then re-audit this plan and push `origin/main` before any evaluation.
 - [ ] Run exactly one evaluation-only invocation for both frozen candidates, writing ignored local evidence below a new `CCF_Sovereign/evaluation/bridgedata_rollouts/` directory. No checkpoint, candidate manifest, source data, or parent mutation is allowed.
 - [ ] Verify post-evaluation hashes and no process; interpret results by candidate, partition, and horizon. Update truth surfaces and commit a handoff whether the gate passes or fails.
 
