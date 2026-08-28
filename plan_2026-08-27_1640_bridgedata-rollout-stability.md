@@ -1,6 +1,6 @@
 # Plan — BridgeData Frozen-Checkpoint Rollout Stability Gate
 
-**Status:** ACTIVE
+**Status:** COMPLETE — both frozen candidates passed the bounded short-horizon rollout rule; no promotion performed
 
 **Date:** 2026-08-27 16:40 CDT
 
@@ -29,8 +29,8 @@
 - [x] Implement and test fail-hard fixture cases: sequence never crosses an episode boundary; skipped frame/timestamp breaks a sequence; target/horizon coverage is exact; intermediate observed states cannot leak into recursive prediction; checkpoint/manifest/split hash drift refuses evaluation. The full focused suite completed with 34 tests passed.
 - [x] Verify and commit the explicit ignore rule for `CCF_Sovereign/evaluation/bridgedata_rollouts/`, then re-audit this plan and push `origin/main` before any evaluation (`281db792a0dd23d3cca587f99173d203328de994`).
 - [x] Preserve the first evaluator attempt’s terminal error: both frozen candidates produced exact zero horizon-one error for at least one baseline, but the initial growth-ratio guard incorrectly rejected zero as invalid. No rollout output directory, checkpoint, candidate manifest, source data, or parent was written or mutated. Correct the evaluator so a zero denominator gives ratio `1.0` only for a zero-error later horizon and `null` otherwise; test the correction before one replacement evaluation.
-- [ ] Run exactly one evaluation-only invocation for both frozen candidates, writing ignored local evidence below a new `CCF_Sovereign/evaluation/bridgedata_rollouts/` directory. No checkpoint, candidate manifest, source data, or parent mutation is allowed.
-- [ ] Verify post-evaluation hashes and no process; interpret results by candidate, partition, and horizon. Update truth surfaces and commit a handoff whether the gate passes or fails.
+- [x] Run one corrected evaluation-only invocation for both frozen candidates, writing ignored local evidence below `CCF_Sovereign/evaluation/bridgedata_rollouts/rollout-20260827-001/`. No checkpoint, candidate manifest, source data, or parent mutation occurred.
+- [x] Verify post-evaluation hashes and no process; interpret results by candidate, partition, and horizon. Update truth surfaces and commit a handoff whether the gate passes or fails.
 
 ## Predeclared Evaluation and Interpretation Criteria
 
@@ -51,6 +51,12 @@ No data download, video download, training, candidate creation, checkpoint write
 ## Corrected-Evaluator Boundary
 
 The first evaluation command exited with `BridgeDataRolloutError: horizon-one RMSE must be finite and positive for growth ratios`. This was an evaluator edge-case defect, not a model result: exact zero error is valid and cannot define a finite ratio for a nonzero later error. The attempted output directory was not created; its ignored stdout/stderr logs were preserved under `CCF_Sovereign/tmp/`. No measured rollout evidence exists from that failed attempt. The planned next invocation is the single corrected, same-parameter evaluation, not a new experiment or a candidate rerun.
+
+## Measured Result Boundary
+
+The corrected evaluation was CPU-only and wrote `rollout_stability.json` (1,565,353 bytes; SHA-256 `9cbd9458cac0926d572fb0130c06ca863996c9403d9f03ad6b7bdba8afce0920`) below the ignored local evidence root. Both candidates passed the predeclared positive-signal rule: at horizons one, two, and five, each had exact coverage and lower terminal open-loop RMSE than the strongest explicit baseline on both protected partitions. Candidate `001` showed error-growth ratios from horizon one to five of 2.95 on held-out episodes and 10.08 on held-out tasks; candidate `002` showed 2.44 and 2.65, respectively. Horizon ten was descriptive only, and both candidates remained finite at exact coverage.
+
+This is narrow **short-horizon open-loop state-prediction** evidence. The sharp candidate-001 strict-task horizon-five growth is a stability limitation even though it remains below the stated nearest-neighbor baseline. The experiment does not establish long-horizon stability, action selection, control, safety, intervention/causality, vision, rendering, native Chronos integration, production readiness, or promotion eligibility.
 
 ## Rollback
 

@@ -63,10 +63,22 @@ episode transitions and `0.0273437551` versus `0.0404739780` on 1,997 strict
 held-out-task transitions. Both candidates remain separate local evidence and
 were explicitly rejected from promotion.
 
-This is narrow **replicated real-data one-step prediction evidence**, not proof
-of robot policy learning, robot control/safety, multi-step rollout, visual world
-models, native Chronos integration, or product readiness. The committed handoffs
-name the local ignored evidence paths and hashes.
+A subsequent evaluation-only open-loop measurement froze both rejected
+checkpoints, started from observed held-out states, and recursively fed only each
+predictor's own state output plus recorded observed actions. On deterministic
+256-case protected samples, both candidates remained below their strongest stated
+baseline through horizons one, two, and five. Candidate `001` was materially
+less stable on strict held-out tasks: its RMSE rose from `0.0256026919` at one
+step to `0.2579618763` at five steps; candidate `002` rose from `0.0281386466`
+to `0.0745211324` on its strict task selection. Horizon-ten measurements were
+descriptive only. The details and frozen artifact hashes are in the rollout
+handoff.
+
+This is narrow **replicated real-data short-horizon open-loop prediction
+evidence**, not proof of robot policy learning, robot control/safety, reliable
+long-horizon rollout, visual world models, native Chronos integration, or
+product readiness. The committed handoffs name the local ignored evidence paths
+and hashes.
 
 ## Operator Rules
 
