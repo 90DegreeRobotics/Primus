@@ -106,6 +106,8 @@ A subsequent broader context audit kept the same frozen strict source-train task
 
 Primus now also has a schema-valid, hash-bound **offline transition-evidence contract** for a future Chronos2 consumer. It carries one frozen predictor's observed 7D initial state/action sequence and recursively predicted 7D state sequence with explicit unknown scene-coordinate semantics. It rejects renderer, scene, program, control, actuation, and promotion fields. This is a consumer handoff boundary only: no Chronos runtime was invoked, and it establishes no 7D-to-scene mapping, native integration, render, or product capability.
 
+A deterministic offline diagnostic now makes one frozen strict-task h5 trace inspectable: seven opaque state-coordinate panels compare observed values with recursive local predictions over five observed actions, with a separate absolute-error strip. It is derived only after raw lineage verification and visibly states that it is not a Chronos scene, render, policy, or control signal. The accepted PNG is a data chart, **not** a direct-Blender or native Chronos renderer PNG.
+
 This is narrow **replicated real-data short-horizon open-loop prediction
 evidence**, not proof of robot policy learning, robot control/safety, reliable
 long-horizon rollout, visual world models, native Chronos integration, or
@@ -145,6 +147,7 @@ python test_candidate_training.py
 python test_scaling_ladder.py
 python test_mvp.py
 ```
+
 
 
 

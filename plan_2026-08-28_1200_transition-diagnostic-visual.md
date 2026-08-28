@@ -1,6 +1,6 @@
 # Plan — Offline Transition Diagnostic Visual
 
-**Status:** ACTIVE
+**Status:** COMPLETE — corrected deterministic diagnostic visual verified; no renderer or Chronos runtime invoked
 
 **Date:** 2026-08-28 12:00 CDT
 
@@ -30,8 +30,8 @@ Generate one deterministic, data-faithful visual diagnostic from the frozen sche
 - [x] Select deterministic precise-chart route and preserve the unknown-coordinate/non-renderer boundary.
 - [x] Implement and test input hash/schema verification, numeric trace/error computation, fixed layout, and fresh local output restrictions. Raw observed lineage now rejects duplicate transition identifiers explicitly; the focused duplicate fixture initially expected a generic error and was corrected to assert the stronger dedicated guard.
 - [x] Compile/run focused chart and contract tests; audit and explicitly commit/push only owned source/test/ignore/plan paths before generating the diagnostic. The focused BridgeData suite passed 70 tests. A first post-commit export attempt preserved a `ModuleNotFoundError` because the workstation Python lacks Matplotlib; it generated no PNG or receipt and altered no evidence. The exporter is corrected to use already installed Pillow with the same deterministic layout and all chart/contract tests pass. The first Pillow plot was visually inspected and preserved, but its seventh coordinate panel was partially obscured by the error strip. The corrected three-column layout preserves all seven opaque coordinate panels above the strip; focused lineage and contract tests passed before the replacement visual is permitted.
-- [ ] Generate exactly one visual from the frozen witness, verify its receipt/hash/dimensions and visible disclaimer, and attach it to the final report labelled offline diagnostic — not a renderer PNG.
-- [ ] Record the visual evidence and limitations in handoff/README/STATUS; audit, explicit-path commit, and push.
+- [x] Generate exactly one visual from the frozen witness, verify its receipt/hash/dimensions and visible disclaimer, and attach it to the final report labelled offline diagnostic — not a renderer PNG. The accepted replacement is `diagnostic-20260828-002-complete`: 1600x1050, PNG SHA-256 `7f1eaac33b74d6b463921159981dab81017d2b1cdd582101072047a06f2a4af8`, receipt SHA-256 `685616efdc605d65b9bab322e6f4cde282253faa32f2c40a5f378cc890bf542f`; all seven panels and disclaimer were visually verified.
+- [x] Record the visual evidence and limitations in handoff/README/STATUS; audit, explicit-path commit, and push.
 
 ## Safety and Rollback
 
@@ -40,6 +40,7 @@ No Chronos2 modification or invocation, renderer, video, image-generation model,
 ## Next-Agent Pickup Notes
 
 This only creates visible state-trajectory evidence, not visible world evidence. Any future object/world visualization needs independently verified coordinate semantics and may not derive geometry or primitives from this witness.
+
 
 
 
