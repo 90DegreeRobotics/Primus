@@ -58,6 +58,17 @@ from .bridgedata_rollouts import (  # noqa: F401
     rollout_predictions,
     score_rollout_predictions,
 )
+from .chronos_transition_contract import (  # noqa: F401
+    ARTIFACT_SCOPE,
+    CHRONOS_TRANSITION_CONTRACT_VERSION,
+    REQUIRED_LIMITATIONS,
+    STATE_COORDINATE_SEMANTICS,
+    ChronosTransitionContractError,
+    ChronosTransitionEvidence,
+    load_verified_contract,
+    write_new_contract,
+)
+
 from .bridgedata_transitions import (  # noqa: F401
     BRIDGEDATA_TRANSITION_VERSION,
     BridgeDataError,
@@ -70,3 +81,4 @@ from .bridgedata_transitions import (  # noqa: F401
     load_bridgedata_intake,
     sha256_file,
 )
+
