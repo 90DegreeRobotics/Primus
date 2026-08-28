@@ -25,6 +25,25 @@ from .bridgedata_evaluation import (  # noqa: F401
     transitions_by_split,
     validate_bridgedata_split,
 )
+from .bridgedata_rollouts import (  # noqa: F401
+    BRIDGEDATA_ROLLOUT_VERSION,
+    DEFAULT_CASE_SELECTION_SEED,
+    DEFAULT_HORIZONS,
+    DEFAULT_MAX_CASES_PER_HORIZON,
+    BridgeDataRolloutCase,
+    BridgeDataRolloutError,
+    BridgeDataRolloutPrediction,
+    BridgeDataRolloutReport,
+    RolloutHorizonMetrics,
+    action_only_mean_delta_predictor,
+    build_rollout_cases,
+    copy_state_predictor,
+    evaluate_rollout_predictor,
+    nearest_train_state_action_predictor,
+    predeclared_rollout_acceptance,
+    rollout_predictions,
+    score_rollout_predictions,
+)
 from .bridgedata_transitions import (  # noqa: F401
     BRIDGEDATA_TRANSITION_VERSION,
     BridgeDataError,
