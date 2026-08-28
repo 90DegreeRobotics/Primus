@@ -19,6 +19,7 @@ from .model import EntityKind, NarrativeVerb, OperationKind, WorldProgram
 
 
 S3V_VERSION = 1
+TYPED_ACTION_OPERATION_SCHEMA_VERSION = 1
 BRIDGE_PREFIX = "world_core_v1:"
 BRIDGE_UUID_NAMESPACE = uuid.UUID("a1d6ad78-7d7c-4a9e-980a-322237eb5ef7")
 
@@ -61,6 +62,33 @@ def _s3v_verb(operation) -> str | dict[str, str]:
     if operation.geometry:
         return {"other": operation.geometry.macro.value}
     return {"other": operation.kind.value}
+
+
+def _typed_action_operation(operation) -> dict[str, Any] | None:
+    """Emit declared geometry meaning directly; never derive it from notes."""
+
+    if operation.geometry is None:
+        return None
+    if operation.kind is not OperationKind.GEOMETRY_MACRO:
+        raise S3vBridgeError("geometry invocation requires geometry_macro operation kind")
+
+    parameters: dict[str, bool | int | str] = {}
+    for key, value in sorted(operation.geometry.parameters.items()):
+        if not isinstance(key, str) or not key:
+            raise S3vBridgeError("geometry parameter names must be nonempty strings")
+        if type(value) not in (bool, int, str):
+            raise S3vBridgeError("geometry parameters must be declared primitive values")
+        parameters[key] = value
+
+    return {
+        "schema_version": TYPED_ACTION_OPERATION_SCHEMA_VERSION,
+        "kind": operation.kind.value,
+        "macro": operation.geometry.macro.value,
+        "family": operation.geometry.family.value,
+        "subject_id": operation.subject_id,
+        "target_id": operation.geometry.target_id,
+        "parameters": parameters,
+    }
 
 
 def _action_uuid(program: WorldProgram, operation_id: str) -> str:
@@ -142,6 +170,7 @@ def to_s3v_dict(program: WorldProgram) -> dict[str, Any]:
                 "subject": operation.subject_id,
                 "object": operation.object_id,
                 "verb": _s3v_verb(operation),
+                "operation": _typed_action_operation(operation),
                 "preconditions": [
                     {
                         "name": "world_precondition",

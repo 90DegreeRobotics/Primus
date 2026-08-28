@@ -38,6 +38,7 @@ from world_schema.model import (
     WorldSchemaError,
 )
 from world_schema.s3v_bridge import (
+    S3vBridgeError,
     assert_lossless_round_trip,
     from_s3v_json,
     to_s3v_dict,
@@ -284,6 +285,57 @@ class WorldSchemaTests(unittest.TestCase):
         geometry = next(note for note in notes if note["kind"] == "geometry_macro")
         self.assertEqual(geometry["capability_status"], "available")
         self.assertEqual(geometry["capability_id"], "geometry_core_primitives")
+
+    def test_geometry_action_emits_direct_typed_operation_payload(self):
+        program = sample_program()
+        geometry_operation = program.operations[0]
+        explicit_geometry = replace(
+            geometry_operation.geometry,
+            parameters={
+                "axis": "positive_z",
+                "distance_mm": 240,
+                "selector": "face_top",
+            },
+        )
+        program = replace(
+            program,
+            operations=(replace(geometry_operation, geometry=explicit_geometry),)
+            + program.operations[1:],
+        )
+        s3v = to_s3v_dict(program)
+        action = next(item for item in s3v["actions"] if item["subject"] == "entity_relic")
+        self.assertEqual(
+            action["operation"],
+            {
+                "schema_version": 1,
+                "kind": "geometry_macro",
+                "macro": "extrude_face",
+                "family": "box_grammar",
+                "subject_id": "entity_relic",
+                "target_id": "entity_relic",
+                "parameters": {
+                    "axis": "positive_z",
+                    "distance_mm": 240,
+                    "selector": "face_top",
+                },
+            },
+        )
+        self.assertEqual(action["operation"]["subject_id"], action["subject"])
+        self.assertNotIn("distance_mm", json.loads(action["notes"]))
+        self.assertTrue(
+            all(item["operation"] is None for item in s3v["actions"] if item is not action)
+        )
+        self.assertEqual(to_s3v_dict(program), s3v)
+
+    def test_geometry_payload_refuses_non_geometry_operation_kind(self):
+        program = sample_program()
+        malformed = replace(
+            program.operations[0],
+            kind=OperationKind.SET_TRANSFORM,
+        )
+        program = replace(program, operations=(malformed,) + program.operations[1:])
+        with self.assertRaisesRegex(S3vBridgeError, "geometry invocation requires"):
+            to_s3v_dict(program)
 
 
 if __name__ == "__main__":
