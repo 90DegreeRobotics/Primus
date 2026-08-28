@@ -110,6 +110,8 @@ A deterministic offline diagnostic now makes one frozen strict-task h5 trace ins
 
 A mechanical offline-artifact safety gate now verifies the frozen contract witness plus accepted diagnostic as a pair before an evidence review. It refuses unsafe consumer intent, altered digests/bindings/labels, unknown fields such as a `program`, and nonfalse control, renderer, Chronos-execution, or promotion flags. Its output sets `execution_authorized: false`. This guards the current artifact schema; it does **not** certify runtime, physical, policy, or downstream-consumer safety.
 
+A local buyer evidence packet now presents the signed strict task-disjoint h1/h2/h5 metrics, exact source-train baseline margins, accepted opaque-state chart, and integrity hashes only after passing the offline safety prerequisite. It is static, local, and unserved; it prominently labels itself `OFFLINE EVIDENCE REVIEW ONLY` and makes no product, robot-control, native Chronos, renderer, or promotion claim.
+
 This is narrow **replicated real-data short-horizon open-loop prediction
 evidence**, not proof of robot policy learning, robot control/safety, reliable
 long-horizon rollout, visual world models, native Chronos integration, or
@@ -149,6 +151,7 @@ python test_candidate_training.py
 python test_scaling_ladder.py
 python test_mvp.py
 ```
+
 
 
 

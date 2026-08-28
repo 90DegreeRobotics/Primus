@@ -1,6 +1,6 @@
 # Plan — Buyer-Facing Evidence Demonstration Gate
 
-**Status:** ACTIVE
+**Status:** COMPLETE — one local evidence packet verified; no external publication or execution
 
 **Date:** 2026-08-28 14:00 CDT
 
@@ -28,8 +28,8 @@ Build one deterministic, local, inspectable buyer-evidence packet from existing 
 - [x] Limit the demo to frozen evidence presentation and require the offline safety gate as a prerequisite.
 - [x] Inspect strict-evidence schema and implement a deterministic evidence-card generator with fail-closed bindings. The generator accepts only two complete passing strict source reports at h1/h2/h5, source-train task/episode overlap zero, exact coverage, canonical source digests, and an independently valid offline safety prerequisite.
 - [x] Test metric parsing, safety gating, fresh output, disclaimer/claim restrictions, and copied-chart digest; audit, explicit-path commit, and push before the one demo-packet invocation. A static HTML formatting defect caused by CSS braces was corrected before integration; the full focused BridgeData suite passed 76 tests. The first post-commit packet invocation correctly refused an assumed nested coverage schema before any packet directory was created. Actual strict evidence stores `cases`, `predictions`, scalar `coverage`, `unknown_prediction_count`, `excluded_case_count`, and `finite_prediction_rate`; the parser and fixture were corrected to require that exact complete-coverage contract, and the full focused suite again passed 76 tests.
-- [ ] Create exactly one fresh local packet; inspect the HTML source, receipt, and copied chart; attach the chart only with the offline-diagnostic label.
-- [ ] Record the accepted evidence packet and all limits in handoff/README/STATUS; audit, explicit-path commit, and push.
+- [x] Create exactly one fresh local packet; inspect the HTML source, receipt, and copied chart; attach the chart only with the offline-diagnostic label. Accepted packet `buyer-evidence-20260828-002-complete` is 65,657 bytes; copied-chart hash matches its source, strict evidence/safety receipt bindings match, and execution/control/renderer/Chronos-execution/promotion are all false.
+- [x] Record the accepted evidence packet and all limits in handoff/README/STATUS; audit, explicit-path commit, and push.
 
 ## Safety and Rollback
 
@@ -38,5 +38,6 @@ No web publication, external browser post, action/policy/control/robot command, 
 ## Next-Agent Pickup Notes
 
 A buyer-facing packet does not increase model evidence. It must never be presented as a world-model product, robot demo, or native Chronos proof. Any future product demonstration needs independently verified scene semantics and integration.
+
 
 
