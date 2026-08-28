@@ -1,6 +1,6 @@
 # Plan — Offline Artifact Safety and Control Gate
 
-**Status:** ACTIVE
+**Status:** COMPLETE — one immutable offline-only safety receipt verified; no execution authorization
 
 **Date:** 2026-08-28 13:00 CDT
 
@@ -35,8 +35,8 @@ Create a fail-closed mechanical gate for the frozen Primus transition contract w
 - [x] Freeze scope to the existing contract witness and accepted diagnostic only.
 - [x] Implement fail-closed cross-artifact validation and focused unsafe-payload/flag/label/hash tests. The validator accepts only the canonical contract plus exact diagnostic-receipt schema and refuses unsafe intent, nonfalse flags, unknown fields, digest drift, binding drift, label drift, and unsafe output paths.
 - [x] Compile/run focused existing and new tests, audit, explicit-path commit, and push before invoking the safety receipt. The full focused BridgeData suite passed 73 tests.
-- [ ] Run exactly one local safety verification; confirm no process, candidate, input, checkpoint, renderer, or Chronos mutation.
-- [ ] Record exact safety receipt and limits in handoff/README/STATUS; audit, explicit-path commit, and push.
+- [x] Run exactly one local safety verification; confirm no process, candidate, input, checkpoint, renderer, or Chronos mutation. Receipt SHA-256 `be26dd831518a070d0c939f62b0dab513a2d411ac63bd88f08b4a6934d8c5511`, payload SHA-256 `056b14ef1d400362a273f9e4f676e094f486815c842e4e85e7c22af5afb719ab`; execution/control/renderer/Chronos execution/promotion are all false.
+- [x] Record exact safety receipt and limits in handoff/README/STATUS; audit, explicit-path commit, and push.
 
 ## Safety and Rollback
 
@@ -45,4 +45,5 @@ No external command dispatch, policy inference, robot action, manufacturing, ren
 ## Next-Agent Pickup Notes
 
 A passing gate only proves the current artifact schema refuses unsafe interpretation. It cannot prove runtime safety, physical safety, authorization, policy correctness, or downstream consumer compliance. A buyer-facing demo must use this gate and display the offline-only limitation.
+
 

@@ -108,6 +108,8 @@ Primus now also has a schema-valid, hash-bound **offline transition-evidence con
 
 A deterministic offline diagnostic now makes one frozen strict-task h5 trace inspectable: seven opaque state-coordinate panels compare observed values with recursive local predictions over five observed actions, with a separate absolute-error strip. It is derived only after raw lineage verification and visibly states that it is not a Chronos scene, render, policy, or control signal. The accepted PNG is a data chart, **not** a direct-Blender or native Chronos renderer PNG.
 
+A mechanical offline-artifact safety gate now verifies the frozen contract witness plus accepted diagnostic as a pair before an evidence review. It refuses unsafe consumer intent, altered digests/bindings/labels, unknown fields such as a `program`, and nonfalse control, renderer, Chronos-execution, or promotion flags. Its output sets `execution_authorized: false`. This guards the current artifact schema; it does **not** certify runtime, physical, policy, or downstream-consumer safety.
+
 This is narrow **replicated real-data short-horizon open-loop prediction
 evidence**, not proof of robot policy learning, robot control/safety, reliable
 long-horizon rollout, visual world models, native Chronos integration, or
@@ -147,6 +149,7 @@ python test_candidate_training.py
 python test_scaling_ladder.py
 python test_mvp.py
 ```
+
 
 
 
