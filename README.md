@@ -79,12 +79,18 @@ The same linear-amended audit scored each frozen model against the other
 candidate's protected episode selections, using only the source candidate's
 train partition for baselines. It found zero protected episode overlap and exact
 finite 256-case coverage. Candidate `001` on candidate `002` passed the
-predeclared h1/h2/h5 rule on both target protected partitions. Candidate `002`
-on candidate `001` passed target held-out episodes but failed target
-held-out-task h5 by `0.00068158` RMSE (`0.26076429` versus nearest-neighbor
-baseline `0.26008270`). Every cross-target split had source-train task overlap,
-so the cross audit is episode-disjoint robustness evidence, not a strict
-unseen-task claim relative to the source model.
+predeclared h1/h2/h5 point-estimate rule on both target protected partitions.
+Candidate `002` on candidate `001` passed target held-out episodes but had a
+point-estimate target held-out-task h5 deficit of `0.00068158` RMSE
+(`0.26076429` versus nearest-neighbor `0.26008270`). A follow-on read-only,
+10,000-resample episode-clustered paired bootstrap reconstructed the signed
+case sets and found the corresponding candidate-minus-baseline MSE 95% interval
+`[-0.00524649, 0.00961948]`, which includes zero. That row is therefore
+**indistinguishable**, not a statistically supported robustness failure. All
+other cross-audited h1/h2/h5 rows had negative 95% upper endpoints and passed
+the uncertainty-aware rule. Every cross-target split had source-train task
+overlap, so the cross audit remains episode-disjoint robustness evidence, not a
+strict unseen-task claim relative to the source model.
 
 This is narrow **replicated real-data short-horizon open-loop prediction
 evidence**, not proof of robot policy learning, robot control/safety, reliable

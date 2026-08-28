@@ -1,6 +1,6 @@
 # Plan — Cross-Candidate Rollout Uncertainty Audit
 
-**Status:** ACTIVE
+**Status:** COMPLETE — one signed-evidence-bound paired uncertainty audit completed; one cross-task h5 row is statistically indistinguishable
 
 **Date:** 2026-08-28 07:30 CDT
 
@@ -49,9 +49,9 @@ The audit may revise the **uncertainty-aware interpretation** of cross-candidate
 - [x] Verify the existing cross evidence has no per-case vectors and probe the selected case episode counts read-only before implementation. All signed 256-case rows contain 54–62 distinct selected episodes, exceeding the predeclared minimum of 10.
 - [x] Implement deterministic cluster-bootstrap and exact interpretation labels in a separate pure module with temporary-fixture tests.
 - [x] Implement a separate read-only evidence-bound auditor that recomputes only signed rows, validates aggregate RMSE parity, and writes raw paired-error evidence only below a fresh ignored local destination.
-- [ ] Run compile and focused tests, audit this plan, explicitly stage only owned paths, commit and push `origin/main` before the audit invocation. The combined focused regression suite completed with 48 tests passed before audit.
-- [ ] Run exactly one audit invocation, then verify no process and no protected artifact/candidate/lifecycle drift.
-- [ ] Write a handoff and narrow truth-surface amendment from actual measured results, audit it, explicitly commit/push it, and report all pass/indistinguishable/fail labels.
+- [x] Run compile and focused tests, audit this plan, explicitly stage only owned paths, commit and push `origin/main` before the audit invocation. The combined focused regression suite completed with 48 tests passed before audit.
+- [x] Run exactly one audit invocation, then verify no process and no protected artifact/candidate/lifecycle drift. The 1,142,125-byte local evidence file has SHA-256 `6cff7a762adf7e4e15da98ca1bee6a72e52f24bbf714d8e743fb0ae50bab2b04` and binds the signed cross-evidence file SHA-256 `2c8dd8c8930b968cebbac7c75403150a9ec1b861d14719171da6fbea088ac484`.
+- [x] Write a handoff and narrow truth-surface amendment from actual measured results, audit it, explicitly commit/push it, and report all pass/indistinguishable/fail labels.
 
 ## Test Gate
 
@@ -60,6 +60,12 @@ Run `python -m compileall -q` for all touched source and test files. Run a focus
 ## Storage and Safety
 
 No download, video, model training, model selection, candidate creation, checkpoint write, data mutation, parent mutation, promotion, renderer, Chronos integration, 6FR work, robot command, actuation, manufacturing operation, or external deployment is authorized. Local numeric audit evidence is expected to be below 5 MiB and must remain Git-ignored in a fresh named directory. Do not delete, overwrite, reset, amend, bulk-stage, or modify Codex-owned in-flight work.
+
+## Measured Result Boundary
+
+All 12 ordered-pair/protected-partition/horizon rows had exact finite coverage for 256 deterministic cases and 54–62 selected episode clusters. The point-estimate result is unchanged: the `002 -> 001` held-out-task horizon-five model RMSE is `0.26076428791202466`, higher than its signed strongest nearest-neighbor baseline `0.26008270475923234` by `0.00068158315279232`. Under the predeclared 10,000-resample episode-clustered paired bootstrap, however, candidate-minus-baseline MSE has 95% interval `[-0.005246492287060185, 0.009619483092465034]`, which includes zero. That row is therefore **indistinguishable**, not a statistically supported fail. Every other audited acceptance row has a negative 95% upper MSE endpoint and is labeled pass.
+
+This narrows cross-candidate interpretation to episode-disjoint bounded short-horizon evidence with one indeterminate strict-task-named target row. Source-train task overlap persists in all rows, so it remains invalid to call this strict unseen-task generalization relative to either source model.
 
 ## Rollback Path
 
