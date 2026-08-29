@@ -4,6 +4,7 @@ from __future__ import annotations
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -13,6 +14,7 @@ from world_data.ingestion import ingest_world_dataset
 from world_data.temporal_witness import (
     CONTEXT_INPUT_FEATURE_NAMES,
     TEMPORAL_TARGET_FEATURE_NAMES,
+    TemporalWitnessError,
     assert_context_feature_boundary,
     derive_temporal_witness,
     derive_temporal_witnesses,
@@ -64,6 +66,42 @@ class TemporalStateWitnessTests(unittest.TestCase):
         self.assertEqual(witness.pre_tick, 0)
         self.assertEqual(witness.target_tick, 2)
         self.assertEqual(witness.target_evidence_kinds, ("generated", "inferred"))
+
+    def test_knobs_come_from_the_operation_not_the_executable_invocation(self):
+        """The witness must read declared knobs from the operation. If it ever
+        falls back to the geometry invocation it would be reading the macro's
+        execution arguments as if they were learning features."""
+        record = self.dataset.records[0]
+        geometry = next(
+            operation
+            for operation in record.program.operations
+            if operation.geometry is not None
+        )
+        witness = derive_temporal_witness(record)
+        self.assertEqual(witness.geometry_extent_mm, geometry.parameters["extent_mm"])
+        self.assertEqual(witness.geometry_bevel_q, geometry.parameters["bevel_q"])
+        self.assertEqual(witness.geometry_variant, geometry.parameters["variant"])
+        # The executable contract is not a feature source.
+        self.assertEqual(
+            set(geometry.geometry.parameters),
+            {"selector", "axis", "distance_mm"},
+        )
+
+    def test_witness_refuses_a_program_whose_knobs_were_never_declared(self):
+        """Fail closed rather than silently reading the invocation."""
+        record = self.dataset.records[0]
+        stripped_operations = tuple(
+            replace(operation, parameters={})
+            if operation.geometry is not None
+            else operation
+            for operation in record.program.operations
+        )
+        broken = replace(
+            record,
+            program=replace(record.program, operations=stripped_operations),
+        )
+        with self.assertRaises(TemporalWitnessError):
+            derive_temporal_witness(broken)
 
     def test_context_feature_contract_excludes_direct_target_and_partition_data(self):
         assert_context_feature_boundary()

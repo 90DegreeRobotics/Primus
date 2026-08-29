@@ -252,7 +252,10 @@ def derive_temporal_witness(record: WorldProgramRecord) -> TemporalStateWitness:
     target = tuple(
         source + change for source, change in zip(subject.transform.translation_mm, delta)
     )
-    geometry_parameters = geometry.geometry.parameters
+    # Declared trajectory knobs live on the operation, not on the geometry
+    # invocation. The invocation carries the executable macro contract
+    # (selector/axis/distance_mm) and is deliberately not a feature source.
+    geometry_parameters = geometry.parameters
     extent = geometry_parameters.get("extent_mm")
     bevel = geometry_parameters.get("bevel_q")
     variant = geometry_parameters.get("variant")

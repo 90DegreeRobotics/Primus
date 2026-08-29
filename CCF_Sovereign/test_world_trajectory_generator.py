@@ -17,6 +17,7 @@ from world_schema.s3v_bridge import assert_lossless_round_trip  # noqa: E402
 from world_schema.tokens import decode_program, encode_program  # noqa: E402
 from world_schema.trajectory_generator import (  # noqa: E402
     DATASET_FILENAME,
+    FACE_SELECTOR,
     HELD_OUT_COMPOSITION,
     HELD_OUT_OBJECT_CLASS,
     HELD_OUT_OPERATION_FAMILY,
@@ -153,6 +154,62 @@ class WorldTrajectoryGeneratorTests(unittest.TestCase):
         self.assertTrue(
             all(line == program.canonical_json() for line, program in zip(records, restored))
         )
+
+    def test_geometry_invocation_declares_only_the_executable_contract(self):
+        """The invocation must carry what the macro needs to run, and nothing
+        else. A native consumer refuses unknown keys, so an extra declared knob
+        here is a cross-repo break, not a harmless addition."""
+        signed_cardinals = {
+            "positive_x", "negative_x",
+            "positive_y", "negative_y",
+            "positive_z", "negative_z",
+        }
+        dataset = generate_dataset(small_config())
+        seen_axes = set()
+        checked = 0
+        for program in dataset.programs:
+            for operation in program.operations:
+                if operation.geometry is None:
+                    continue
+                checked += 1
+                parameters = operation.geometry.parameters
+                self.assertEqual(
+                    set(parameters), {"selector", "axis", "distance_mm"}
+                )
+                self.assertEqual(parameters["selector"], FACE_SELECTOR)
+                self.assertIn(parameters["axis"], signed_cardinals)
+                seen_axes.add(parameters["axis"])
+                distance = parameters["distance_mm"]
+                self.assertIsInstance(distance, int)
+                self.assertNotIsInstance(distance, bool)
+                self.assertTrue(1 <= distance <= 10_000)
+                self.assertEqual(operation.geometry.target_id, operation.subject_id)
+        self.assertGreater(checked, 0)
+        self.assertGreater(len(seen_axes), 1)
+
+    def test_declared_knobs_live_on_the_operation_not_the_invocation(self):
+        """Trajectory knobs are learning features, not execution arguments.
+        They must stay reachable, and must stay out of the macro contract."""
+        dataset = generate_dataset(small_config())
+        checked = 0
+        for program in dataset.programs:
+            for operation in program.operations:
+                if operation.geometry is None:
+                    continue
+                checked += 1
+                self.assertEqual(
+                    set(operation.parameters),
+                    {"extent_mm", "bevel_q", "variant"},
+                )
+                # The executable distance is the declared extent, not a new
+                # value invented for the consumer.
+                self.assertEqual(
+                    operation.geometry.parameters["distance_mm"],
+                    operation.parameters["extent_mm"],
+                )
+                for key in ("extent_mm", "bevel_q", "variant"):
+                    self.assertNotIn(key, operation.geometry.parameters)
+        self.assertGreater(checked, 0)
 
     def test_invalid_configuration_and_holdout_leak_fail_closed(self):
         with self.assertRaises(TrajectoryDatasetError):

@@ -48,8 +48,13 @@ from .s3v_bridge import assert_lossless_round_trip
 from .tokens import encode_program, unique_program_coverage
 
 
-GENERATOR_VERSION = "1.1.0"
+# 1.2.0 splits the executable geometry contract from the declared trajectory
+# knobs. Feature values are unchanged; their location in the program is not.
+GENERATOR_VERSION = "1.2.0"
 DATASET_FILENAME = "world_trajectories.jsonl"
+
+#: The only face selector the native geometry consumer accepts.
+FACE_SELECTOR = "face_by_normal"
 MANIFEST_FILENAME = "world_trajectories.manifest.json"
 
 TRAIN_OBJECT_CLASSES = ("chair", "lamp", "bowl", "tower")
@@ -276,6 +281,12 @@ def _make_program(
     # pre-action context and action intent. A future temporal-witness learner
     # may receive those context values but never this resulting delta.
     direction = -1 if variant in (1, 4) else 1
+    # Declared extrusion axis. Derived from state the generator already holds so
+    # the RNG stream is untouched; the token set is the closed signed-cardinal
+    # vocabulary the native consumer accepts.
+    geometry_axis = (
+        f"{'positive' if direction > 0 else 'negative'}_{'xyz'[variant % 3]}"
+    )
     delta_x = direction * (160 + geometry_extent // 3 + bevel_q)
     delta_y = (metallic_q8 - roughness_q8) // 2
     delta_z = 60 + ((geometry_extent + bevel_q + metallic_q8 + variant * 73) % 220)
@@ -450,12 +461,21 @@ def _make_program(
                 family=geometry_family,
                 macro=geometry_macro,
                 target_id=subject_id,
+                # The invocation carries only what the macro needs in order to
+                # execute: which face, which way, how far. Declared trajectory
+                # knobs live on the operation below, so a native consumer never
+                # has to guess which keys are executable.
                 parameters={
-                    "extent_mm": geometry_extent,
-                    "bevel_q": bevel_q,
-                    "variant": variant,
+                    "selector": FACE_SELECTOR,
+                    "axis": geometry_axis,
+                    "distance_mm": geometry_extent,
                 },
             ),
+            parameters={
+                "extent_mm": geometry_extent,
+                "bevel_q": bevel_q,
+                "variant": variant,
+            },
             evidence_ids=(generated_evidence.evidence_id,),
             capability_id="geometry_core_primitives",
             capability_status=CapabilityStatus.AVAILABLE,
