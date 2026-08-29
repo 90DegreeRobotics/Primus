@@ -364,12 +364,33 @@ extrusion axis is `'xyz'[variant % 3]` with the sign taken from a hardcoded
 written by an agent that had no rule telling it not to, and it is retiring with
 the generator rather than being polished.
 
+**Correction, same day.** An earlier version of this section set the retirement
+condition as "until the BridgeData lane can emit a geometry operation from
+learned state." That is a category error and is withdrawn. BridgeData is a 7D
+robot state/action to next-state predictor whose coordinate semantics this repo
+explicitly records as unknown. It will never emit a geometry operation, and no
+amount of growing it will make it do so.
+
+The synthetic generator was a **fake bridge between two lanes that do not connect
+that way**, and it was fake at both ends: not real physics, because the
+transition it teaches is closed-form arithmetic; and not real shape-thinking,
+because the program is a fixed template. Removing it loses nothing, because it
+was never carrying anything.
+
+The two real lanes, kept separate:
+
+| Lane | Question | Where it lives |
+|---|---|---|
+| Observational dynamics | can a small model learn real physical state transitions from observation | `CCF_Sovereign/src/real_data`, this repo |
+| Shape thinking | can a guided symbolic planner reach a shape through Blender operations rather than a noun lookup | `crates/chronos_geometry_plan`, including `shape_thinking.rs`, in `C:\chronos2` |
+
 **Retirement condition:** the generator, its entry script
-`generate_world_trajectories.py`, and the synthetic learning candidates that
-consume it stay in the tree, unextended, until the BridgeData lane can emit a
-geometry operation from learned state. At that point they are removed in one
-audited commit. Until then: no new features, no new candidates, no new evidence
-claims, and no citation as learned behaviour.
+`generate_world_trajectories.py`, and the synthetic candidates that consume it
+stay in the tree, unextended and uncited, until a decision is recorded on whether
+any Primus-side world-program representation is needed at all once shape thinking
+is driven from `chronos_geometry_plan`. If the answer is no, they are removed in
+one audited commit. Until then: no new features, no new candidates, no new
+evidence claims, and no citation as learned behaviour.
 
 **Not affected:** `CCF_Sovereign/src/real_data`, the frozen BridgeData intake,
 and the two rejected BridgeData candidates. That lane shares no code with this
