@@ -45,10 +45,16 @@ prevention.** A lane may create and edit only the paths listed for it.
 ```
 crates/chronos_geometry_plan/src/program_sampler.rs      (new)
 crates/chronos_geometry_plan/src/lib.rs                  (module decl + re-export ONLY)
-crates/chronos_geometry_plan/examples/scorer_separation.rs (new)
+crates/chronos_vision/examples/scorer_separation.rs      (new)
 out/**                                                   (ignored evidence)
 handoff_claude_2026-08-29_lane-a-*.md
 ```
+
+**Amended 2026-08-29 by Lane A.** The example was assigned to
+`chronos_geometry_plan`, which cannot work: `chronos_dreamer` (the compiler) and
+`chronos_vision` (the scorer) both depend on `chronos_geometry_plan`, so it
+cannot depend on them. It lives in `chronos_vision`, which sees all three.
+Declared here rather than silently exceeding the list.
 
 ### Lane B owns (Primus)
 ```
