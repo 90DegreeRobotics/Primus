@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import hashlib
 import json
 import sys
@@ -207,6 +208,22 @@ class GeometryPhase0TrainerTests(unittest.TestCase):
         )
         self.assertEqual(result_a["model_metrics"], result_b["model_metrics"])
         self.assertEqual(result_a["declared_baselines"], result_b["declared_baselines"])
+
+    def test_mesh_metric_changes_cannot_change_model_features(self) -> None:
+        paths = self.write_phase0_fixture()
+        intake = load_geometry_corpus_intake(*paths)
+        training_records = intake.structural_splits()["train"]
+        schema = feature_schema(training_records)
+        original_features, original_targets = build_training_tensors(training_records, schema=schema)
+        altered_records = []
+        for record in training_records:
+            altered_metrics = dict(record.mesh_metrics)
+            altered_metrics["vert_count"] = int(altered_metrics["vert_count"]) + 10000
+            altered_metrics["volume_mm3"] = float(altered_metrics["volume_mm3"]) + 1_000_000.0
+            altered_records.append(replace(record, mesh_metrics=altered_metrics))
+        altered_features, altered_targets = build_training_tensors(altered_records, schema=schema)
+        self.assertTrue(original_features.equal(altered_features))
+        self.assertFalse(original_targets.equal(altered_targets))
 
     def test_nonfixture_inputs_are_refused_before_candidate_creation(self) -> None:
         corpus, manifest, splits = self.write_phase0_fixture()
