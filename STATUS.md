@@ -289,8 +289,48 @@ whole-object-class, whole-operation-family, and composition holdouts. The curren
 implementation proves representation and round-trip behavior only; it does not
 prove learned world dynamics or a shipped world-builder.
 
+## Executable `extrude_face` contract result — 2026-08-28
 
+The typed S3V geometry payload previously carried `{extent_mm, bevel_q, variant}`.
+The native consumer in Chronos2 requires exactly `{selector, axis, distance_mm}`
+and refuses unknown keys, so the two sets were disjoint and every Primus emission
+was refused before dispatch. This was measured by emitting from the then-current
+commit and reading the payload, not inferred from the source.
 
+`GeometryInvocation.parameters` is now the executable macro contract only. The
+declared trajectory knobs moved, unchanged in value, onto the operation itself,
+and `temporal_witness` reads them from there. No learning feature value changed
+and no new RNG draw was introduced, so the generator stream is untouched. The
+extrusion axis is derived from the existing declared direction and variant, so
+nothing is invented per macro. `GENERATOR_VERSION` moved to `1.2.0` because the
+emitted program shape changed; regenerated synthetic programs hash differently.
 
+Gates: `python -m compileall` on both touched sources, and 80 focused tests
+passing across world schema, trajectory generator, temporal witness, compiler,
+ingestion, transition metrics, and the temporal candidate suites.
 
+This is a data-contract result. It is not learned world dynamics, a shipped
+world-builder, candidate promotion, or renderer evidence in this repo.
 
+## Primus-to-Chronos native witness — 2026-08-28
+
+A Primus-emitted typed S3V `extrude_face` operation was consumed by Chronos2 and
+executed through sealed native Dreamer/BlenderMCP, producing a real render.
+Input SHA-256 `30ed34ef5dae11477f3771891d1b42214de2ef23ef3bbe66d1d7eae01ae96cb9`,
+action `8fc2b4bc-9b4d-5fcf-9311-625e573cc16b`, payload
+`{selector: face_by_normal, axis: positive_x, distance_mm: 656}`. The run exited
+`0`, the Codex chain verified over 26 events, exactly one sealed `execute_code`
+dispatch carried the typed arguments, and the `world_core_v1` notes marker
+appeared nowhere in the Codex. The target mesh spans X `-0.5 .. 1.156` where every
+other entity spans `-0.5 .. 0.5`: the declared 656 mm landed in the geometry.
+
+The render, the four Chronos2 defects that had to be fixed to reach it, and the
+Dreamer verb-coverage limit are recorded in `C:\chronos2`, commit `d97c7a58`, in
+`handoff_claude_2026-08-28_native-extrude-face-witness.md`. The witness ran
+against a Primus program reduced to its single geometry operation, because the
+Dreamer cannot yet execute the relation, observation, transform, camera, or
+narrative verbs a full trajectory program contains.
+
+This is renderer-integration evidence produced in Chronos2. It is not a Primus
+model result, learned world modelling, BridgeData state semantics, robot policy,
+control, safety, or candidate promotion.

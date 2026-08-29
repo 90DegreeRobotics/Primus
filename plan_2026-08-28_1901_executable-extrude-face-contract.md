@@ -1,7 +1,7 @@
 # Plan — Executable `extrude_face` Contract
 
 **Date:** 2026-08-28 1901 CDT
-**Status:** ACTIVE
+**Status:** COMPLETE
 **Scope:** Make the Primus-declared `extrude_face` geometry invocation carry the
 parameters the operation actually needs to execute, so a Chronos2 native witness
 can consume a Primus-emitted typed S3V without notes parsing or invented values.
@@ -116,20 +116,19 @@ are left in place, not deleted.
 
 ## Ordered Steps
 
-1. [ ] Capture clean baseline in both repos.
-2. [ ] Record the measured refusal and the fresh-emission payload.
-3. [ ] Edit `trajectory_generator.py` to split executable contract from knobs.
-4. [ ] Edit `temporal_witness.py` to read knobs from the operation dict.
-5. [ ] Update focused tests to assert the executable contract explicitly, and to
-   prove the knobs still reach the witness unchanged.
-6. [ ] Run `python -m compileall -q` on touched paths.
-7. [ ] Run the focused suites: `test_world_schema`,
-   `test_world_trajectory_generator`, `test_temporal_state_witness`,
-   `test_world_compiler`.
-8. [ ] Emit a fresh typed S3V and confirm the payload matches the Chronos2
-   accepted shape by inspection.
-9. [ ] Stage explicit paths, `git diff --check --cached`, commit, push `origin main`.
-10. [ ] Update `README.md`, `STATUS.md`, and write the handoff.
+1. [x] Capture clean baseline in both repos. Both clean, `HEAD == origin/main`.
+2. [x] Record the measured refusal and the fresh-emission payload.
+3. [x] Edit `trajectory_generator.py` to split executable contract from knobs.
+4. [x] Edit `temporal_witness.py` to read knobs from the operation dict.
+5. [x] Four new tests added: two locking the invocation contract, two proving
+   witness provenance and fail-closed behaviour.
+6. [x] `python -m compileall -q` on both touched sources, exit 0.
+7. [x] Focused suites plus the wider affected surface: 66 then 14, 80 total.
+8. [x] Emitted and hash-pinned. Payload matches the Chronos2 accepted shape.
+9. [x] Staged by explicit path, committed `cadd8ee0`, pushed `origin main`.
+10. [x] `STATUS.md` updated and the handoff written. `README.md` left unchanged;
+    it describes the bridge in general terms and is not made wrong by this
+    change. Noted in the handoff as outstanding.
 
 ## Test Gate
 
