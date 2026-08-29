@@ -4,12 +4,38 @@ Primus is the local-first NeuroCognica textual-mind workspace. This repository
 is being brought under git governance from an existing local tree rather than a
 fresh scaffold.
 
+## Tandem Repository
+
+As of 2026-08-29 this is **one build in two repositories**. Primus does not stand
+alone and neither does `C:\chronos2`.
+
+| Repo | Role |
+|---|---|
+| `C:\Primus` | **the learner** — frozen hash-pinned inputs, candidate lifecycle, declared baselines, structural holdouts, promotion governance |
+| `C:\chronos2` | **the world** — operation space, executor, renderer, scorer, sealed evidence |
+
+Read the current plan and handoff in **both** repos before starting work. A plan
+that exists in only one repo is not in effect. Plans, handoffs, truth-surface
+updates, and guides land in both, in the same unit of work, under the same
+date-stamped filename. See `AGENTS.md` rule 10.
+
+## Two Standing Constraints
+
+1. **No recipes.** A lookup table of named things is not a capability. The
+   system will be able to learn or not exist. `AGENTS.md` rule 9 carries the test:
+   ask what decided a value, and if the answer is a literal, an index, or a modulo
+   of one, it is a recipe.
+2. **No completion theater.** If you did not run it, you do not get to say it
+   works.
+
 ## Current Truth
 
 - Canonical branch: `main`.
 - Remote: `https://github.com/90DegreeRobotics/Primus.git`.
 - Repo-law surface: `AGENTS.md`.
 - Current status ledger: `STATUS.md`.
+- Active cross-repo plan:
+  `plan_2026-08-29_0552_no-recipe-geometry-understanding.md`.
 
 The local tree contains research documents, `CCF_Sovereign`, and
 `NeuroCognica_Primus` material. Those surfaces must be imported intentionally

@@ -395,3 +395,32 @@ evidence claims, and no citation as learned behaviour.
 **Not affected:** `CCF_Sovereign/src/real_data`, the frozen BridgeData intake,
 and the two rejected BridgeData candidates. That lane shares no code with this
 one and is the lane being grown.
+
+## No-recipe geometry understanding — PLANNED — 2026-08-29
+
+Operator directive: **no recipes; the system will be able to learn or not
+exist.** Encoded as `AGENTS.md` rule 9. Tandem-repo obligation encoded as rule 10.
+
+Plan: `plan_2026-08-29_0552_no-recipe-geometry-understanding.md`, paired in
+`C:\chronos2` at the same filename. Neither copy is in effect alone.
+
+**The split.** Chronos2 is the world — operation space, executor, renderer,
+scorer, sealed evidence, and the program sampler that does not yet exist. Primus
+is the learner — frozen hash-pinned inputs, candidate lifecycle, declared
+baselines, structural holdouts, promotion governance. That split exists because
+the BridgeData work is the only genuinely non-recipe result in either repo, and
+the governance that produced it is the asset being pointed at geometry.
+
+**Ordering, which is the whole plan.** Learn what operations do before learning
+which operations to choose. Learning what operations do needs no language, so it
+needs no nouns, so a recipe is not merely forbidden — it is unrepresentable,
+because the training data has nowhere to put one. Every previous attempt started
+at brief-to-shape, where a dictionary is the path of least resistance.
+
+**Primus obligations when Phase 0 is authorized:** consume the Chronos2 corpus as
+a frozen hash-pinned input under the BridgeData intake discipline; hold out by
+program structure and never by object class; declare baselines before training;
+report which baselines were beaten on which structural holdout or report nothing.
+
+**Not claimed:** no corpus, no model, no training, no result. This entry records
+an authorized plan only.

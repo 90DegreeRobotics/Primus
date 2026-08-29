@@ -60,10 +60,27 @@ verified behavior, and no completion theater.
    - A positive control on template data proves the learner can recover the
      template. Do not report it, extend it, or build on it as evidence of
      learned behavior. Run it once, record it, move on.
+   - **Operator directive, 2026-08-29: the system will be able to learn or not
+     exist.** A capability that cannot be learned does not get a lookup table as
+     a consolation prize. It ships learned, or it does not ship.
    - This rule exists because the constraint was stated clearly in
      `C:\chronos2\plan_2026-08-15_2046_shape-thinking-not-recipes.md` and then
      lived only in that plan. Plans get marked COMPLETE and stop being read.
      Repo law does not.
+10. **Tandem repos.** `C:\Primus` and `C:\chronos2` are one build in two
+    repositories. Primus is the learner: frozen inputs, candidate lifecycle,
+    declared baselines, structural holdouts, promotion governance. Chronos2 is
+    the world: operation space, executor, renderer, scorer, sealed evidence.
+    - Before starting work in either, read the current plan and handoff in
+      **both**. A plan that exists in only one repo is not in effect.
+    - Every plan document, handoff, truth-surface update, manual, and guide
+      change lands in **both** repos in the same unit of work. Paired documents
+      carry the same date-stamped filename.
+    - If you touch a repo, you own its final state: audited, staged by explicit
+      path, committed, pushed, and `HEAD == origin/main` with an empty
+      `git status`.
+    - Neither repo may claim a capability that depends on the other without
+      naming the exact commit in the other that supplies it.
 
 Violations of these rules have real cost: lost work, false confidence, broken
 handoffs, and polluted repos. If finishing a task requires violating a rule,
