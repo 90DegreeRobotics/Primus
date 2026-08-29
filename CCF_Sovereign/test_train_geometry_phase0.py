@@ -7,6 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import torch
+
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
@@ -18,10 +20,14 @@ from train_geometry_phase0 import (  # noqa: E402
     CANDIDATE_MANIFEST_NAME,
     CANDIDATE_OUTPUT_DIRECTORY,
     GeometryPhase0SafetyError,
+    LOG1P_TARGET_METRICS,
     TrainingConfig,
     build_training_tensors,
     feature_schema,
+    inverse_transform_targets,
     run_fixture_training,
+    target_transform_schema,
+    transform_targets,
 )
 
 
@@ -121,6 +127,22 @@ class GeometryPhase0TrainerTests(unittest.TestCase):
         self.assertTrue(all("_fixture_" in path.name for path in (corpus, manifest, splits)))
         return corpus, manifest, splits
 
+    def test_declared_target_transforms_preserve_zero_and_restore_raw_units(self) -> None:
+        schema = target_transform_schema()
+        self.assertEqual(set(schema), set(LOG1P_TARGET_METRICS) | {"loose_part_count", "is_closed"})
+        raw = torch.tensor(
+            [
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                [51739.0, 80000.0, 40000.0, 100000.0, 4.0, 600.0, 700.0, 800.0, 35720618.0, 193911611.0, 1.0],
+            ],
+            dtype=torch.float32,
+        )
+        transformed = transform_targets(raw)
+        for index, metric in enumerate(schema):
+            if metric in LOG1P_TARGET_METRICS:
+                self.assertEqual(float(transformed[0, index]), 0.0)
+        self.assertTrue(torch.allclose(inverse_transform_targets(transformed), raw, rtol=1e-5, atol=1e-3))
+
     def test_fixture_candidate_is_isolated_hash_pinned_and_nonpromotable(self) -> None:
         corpus, manifest, splits = self.write_phase0_fixture()
         output_root = self.root / "candidate_output"
@@ -135,6 +157,8 @@ class GeometryPhase0TrainerTests(unittest.TestCase):
         candidate_directory = output_root / CANDIDATE_OUTPUT_DIRECTORY / "fixture-phase0"
         self.assertEqual(result["state"], "evaluated")
         self.assertTrue(result["fixture_only"])
+        self.assertEqual(result["zero_mesh_policy"]["decision"], "keep")
+        self.assertEqual(result["target_transforms"]["volume_mm3"], "log1p_then_zscore")
         self.assertFalse(result["promotion"]["permitted"])
         self.assertEqual(result["promotion"]["state"], "rejected_by_default")
         self.assertTrue((candidate_directory / CANDIDATE_MANIFEST_NAME).is_file())

@@ -42,6 +42,23 @@ CANDIDATE_MANIFEST_NAME = "geometry_phase0_manifest.json"
 CANDIDATE_CHECKPOINT_NAME = "geometry_phase0_model.pt"
 CANDIDATE_OUTPUT_DIRECTORY = "geometry_phase0_candidates"
 
+# Declared before the first real candidate: log1p preserves legitimate zero-mesh
+# outcomes while reducing the dominance of high-scale extensive measurements.
+LOG1P_TARGET_METRICS = frozenset(
+    {
+        "vert_count",
+        "edge_count",
+        "face_count",
+        "tri_count",
+        "bbox_extent_x_mm",
+        "bbox_extent_y_mm",
+        "bbox_extent_z_mm",
+        "surface_area_mm2",
+        "volume_mm3",
+    }
+)
+IDENTITY_TARGET_METRICS = frozenset({"loose_part_count", "is_closed"})
+
 
 class GeometryPhase0SafetyError(RuntimeError):
     """Raised when the Phase 0 candidate lifecycle or input contract is unsafe."""
@@ -265,6 +282,47 @@ def _normalizer(values: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
     return mean, std
 
 
+def target_transform_schema(target_metrics: Sequence[str] = TARGET_METRICS) -> dict[str, str]:
+    """Return the predeclared loss-space transform for every predicted metric."""
+
+    unknown = set(target_metrics).difference(LOG1P_TARGET_METRICS | IDENTITY_TARGET_METRICS)
+    if unknown:
+        raise GeometryPhase0SafetyError(f"missing declared target transform(s): {sorted(unknown)}")
+    return {
+        metric: "log1p_then_zscore" if metric in LOG1P_TARGET_METRICS else "zscore"
+        for metric in target_metrics
+    }
+
+
+def transform_targets(values: torch.Tensor, target_metrics: Sequence[str] = TARGET_METRICS) -> torch.Tensor:
+    """Map raw non-negative metrics into the declared loss space without filtering zeros."""
+
+    if values.ndim != 2 or values.shape[1] != len(target_metrics):
+        raise GeometryPhase0SafetyError("target tensor width does not match target metrics")
+    schema = target_transform_schema(target_metrics)
+    transformed = values.clone()
+    for index, metric in enumerate(target_metrics):
+        if schema[metric] == "log1p_then_zscore":
+            column = transformed[:, index]
+            if torch.any(column < 0):
+                raise GeometryPhase0SafetyError(f"{metric} cannot use log1p with negative values")
+            transformed[:, index] = torch.log1p(column)
+    return transformed
+
+
+def inverse_transform_targets(values: torch.Tensor, target_metrics: Sequence[str] = TARGET_METRICS) -> torch.Tensor:
+    """Return loss-space predictions to raw units for split-separated reporting."""
+
+    if values.ndim != 2 or values.shape[1] != len(target_metrics):
+        raise GeometryPhase0SafetyError("target tensor width does not match target metrics")
+    schema = target_transform_schema(target_metrics)
+    restored = values.clone()
+    for index, metric in enumerate(target_metrics):
+        if schema[metric] == "log1p_then_zscore":
+            restored[:, index] = torch.expm1(restored[:, index])
+    return restored
+
+
 def _metric_rows(
     actual: torch.Tensor, predicted: torch.Tensor, split: str, target_metrics: Sequence[str]
 ) -> list[dict[str, Any]]:
@@ -361,6 +419,11 @@ def run_phase0_training(
         "code_commit": _git_commit(),
         "trainer_sha256": sha256_file(Path(__file__).resolve()),
         "config": config_dict,
+        "zero_mesh_policy": {
+            "decision": "keep",
+            "reason": "A zero mesh is a valid deterministic executor outcome and must remain learnable.",
+        },
+        "target_transforms": target_transform_schema(),
         "frozen_inputs": {
             "corpus": {"path": str(intake.corpus_path), "sha256": intake.corpus_sha256},
             "manifest": {"path": str(intake.manifest_path), "sha256": intake.manifest_sha256},
@@ -381,8 +444,9 @@ def run_phase0_training(
         training_records = splits["train"]
         schema = feature_schema(training_records)
         train_features, train_targets = build_training_tensors(training_records, schema=schema)
+        transformed_train_targets = transform_targets(train_targets)
         feature_mean, feature_std = _normalizer(train_features)
-        target_mean, target_std = _normalizer(train_targets)
+        target_mean, target_std = _normalizer(transformed_train_targets)
         model = GeometryForwardModel(
             input_width=train_features.shape[1],
             output_width=train_targets.shape[1],
@@ -395,7 +459,7 @@ def run_phase0_training(
         manifest["target_metrics"] = list(TARGET_METRICS)
         atomic_write_json(manifest_file, manifest)
         normalized_features = (train_features - feature_mean) / feature_std
-        normalized_targets = (train_targets - target_mean) / target_std
+        normalized_targets = (transformed_train_targets - target_mean) / target_std
         losses: list[float] = []
         for _ in range(config.epochs):
             optimizer.zero_grad(set_to_none=True)
@@ -409,7 +473,8 @@ def run_phase0_training(
         with torch.no_grad():
             for split_name in ("held_out_length", "held_out_op_combo"):
                 features, targets = build_training_tensors(splits[split_name], schema=schema)
-                predicted = model((features - feature_mean) / feature_std) * target_std + target_mean
+                transformed_prediction = model((features - feature_mean) / feature_std) * target_std + target_mean
+                predicted = inverse_transform_targets(transformed_prediction)
                 model_metrics.extend(_metric_rows(targets, predicted, split_name, TARGET_METRICS))
         baseline_reports = evaluate_declared_baselines(intake, target_metrics=TARGET_METRICS)
         atomic_torch_save(
@@ -421,6 +486,8 @@ def run_phase0_training(
                 "feature_std": feature_std,
                 "target_mean": target_mean,
                 "target_std": target_std,
+                "target_transforms": target_transform_schema(),
+                "zero_mesh_policy": manifest["zero_mesh_policy"],
                 "config": config_dict,
                 "fixture_only": fixture_only,
             },
@@ -496,7 +563,15 @@ def main() -> None:
         config=TrainingConfig(seed=args.seed, epochs=args.epochs),
         fixture_only=args.fixture_only,
     )
-    print(canonical_json({"candidate_id": result["candidate_id"], "state": result["state"], "fixture_only": True}))
+    print(
+        canonical_json(
+            {
+                "candidate_id": result["candidate_id"],
+                "fixture_only": result["fixture_only"],
+                "state": result["state"],
+            }
+        )
+    )
 
 
 if __name__ == "__main__":
