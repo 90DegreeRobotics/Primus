@@ -334,3 +334,43 @@ narrative verbs a full trajectory program contains.
 This is renderer-integration evidence produced in Chronos2. It is not a Primus
 model result, learned world modelling, BridgeData state semantics, robot policy,
 control, safety, or candidate promotion.
+
+## Synthetic trajectory generator — SCAFFOLDING, RETIRING — 2026-08-29
+
+`CCF_Sovereign/src/world_schema/trajectory_generator.py` is declared scaffolding
+under `AGENTS.md` rule 9, and it is being retired. It is not a world generator.
+
+What it actually is: a fixed template. Every program it can emit has the same
+four entities (`entity_subject`, `entity_actor`, `entity_support`,
+`entity_room`), the same material, the same two cameras, the same three frames,
+and operations drawn from one hardcoded list of nine. The only variation is
+randomised numbers and two `if variant` branches, where `variant = index % 5`.
+
+The declared transition it teaches is closed-form arithmetic:
+
+```python
+delta_x = direction * (160 + geometry_extent // 3 + bevel_q)
+delta_y = (metallic_q8 - roughness_q8) // 2
+delta_z = 60 + ((geometry_extent + bevel_q + metallic_q8 + variant * 73) % 220)
+```
+
+The 2026-08-27 positive control confirmed a linear model recovers that linear
+function. That is the expected result, it has been recorded, and it cannot be
+re-run for further information. Nothing further should be built on it.
+
+The 2026-08-28 executable `extrude_face` contract also violates rule 9: the
+extrusion axis is `'xyz'[variant % 3]` with the sign taken from a hardcoded
+`variant` branch. Nothing decides which face to extrude. It is a recipe, it was
+written by an agent that had no rule telling it not to, and it is retiring with
+the generator rather than being polished.
+
+**Retirement condition:** the generator, its entry script
+`generate_world_trajectories.py`, and the synthetic learning candidates that
+consume it stay in the tree, unextended, until the BridgeData lane can emit a
+geometry operation from learned state. At that point they are removed in one
+audited commit. Until then: no new features, no new candidates, no new evidence
+claims, and no citation as learned behaviour.
+
+**Not affected:** `CCF_Sovereign/src/real_data`, the frozen BridgeData intake,
+and the two rejected BridgeData candidates. That lane shares no code with this
+one and is the lane being grown.

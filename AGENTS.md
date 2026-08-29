@@ -45,6 +45,25 @@ verified behavior, and no completion theater.
 8. **Docs are part of done.** Any change that alters behavior, entry points,
    training claims, artifact locations, or operator workflow must update the
    affected truth surfaces in the same unit of work.
+9. **No recipe systems.** A lookup table of named things is not a capability.
+   Do not add per-noun recipes, per-macro defaults, hardcoded parameter tables,
+   or index-driven branches that stand in for a decision the system is supposed
+   to make.
+   - **The test:** ask "what decided this value?" If the honest answer is a
+     literal, a counter, an index, a `variant` number, or a modulo of one, it is
+     a recipe. Something must decide it from state, and must be capable of being
+     measurably wrong.
+   - Templates and fixed generators are permitted **only** as declared
+     scaffolding. Label them as scaffolding in `STATUS.md`, and name the
+     condition under which they get retired. Scaffolding without a stated
+     retirement condition is a recipe wearing a lab coat.
+   - A positive control on template data proves the learner can recover the
+     template. Do not report it, extend it, or build on it as evidence of
+     learned behavior. Run it once, record it, move on.
+   - This rule exists because the constraint was stated clearly in
+     `C:\chronos2\plan_2026-08-15_2046_shape-thinking-not-recipes.md` and then
+     lived only in that plan. Plans get marked COMPLETE and stop being read.
+     Repo law does not.
 
 Violations of these rules have real cost: lost work, false confidence, broken
 handoffs, and polluted repos. If finishing a task requires violating a rule,
