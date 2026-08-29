@@ -60,6 +60,24 @@ verified behavior, and no completion theater.
    - A positive control on template data proves the learner can recover the
      template. Do not report it, extend it, or build on it as evidence of
      learned behavior. Run it once, record it, move on.
+   - **The primary defence is a measurement on OUTPUTS, not a scan of source.**
+     A source scan is evadable by construction: a table can move into data, a
+     JSON seed file, a prompt template, or hardcoded magic-number profiles.
+     What defines a recipe book is that **the number of distinct outputs is
+     bounded by a table somebody maintains**. That is measurable, and it cannot
+     be evaded by moving the table.
+     The gate lives in `C:\chronos2` at
+     `crates/chronos_geometry_plan/tests/novelty_ratchet.rs`. Measured
+     2026-08-29: **200 compositional briefs produced 7 distinct programs**, and
+     all 7 came from the modifier words, so the subject contributed nothing.
+     It is a ratchet, not a red test, because a permanently-failing test gets
+     switched off and then defends nothing. **Raise the floor when the system
+     improves. Lowering it to make the test pass is a law violation, not a fix.**
+   - A model may be called *learned* only when distinct outputs scale with
+     distinct inputs instead of saturating, when it produces structures absent
+     from its training set, and when perturbing one input changes the output
+     continuously rather than switching branches. This is the same standard the
+     BridgeData lane already meets and the geometry lane does not.
    - **Operator directive, 2026-08-29: the system will be able to learn or not
      exist.** A capability that cannot be learned does not get a lookup table as
      a consolation prize. It ships learned, or it does not ship.

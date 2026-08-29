@@ -98,6 +98,62 @@ reliably in Blender, that is a Lane A blocker handoff, not a silent omission.
 
 ---
 
+## 2b. The Decision On How This Stays Out Of Recipe Territory
+
+Two mechanisms, in priority order. The second is the one that actually wins.
+
+### Defence 1 — measure the output space (the gate that cannot be evaded)
+
+Source scans catch the lazy version. They do not catch a table that moves into
+data, a seed file, a prompt template, or magic-number profiles. What defines a
+recipe book is that **distinct outputs are bounded by a maintained table**, and
+that is measurable directly.
+
+`crates/chronos_geometry_plan/tests/novelty_ratchet.rs` feeds compositionally
+generated briefs — never a curated noun list — through the live path and counts
+distinct programs out.
+
+**Measured 2026-08-29: 200 briefs produced 7 distinct programs, 4 operation
+signatures, novelty ratio 0.035.** All 7 came from the modifier words. The
+subject of the brief contributed nothing: for any subject outside the dictionary
+the system has exactly seven answers.
+
+A ratchet, not a red test. Raise the floor as the system improves; lowering it is
+a law violation. This number is the headline metric for the whole programme — if
+it is not climbing, nothing else that is being built matters.
+
+### Defence 2 — remove the pressure that creates recipes
+
+Recipes do not appear because agents are careless. They appear because the
+dictionary **works today** and the learned path does not, and something has to
+answer a brief before the model exists. Every guard in the world loses to that.
+
+So the fix is to make a non-recipe path work *early*: **search over the operation
+space, scored by mesh metrics.** The program sampler in A4 plus the metric
+evaluator in A1 already compose into one — sample candidates, score against a
+target, keep the best, iterate. Nothing about it is a table.
+
+This is also what the project thesis already said:
+
+> The LLM is used not to generate the final plan, but to act as an intelligent
+> heuristic or "idea generator" that guides a more rigorous, underlying symbolic
+> planner.
+
+Read against the gate above: **the LLM must emit targets in metric space — tall,
+hollow, roughly 2:1, closed — never a program and never a noun lookup.** Search
+supplies the rigour. The LLM is allowed to be fuzzy precisely because it is not
+the thing choosing operations.
+
+An LLM mapping words to metric targets is not a recipe book: the target space is
+continuous, it generalises to subjects nobody enumerated, and there is no table
+in the repo to maintain. That is the difference between a model that generalises
+and a dictionary somebody keeps up to date.
+
+**Consequence for sequencing:** the learned Phase 0/1 models replace search for
+*speed*, not for *capability*. Search is what retires `think_from_brief`, and it
+can exist long before a model does. Round 2's sampler is therefore not only
+corpus infrastructure — it is the first non-recipe answer path.
+
 ## 3. Lane Assignment And Ownership
 
 | Lane | Agent | Focus |
