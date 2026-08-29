@@ -1,7 +1,7 @@
 """Declared, model-free Phase 0 baselines for geometry-program metrics.
 
-The baselines are intentionally defined before any learner exists.  They provide
-comparison points only; a successful baseline run is not a learned result.
+The baselines are fixed before the learned forward model exists. They provide
+split-separated reference errors, not evidence of a learned capability.
 """
 
 from __future__ import annotations
@@ -18,7 +18,19 @@ DECLARED_PHASE_ZERO_BASELINES = (
     "step_count_only",
     "op_mix_nearest_neighbour",
 )
-TARGET_METRICS = ("vert_count", "face_count")
+TARGET_METRICS = (
+    "vert_count",
+    "edge_count",
+    "face_count",
+    "tri_count",
+    "loose_part_count",
+    "bbox_extent_x_mm",
+    "bbox_extent_y_mm",
+    "bbox_extent_z_mm",
+    "surface_area_mm2",
+    "volume_mm3",
+    "is_closed",
+)
 EVALUATION_SPLITS = ("held_out_length", "held_out_op_combo")
 
 
@@ -57,7 +69,22 @@ class DeclaredBaselineReport:
 
 
 def _target(record: GeometryProgramRecord, metric: str) -> float:
-    raw = record.mesh_metrics.get(metric)
+    if metric.startswith("bbox_extent_") and metric.endswith("_mm"):
+        axis_name = metric.removeprefix("bbox_extent_").removesuffix("_mm")
+        axis_index = {"x": 0, "y": 1, "z": 2}.get(axis_name)
+        if axis_index is None:
+            raise GeometryCorpusError(f"unsupported bounding-box target metric {metric!r}")
+        raw_extent = record.mesh_metrics.get("bbox_extent_mm")
+        if not isinstance(raw_extent, (list, tuple)) or len(raw_extent) != 3:
+            raise GeometryCorpusError(f"record {record.sample_id} lacks bbox_extent_mm")
+        raw = raw_extent[axis_index]
+    elif metric == "is_closed":
+        raw = record.mesh_metrics.get(metric)
+        if not isinstance(raw, bool):
+            raise GeometryCorpusError(f"record {record.sample_id} lacks boolean mesh metric is_closed")
+        return float(raw)
+    else:
+        raw = record.mesh_metrics.get(metric)
     if isinstance(raw, bool) or not isinstance(raw, (int, float)):
         raise GeometryCorpusError(f"record {record.sample_id} lacks numeric mesh metric {metric!r}")
     return float(raw)
@@ -79,7 +106,12 @@ def _step_count_means(records: Sequence[GeometryProgramRecord], metric: str) -> 
 def _op_mix_distance(left: GeometryProgramRecord, right: GeometryProgramRecord) -> float:
     left_mix = left.program_structure.op_mix_dict()
     right_mix = right.program_structure.op_mix_dict()
-    return float(sum(abs(left_mix.get(operation, 0) - right_mix.get(operation, 0)) for operation in set(left_mix) | set(right_mix)))
+    return float(
+        sum(
+            abs(left_mix.get(operation, 0) - right_mix.get(operation, 0))
+            for operation in set(left_mix) | set(right_mix)
+        )
+    )
 
 
 def _nearest_op_mix_target(
@@ -141,12 +173,7 @@ def _evaluate_baseline(
 def evaluate_declared_baselines(
     intake: GeometryCorpusIntake, *, target_metrics: Sequence[str] = TARGET_METRICS
 ) -> tuple[DeclaredBaselineReport, ...]:
-    """Run the three declared baselines with fresh hash verification.
-
-    Evaluation is intentionally fail-closed: it re-verifies the corpus,
-    manifest, and split definition before calculating any metric, then emits a
-    result for each baseline/metric pair on each structural holdout separately.
-    """
+    """Run declared baselines with fresh input verification and structural metrics."""
 
     intake.verify()
     splits = intake.structural_splits()

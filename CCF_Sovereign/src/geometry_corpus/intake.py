@@ -1,11 +1,12 @@
-"""Fail-closed intake for the frozen ``geometry_program_corpus_v1`` contract.
+"""Fail-closed intake for the frozen ``geometry_program_corpus_v2`` contract.
 
-This module is deliberately limited to the learner-side contract.  It does not
-create samples, infer object categories, invoke Blender, or train a model.
+This module is limited to learner-side input verification. It neither creates
+geometry programs nor invokes rendering or training systems.
 """
 
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import dataclass
 import hashlib
 import json
@@ -13,7 +14,7 @@ import math
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-GEOMETRY_PROGRAM_CORPUS_SCHEMA_VERSION = "geometry_program_corpus_v1"
+GEOMETRY_PROGRAM_CORPUS_SCHEMA_VERSION = "geometry_program_corpus_v2"
 FORBIDDEN_KEYS = frozenset(
     {
         "class",
@@ -36,20 +37,35 @@ REQUIRED_MANIFEST_KEYS = frozenset(
         "schema_sha256",
     }
 )
+REQUIRED_MESH_METRIC_KEYS = frozenset(
+    {
+        "vert_count",
+        "edge_count",
+        "face_count",
+        "tri_count",
+        "loose_part_count",
+        "bbox_min_mm",
+        "bbox_max_mm",
+        "bbox_extent_mm",
+        "surface_area_mm2",
+        "volume_mm3",
+        "is_closed",
+    }
+)
 
 
 class GeometryCorpusError(ValueError):
-    """Raised when the frozen geometry corpus contract is violated."""
+    """Raised when a frozen geometry corpus contract is violated."""
 
 
 def canonical_json(value: Any) -> str:
-    """Return deterministic JSON suitable for canonical corpus identifiers."""
+    """Return deterministic JSON suitable for corpus identifiers."""
 
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
 
 
 def sha256_file(path: Path) -> str:
-    """Hash a file incrementally so large real corpora do not need buffering."""
+    """Hash a file incrementally so real corpora need not be buffered."""
 
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -114,7 +130,7 @@ def _assert_no_forbidden_keys(value: Any, location: str = "record") -> None:
 
 @dataclass(frozen=True)
 class ProgramStructure:
-    """The only allowable basis for a learner-side structural split."""
+    """The only allowed basis for learner-side structural split membership."""
 
     step_count: int
     op_mix: tuple[tuple[str, int], ...]
@@ -156,9 +172,28 @@ class ProgramStructure:
         return dict(self.op_mix)
 
 
+def _derived_program_structure(program: Mapping[str, Any], *, label: str) -> ProgramStructure:
+    """Derive structure from v2 program steps instead of trusting copied metadata."""
+
+    raw_steps = program.get("steps")
+    if not isinstance(raw_steps, list) or not raw_steps:
+        raise GeometryCorpusError(f"{label}.steps must be a non-empty array")
+    operation_names: list[str] = []
+    for index, raw_step in enumerate(raw_steps):
+        step = _require_mapping(raw_step, f"{label}.steps[{index}]")
+        operation_names.append(_require_nonempty_string(step.get("op"), f"{label}.steps[{index}].op"))
+    counts = Counter(operation_names)
+    ordered_counts = tuple(sorted(counts.items()))
+    return ProgramStructure(
+        step_count=len(operation_names),
+        op_mix=ordered_counts,
+        op_signature="|".join(operation for operation, _ in ordered_counts),
+    )
+
+
 @dataclass(frozen=True)
 class GeometryProgramRecord:
-    """One validated line from a ``geometry_program_corpus_v1`` JSONL file."""
+    """One validated line from a ``geometry_program_corpus_v2`` JSONL file."""
 
     sample_id: str
     program: Mapping[str, Any]
@@ -198,14 +233,30 @@ class GeometryProgramRecord:
             )
         if not isinstance(raw["executed"], bool) or not raw["executed"]:
             raise GeometryCorpusError(f"line {line_number}.executed must be true")
+        declared_structure = ProgramStructure.from_mapping(
+            raw["program_structure"], label=f"line {line_number}.program_structure"
+        )
+        derived_structure = _derived_program_structure(program, label=f"line {line_number}.program")
+        if declared_structure != derived_structure:
+            raise GeometryCorpusError(
+                f"line {line_number}.program_structure is not derivable from program.steps"
+            )
         mesh_metrics = _require_mapping(raw["mesh_metrics"], f"line {line_number}.mesh_metrics")
-        for key in ("vert_count", "face_count", "bbox_min_mm", "bbox_max_mm"):
-            if key not in mesh_metrics:
-                raise GeometryCorpusError(f"line {line_number}.mesh_metrics lacks {key!r}")
-        _require_nonnegative_int(mesh_metrics["vert_count"], f"line {line_number}.mesh_metrics.vert_count")
-        _require_nonnegative_int(mesh_metrics["face_count"], f"line {line_number}.mesh_metrics.face_count")
-        _require_vector(mesh_metrics["bbox_min_mm"], f"line {line_number}.mesh_metrics.bbox_min_mm")
-        _require_vector(mesh_metrics["bbox_max_mm"], f"line {line_number}.mesh_metrics.bbox_max_mm")
+        missing_metrics = REQUIRED_MESH_METRIC_KEYS.difference(mesh_metrics)
+        if missing_metrics:
+            raise GeometryCorpusError(
+                f"line {line_number}.mesh_metrics lacks required keys: {sorted(missing_metrics)}"
+            )
+        for key in ("vert_count", "edge_count", "face_count", "tri_count", "loose_part_count"):
+            _require_nonnegative_int(mesh_metrics[key], f"line {line_number}.mesh_metrics.{key}")
+        for key in ("bbox_min_mm", "bbox_max_mm", "bbox_extent_mm"):
+            _require_vector(mesh_metrics[key], f"line {line_number}.mesh_metrics.{key}")
+        _require_finite_number(
+            mesh_metrics["surface_area_mm2"], f"line {line_number}.mesh_metrics.surface_area_mm2"
+        )
+        _require_finite_number(mesh_metrics["volume_mm3"], f"line {line_number}.mesh_metrics.volume_mm3")
+        if not isinstance(mesh_metrics["is_closed"], bool):
+            raise GeometryCorpusError(f"line {line_number}.mesh_metrics.is_closed must be boolean")
         render = _require_mapping(raw["render"], f"line {line_number}.render")
         for key in ("path", "sha256", "width", "height"):
             if key not in render:
@@ -215,21 +266,15 @@ class GeometryProgramRecord:
         _require_nonnegative_int(render["width"], f"line {line_number}.render.width")
         _require_nonnegative_int(render["height"], f"line {line_number}.render.height")
         view_score = _require_mapping(raw["view_score"], f"line {line_number}.view_score")
-        for key in ("score", "silhouette_overlap", "bbox_iou", "scorer_version"):
+        for key in ("score", "scorer_version"):
             if key not in view_score:
                 raise GeometryCorpusError(f"line {line_number}.view_score lacks {key!r}")
         _require_finite_number(view_score["score"], f"line {line_number}.view_score.score")
-        _require_finite_number(
-            view_score["silhouette_overlap"], f"line {line_number}.view_score.silhouette_overlap"
-        )
-        _require_finite_number(view_score["bbox_iou"], f"line {line_number}.view_score.bbox_iou")
         _require_nonempty_string(view_score["scorer_version"], f"line {line_number}.view_score.scorer_version")
         return cls(
             sample_id=sample_id,
             program=dict(program),
-            program_structure=ProgramStructure.from_mapping(
-                raw["program_structure"], label=f"line {line_number}.program_structure"
-            ),
+            program_structure=declared_structure,
             executed=True,
             mesh_metrics=dict(mesh_metrics),
             render=dict(render),
@@ -281,17 +326,15 @@ class SplitDefinition:
     def to_dict(self) -> dict[str, list[Any]]:
         return {
             "held_out_length": sorted(self.held_out_length),
-            "held_out_op_combo": [sorted(pair) for pair in sorted(self.held_out_op_combo, key=lambda value: tuple(sorted(value)))],
+            "held_out_op_combo": [
+                sorted(pair)
+                for pair in sorted(self.held_out_op_combo, key=lambda value: tuple(sorted(value)))
+            ],
         }
 
 
 def split_for_structure(structure: ProgramStructure, definition: SplitDefinition) -> str:
-    """Return one deterministic split using only declared program structure.
-
-    Operation-combination holdouts take precedence so their operation signature
-    cannot also appear in the training partition.  Records meeting both rules
-    remain in that single, stronger holdout.
-    """
+    """Return one deterministic split using only declared program structure."""
 
     operations = frozenset(operation for operation, count in structure.op_mix if count > 0)
     if any(combo.issubset(operations) for combo in definition.held_out_op_combo):
@@ -304,7 +347,7 @@ def split_for_structure(structure: ProgramStructure, definition: SplitDefinition
 def build_structural_splits(
     records: Iterable[GeometryProgramRecord], definition: SplitDefinition
 ) -> dict[str, tuple[GeometryProgramRecord, ...]]:
-    """Partition records exactly once from ``program_structure`` alone."""
+    """Partition every record exactly once from ``program_structure`` alone."""
 
     splits: dict[str, list[GeometryProgramRecord]] = {
         "train": [],
@@ -317,12 +360,9 @@ def build_structural_splits(
             raise GeometryCorpusError(f"duplicate sample_id in corpus: {record.sample_id}")
         seen_sample_ids.add(record.sample_id)
         splits[split_for_structure(record.program_structure, definition)].append(record)
-    if not splits["train"]:
-        raise GeometryCorpusError("structural split leaves no train records")
-    if not splits["held_out_length"]:
-        raise GeometryCorpusError("structural split leaves no held_out_length records")
-    if not splits["held_out_op_combo"]:
-        raise GeometryCorpusError("structural split leaves no held_out_op_combo records")
+    for split_name, records_in_split in splits.items():
+        if not records_in_split:
+            raise GeometryCorpusError(f"structural split leaves no {split_name} records")
     train_signatures = {record.program_structure.op_signature for record in splits["train"]}
     combo_signatures = {record.program_structure.op_signature for record in splits["held_out_op_combo"]}
     overlap = train_signatures.intersection(combo_signatures)
@@ -348,7 +388,7 @@ class GeometryCorpusIntake:
     manifest_sha256: str
 
     def verify(self) -> None:
-        """Re-verify every pinned artifact before evaluation or any future training."""
+        """Re-verify every pinned artifact before evaluation or any training."""
 
         if sha256_file(self.corpus_path) != self.corpus_sha256:
             raise GeometryCorpusError("corpus SHA-256 changed after intake")
@@ -356,7 +396,7 @@ class GeometryCorpusIntake:
             raise GeometryCorpusError("split-definition SHA-256 changed after intake")
         expected_schema_sha256 = _sha256_text(GEOMETRY_PROGRAM_CORPUS_SCHEMA_VERSION)
         if expected_schema_sha256 != self.schema_sha256:
-            raise GeometryCorpusError("schema-version SHA-256 does not match geometry_program_corpus_v1")
+            raise GeometryCorpusError("schema-version SHA-256 does not match geometry_program_corpus_v2")
         if sha256_file(self.manifest_path) != self.manifest_sha256:
             raise GeometryCorpusError("manifest SHA-256 changed after intake")
 
@@ -395,7 +435,7 @@ def _load_records(corpus_path: Path) -> tuple[GeometryProgramRecord, ...]:
 def load_geometry_corpus_intake(
     corpus_path: str | Path, manifest_path: str | Path, split_path: str | Path
 ) -> GeometryCorpusIntake:
-    """Load and fail closed on a hash-pinned ``geometry_program_corpus_v1`` intake."""
+    """Load and fail closed on a hash-pinned ``geometry_program_corpus_v2`` intake."""
 
     resolved_corpus = Path(corpus_path).expanduser().resolve()
     resolved_manifest = Path(manifest_path).expanduser().resolve()
@@ -412,7 +452,7 @@ def load_geometry_corpus_intake(
     if missing:
         raise GeometryCorpusError(f"manifest lacks required keys: {sorted(missing)}")
     if manifest["schema_version"] != GEOMETRY_PROGRAM_CORPUS_SCHEMA_VERSION:
-        raise GeometryCorpusError("manifest schema_version does not match geometry_program_corpus_v1")
+        raise GeometryCorpusError("manifest schema_version does not match geometry_program_corpus_v2")
     expected_corpus_sha256 = _require_nonempty_string(manifest["corpus_sha256"], "manifest.corpus_sha256")
     expected_splits_sha256 = _require_nonempty_string(manifest["splits_sha256"], "manifest.splits_sha256")
     expected_schema_sha256 = _require_nonempty_string(manifest["schema_sha256"], "manifest.schema_sha256")
@@ -424,7 +464,7 @@ def load_geometry_corpus_intake(
     if actual_splits_sha256 != expected_splits_sha256:
         raise GeometryCorpusError("split-definition SHA-256 does not match manifest")
     if expected_schema_sha256 != expected_schema_hash:
-        raise GeometryCorpusError("schema-version SHA-256 does not match geometry_program_corpus_v1")
+        raise GeometryCorpusError("schema-version SHA-256 does not match geometry_program_corpus_v2")
     split_definition = SplitDefinition.from_mapping(_load_json_object(resolved_split, "split definition"))
     records = _load_records(resolved_corpus)
     intake = GeometryCorpusIntake(
