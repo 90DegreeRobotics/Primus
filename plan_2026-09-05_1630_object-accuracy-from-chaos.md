@@ -226,3 +226,11 @@ why the signed build is for the operator to judge, not a storefront claim.
 - [x] Implement what wins; focused Rust + Python gates
 - [x] End-to-end render witnesses through the real binary
 - [x] Truth surfaces, commit, push, signed build to Downloads
+
+## Signed payload
+
+- `C:\Users\m\Downloads\ChronoSophia2_Setup_2.0.48.exe`
+- serial 72, source `cebc024a5b6e`
+- sha256 `78C2DCB1CBAC7A513F4B620E8180C92D9235F9BA223499670FF761D712D01723`
+- Authenticode Valid, `CN=Michael Holt`
+- Agent did not run the installer.
